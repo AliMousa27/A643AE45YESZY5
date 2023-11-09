@@ -1,10 +1,25 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'initial_page.dart';
 
-Future<Album> fetchAlbum() async {
+void main() => runApp(const MyApp());
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'App',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      ),
+      home: const InitialPage(),
+    );
+  }
+}
+
+/*Future<Album> fetchAlbum() async {
   final response = await http.get(Uri.parse('http://localhost:3000/api'));
 
   if (response.statusCode == 200) {
@@ -78,3 +93,4 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
+*/
