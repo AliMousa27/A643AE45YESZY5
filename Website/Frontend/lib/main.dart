@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'initial_page.dart';
-import 'authentication.dart';
 
 void main() => runApp(const MyApp());
 

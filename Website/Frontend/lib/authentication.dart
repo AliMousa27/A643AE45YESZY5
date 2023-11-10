@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import 'initial_pages_background.dart';
 import 'widget_util.dart';
@@ -29,6 +28,7 @@ class Authentication extends StatelessWidget {
               child: Column(
                 children: [
                   SizedBox(
+                    // 20% of screen height
                     height: screenSize.height * 0.2,
                   ),
                   Text(isSigningUp ? "Sign Up" : "Log In",
@@ -37,6 +37,7 @@ class Authentication extends StatelessWidget {
                           fontSize: 50,
                           fontFamily: "suezone")),
                   SizedBox(
+                    // 4% of screen height
                     height: screenSize.height * 0.04,
                   ),
                   createTextField(screenSize.width * textFieldWidthFactor,
@@ -66,12 +67,6 @@ class Authentication extends StatelessWidget {
                         const Color.fromRGBO(176, 218, 243, 1),
                         () => onPressed(context),
                         "confirm"),
-                    /*child: newMethod(
-                        context,
-                        const Color.fromRGBO(88, 109, 121, 1),
-                        const Size(230, 60),
-                        const Color.fromRGBO(176, 218, 243, 1)),
-                  )*/
                   )
                 ],
               ),
@@ -82,29 +77,9 @@ class Authentication extends StatelessWidget {
     ));
   }
 
-  OutlinedButton newMethod(
-      BuildContext context, Color textColor, Size btnSize, Color btnColor) {
-    return OutlinedButton(
-        onPressed: () => onPressed(context),
-        style: ButtonStyle(
-            fixedSize: MaterialStateProperty.all<Size>(btnSize),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30.0),
-            )),
-            backgroundColor: MaterialStateProperty.all<Color>(btnColor)),
-        child: Text(
-          "Confirm",
-          style: TextStyle(
-            color: textColor,
-            fontSize: 20,
-            fontFamily: "suezone",
-          ),
-        ));
-  }
-
   TextField createTextField(double width, double height, String prompt) {
     return TextField(
+        //check if the text field is the password one to deicde to blur or not
         obscureText: prompt.contains("password") ? true : false,
         decoration: InputDecoration(
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),

@@ -5,24 +5,26 @@ class InitialPageBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    double bottomToothSpace = 130;
+    double topToothSpace = 150;
+    return MaterialApp(
       title: 'Flutter Demo',
       home: Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: Color.fromARGB(255, 234, 255, 253),
+        backgroundColor: const Color.fromARGB(255, 234, 255, 253),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Center(
               child: Image(
-                image: AssetImage("assets/BottomTooth.png"),
-                height: 130,
+                image: const AssetImage("assets/BottomTooth.png"),
+                height: bottomToothSpace,
               ),
             ),
             Center(
               child: Image(
-                image: AssetImage("assets/TopTooth.png"),
-                height: 150,
+                image: const AssetImage("assets/TopTooth.png"),
+                height: topToothSpace,
               ),
             )
           ],
