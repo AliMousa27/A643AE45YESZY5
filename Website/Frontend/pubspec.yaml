@@ -60,7 +60,7 @@ flutter:
   fonts:
     - family: suezone
       fonts:
-        - asset: assets/SuezOne-Regular.ttf 
+        - asset: assets/fonts/SuezOne-Regular.ttf 
 
   # To add assets to your application, add an assets section, like this:
   # assets:

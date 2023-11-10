@@ -8,6 +8,7 @@ class InitialPageBackground extends StatelessWidget {
     return const MaterialApp(
       title: 'Flutter Demo',
       home: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Color.fromARGB(255, 234, 255, 253),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
