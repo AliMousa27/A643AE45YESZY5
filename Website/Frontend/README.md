@@ -12,14 +12,16 @@
 *Step 0*
 - Make sure you have correctly setup and installed flutter with the SDK. Other wise refer to the flutter [install guide](https://docs.flutter.dev/get-started/install) and make sure to add the bin folder to your enviornment variables. 
 By the end of the setup, you should run ```flutter doctor``` and see something similar to this
+
 ![Flutter doctor result](readme_assets/image.png)
+
 **Note**: You do __not__ need the Android toolchain or Android studio. They are only reuqired if you want to run the application on an emulator. Otherwise you will just run it on a web browser, namely google chrome
 
 *Step 1*
 
-Clone the repositery into your machine
+Make sure you have the repository cloned into your machine Otherwis
 ```
-https://github.com/zubairehman/flutter-boilerplate-project.git
+git clone git@git.chalmers.se:courses/dit355/2023/student-teams/dit356-2023-12/toothtrek.git
 ```
 
 *Step 2*
@@ -34,7 +36,11 @@ If you want to run the application on an android emulator, then make sure you ha
 Press ```ctrl + shift + p``` on windows or ```cmd + shift + p``` on mac to open the VSCode command pallete 
 
 1. Search "Flutter: Launch Emualtor"
+   
    ![Alt text](readme_assets/image-1.png)
+
 2. Select the cold boot option 
+
 ![Alt text](readme_assets/image-2.png)
+
 3. After the emulator is up, run the command ```flutter run``` in the terminal
