@@ -1,35 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application/authentication.dart';
 import 'initial_pages_background.dart';
+import 'widget_util.dart';
 
 class InitialPage extends StatelessWidget {
   const InitialPage({super.key});
 
-  Material createBTN(
-      String prompt, double txtSize, BuildContext context, String buttonId) {
+  Material createBTN(String prompt, double txtSize, BuildContext context,
+      String buttonId, String text) {
     return Material(
-      elevation: 7,
-      borderRadius: BorderRadius.circular(30.0),
-      shadowColor: Colors.black,
-      child: OutlinedButton(
-          onPressed: () => onPressed(context, buttonId),
-          style: ButtonStyle(
-              fixedSize: MaterialStateProperty.all<Size>(const Size(230, 74)),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30.0),
-              )),
-              backgroundColor: MaterialStateProperty.all<Color>(
-                  const Color.fromRGBO(176, 218, 243, 1))),
-          child: Text(
-            prompt,
-            style: TextStyle(
-              color: const Color.fromRGBO(117, 116, 116, 1),
-              fontSize: txtSize,
-              fontFamily: "suezone",
-            ),
-          )),
-    );
+        elevation: 7,
+        borderRadius: BorderRadius.circular(30.0),
+        shadowColor: Colors.black,
+        child: WidgetUtil.newMethod(
+            context,
+            const Color.fromRGBO(117, 116, 116, 1),
+            const Size(230, 74),
+            const Color.fromRGBO(176, 218, 243, 1),
+            () => onPressed(context, buttonId),
+            text));
   }
 
   @override
@@ -49,11 +38,13 @@ class InitialPage extends StatelessWidget {
               children: [
                 //sizedbox now takes 17% of screen height
                 SizedBox(height: screenSize.height * 0.27),
-                createBTN("Log in with email", 23, context, "Log in BTN"),
+                createBTN(
+                    "Log in with email", 23, context, "Log in BTN", "Log in"),
                 SizedBox(
                   height: screenSize.height * 0.04,
                 ),
-                createBTN("Sign up with email", 22, context, "Sign up BTN"),
+                createBTN("Sign up with email", 22, context, "Sign up BTN",
+                    "Sign up"),
                 SizedBox(height: screenSize.height * 0.04),
                 Container(
                   height: 1,

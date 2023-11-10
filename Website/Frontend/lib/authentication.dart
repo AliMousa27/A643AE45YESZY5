@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import 'initial_pages_background.dart';
+import 'widget_util.dart';
 
 class Authentication extends StatelessWidget {
   final bool isSigningUp;
@@ -58,25 +59,19 @@ class Authentication extends StatelessWidget {
                     elevation: 7,
                     borderRadius: BorderRadius.circular(30.0),
                     shadowColor: Colors.black,
-                    child: OutlinedButton(
-                        onPressed: () => onPressed(context),
-                        style: ButtonStyle(
-                            fixedSize: MaterialStateProperty.all<Size>(
-                                const Size(230, 60)),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                            )),
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                const Color.fromRGBO(176, 218, 243, 1))),
-                        child: const Text(
-                          "Confirm",
-                          style: TextStyle(
-                            color: Color.fromRGBO(88, 109, 121, 1),
-                            fontSize: 20,
-                            fontFamily: "suezone",
-                          ),
-                        )),
+                    child: WidgetUtil.newMethod(
+                        context,
+                        const Color.fromRGBO(117, 116, 116, 1),
+                        const Size(230, 74),
+                        const Color.fromRGBO(176, 218, 243, 1),
+                        () => onPressed(context),
+                        "confirm"),
+                    /*child: newMethod(
+                        context,
+                        const Color.fromRGBO(88, 109, 121, 1),
+                        const Size(230, 60),
+                        const Color.fromRGBO(176, 218, 243, 1)),
+                  )*/
                   )
                 ],
               ),
@@ -85,6 +80,27 @@ class Authentication extends StatelessWidget {
         ],
       ),
     ));
+  }
+
+  OutlinedButton newMethod(
+      BuildContext context, Color textColor, Size btnSize, Color btnColor) {
+    return OutlinedButton(
+        onPressed: () => onPressed(context),
+        style: ButtonStyle(
+            fixedSize: MaterialStateProperty.all<Size>(btnSize),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30.0),
+            )),
+            backgroundColor: MaterialStateProperty.all<Color>(btnColor)),
+        child: Text(
+          "Confirm",
+          style: TextStyle(
+            color: textColor,
+            fontSize: 20,
+            fontFamily: "suezone",
+          ),
+        ));
   }
 
   TextField createTextField(double width, double height, String prompt) {
