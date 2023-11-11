@@ -5,12 +5,15 @@ import com.toothtrek.mqtt.MqttHandler;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.UUID;
+
 import org.eclipse.paho.mqttv5.client.IMqttToken;
 import org.eclipse.paho.mqttv5.client.MqttCallback;
 import org.eclipse.paho.mqttv5.client.MqttDisconnectResponse;
 import org.eclipse.paho.mqttv5.common.MqttException;
 import org.eclipse.paho.mqttv5.common.MqttMessage;
 import org.eclipse.paho.mqttv5.common.packet.MqttProperties;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 
 /*
@@ -28,9 +31,14 @@ public class TestMqtt {
     @BeforeAll
     public static void setup() {
         String broker = "tcp://test.mosquitto.org:1883";
-        String clientId = "test";
+        String clientId = "testclient-" + UUID.randomUUID().toString().replace("-", "");
         int qos = 1;
         handler = new MqttHandler(broker, clientId, qos);
+    }
+
+    @AfterEach
+    public void reset() {
+        handler.disconnect();
     }
 
     @Test

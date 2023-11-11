@@ -131,7 +131,8 @@ public class MqttHandler {
      */
     public void disconnect() {
         try {
-            this.client.disconnect();
+            this.token = this.client.disconnect();
+            token.waitForCompletion();
         } catch (MqttException me) {
             printException(me);
         }

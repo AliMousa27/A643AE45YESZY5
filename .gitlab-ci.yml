@@ -44,7 +44,10 @@ build-frontend:
 test-frontend:
   stage: test
   needs: ["build-frontend"]
+
   image: "ghcr.io/cirruslabs/flutter:3.13.9"
+  tags:
+    - docker
 
   script:
     - cd Website
@@ -54,9 +57,11 @@ test-frontend:
 # Express
 build-backend:
   stage: build
+
   image: node:18
   tags:
     - docker
+
   script:
     - cd Website
     - cd Backend
@@ -65,13 +70,16 @@ build-backend:
 test-backend:
   stage: test
   needs: ["build-backend"]
+
   image: node:18
   tags:
     - docker
+
   script:
     - cd Website
     - cd Backend
     - npm test 
+
   # Allow failure til we have tests
   allow_failure: true
 
@@ -81,9 +89,11 @@ test-backend:
 
 build-template-middleware:
   stage: build
+
   image: maven:3.9.5-eclipse-temurin-21-alpine
   tags:
     - docker
+
   script:
     - cd Middleware
     - cd template
@@ -92,9 +102,11 @@ build-template-middleware:
 test-template-middleware:
   stage: test
   needs: ["build-template-middleware"]
+
   image: maven:3.9.5-eclipse-temurin-21-alpine
   tags:
     - docker
+
   script:
     - cd Middleware
     - cd template
