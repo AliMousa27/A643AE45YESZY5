@@ -1,0 +1,102 @@
+workflow:
+  rules:
+
+    # If the branch is empty do not run the pipeline
+    - if: $CI_COMMIT_BRANCH
+      changes:
+        compare_to: 'refs/heads/main'
+        paths:
+          - '*'
+    # When opening a merge request run the pipeline
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    # If a merge request has been opened for the branch do not run the branch pipeline
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+      when: never
+    # When committing run the pipeline
+    - if: $CI_COMMIT_BRANCH
+
+# add in the future
+# services:
+  # - postgres:latest
+
+stages:
+  - build
+  - test
+
+# Flutter
+build-frontend:
+  image: "ghcr.io/cirruslabs/flutter:3.13.9"
+  stage: build
+
+  script:
+    - cd Website
+    - cd Frontend
+    - flutter pub get
+    - flutter build web 
+  tags:
+    - docker
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - $CI_PROJECT_DIR/Website/Frontend/.dart_tool/
+      - $CI_PROJECT_DIR/Website/Frontend/build/web/
+
+test-frontend:
+  stage: test
+  needs: ["build-frontend"]
+  image: "ghcr.io/cirruslabs/flutter:3.13.9"
+
+  script:
+    - cd Website
+    - cd Frontend
+    - flutter test
+
+# Express
+build-backend:
+  stage: build
+  image: node:18
+  tags:
+    - docker
+  script:
+    - cd Website
+    - cd Backend
+    - npm install
+
+test-backend:
+  stage: test
+  needs: ["build-backend"]
+  image: node:18
+  tags:
+    - docker
+  script:
+    - cd Website
+    - cd Backend
+    - npm test 
+  # Allow failure til we have tests
+  allow_failure: true
+
+# Java Middleware
+
+# !!! Add one per service !!!
+
+build-template-middleware:
+  stage: build
+  image: maven:3.9.5-eclipse-temurin-21-alpine
+  tags:
+    - docker
+  script:
+    - cd Middleware
+    - cd template
+    - mvn --show-version install -DskipTests
+
+test-template-middleware:
+  stage: test
+  needs: ["build-template-middleware"]
+  image: maven:3.9.5-eclipse-temurin-21-alpine
+  tags:
+    - docker
+  script:
+    - cd Middleware
+    - cd template
+    - mvn --show-version test
+  retry: 2
