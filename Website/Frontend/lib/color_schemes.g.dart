@@ -1,0 +1,43 @@
+import 'package:flutter/material.dart';
+
+const lightColorScheme = ColorScheme(
+  brightness: Brightness.light,
+  primary: Color(0xFF3E84AE),
+  onPrimary: Color(0xFFFFFFFF),
+  primaryContainer: Color(0xFFB0DAF3),
+  onPrimaryContainer: Color(0x80000000),
+  secondary: Color(0xFFB08376),
+  onSecondary: Color(0xFFFFFFFF),
+  secondaryContainer: Color(0xFFEEC4B8),
+  onSecondaryContainer: Color(0xFF000000),
+  error: Color(0xFF991A1A),
+  errorContainer: Color(0xFFFFDAD6),
+  onError: Color(0xFFFFFFFF),
+  onErrorContainer: Color(0xFF410002),
+  background: Color(0xFFEAFFFD),
+  onBackground: Color(0x80000000),
+  surface: Color(0xFFFFFFFF),
+  onSurface: Color(0x80000000),
+  shadow: Color(0xFF000000),
+);
+
+const darkColorScheme = ColorScheme(
+  brightness: Brightness.dark,
+  primary: Color(0xFFB0DAF3),
+  onPrimary: Color(0xFF000000),
+  primaryContainer: Color(0xFF3E84AE),
+  onPrimaryContainer: Color(0xFFFFFFFF),
+  secondary: Color(0xFFEEC4B8),
+  onSecondary: Color(0xFF000000),
+  secondaryContainer: Color(0xFFB08376),
+  onSecondaryContainer: Color(0xFFFFFFFF),
+  error: Color(0xFFFFB4AB),
+  errorContainer: Color(0xFF93000A),
+  onError: Color(0xFF690005),
+  onErrorContainer: Color(0xFFFFDAD6),
+  background: Color(0xFF3f3f3f),
+  onBackground: Color(0xFFEAFFFD),
+  surface: Color(0xFF3f3f3f),
+  onSurface: Color(0xFFFFFFFF),
+  shadow: Color(0xFFFFFFFF),
+);
