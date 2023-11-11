@@ -1,19 +1,8 @@
-<div style = "display: flex;
-  justify-content: center;">
-<ul style="list-style-type: none; padding: 0; margin: 0; overflow: auto;">
-    <li style="display: inline-block; margin-right: 10px;">
-        <img width ="20" alt="java img" src="https://cdn.freebiesupply.com/logos/large/2x/java-14-logo-png-transparent.png">
-    </li>
-    <li style="display: inline-block; margin-right: 10px;">
-        <img width ="20" alt="javascript img" src="https://static.vecteezy.com/system/resources/previews/027/127/463/original/javascript-logo-javascript-icon-transparent-free-png.png">
-    </li>
-    <li style="display: inline-block; margin-right: 10px;">
-        <img width ="20" alt="flutter img" src="https://storage.googleapis.com/cms-storage-bucket/0dbfcc7a59cd1cf16282.png">
-    </li>
-    <li style="display: inline-block; margin-right: 10px;">
+<div style = "align: center;">
+        <img width ="20" alt="java img" src="https://cdn.freebiesupply.com/logos/large/2x/java-14-logo-png-transparent.png">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <img width ="20" alt="javascript img" src="https://static.vecteezy.com/system/resources/previews/027/127/463/original/javascript-logo-javascript-icon-transparent-free-png.png">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <img width ="20" alt="flutter img" src="https://storage.googleapis.com/cms-storage-bucket/0dbfcc7a59cd1cf16282.png">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <img width ="20" alt="Node JS" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Node.js_logo.svg/590px-Node.js_logo.svg.png">
-    </li>
-</ul>
 </div>
 
 # ToothTrek
