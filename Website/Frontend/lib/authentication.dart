@@ -12,8 +12,7 @@ class Authentication extends StatelessWidget {
     Size screenSize = MediaQuery.of(context).size;
     bool isDesktop = screenSize.width > 800;
     double textFieldWidthFactor = isDesktop ? 0.4 : 0.7;
-    return MaterialApp(
-        home: Scaffold(
+    return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
         alignment: Alignment.topCenter,
@@ -32,8 +31,8 @@ class Authentication extends StatelessWidget {
                     height: screenSize.height * 0.2,
                   ),
                   Text(isSigningUp ? "Sign Up" : "Log In",
-                      style: const TextStyle(
-                          color: Color.fromRGBO(117, 116, 116, 1),
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontSize: 50,
                           fontFamily: "suezone")),
                   SizedBox(
@@ -41,30 +40,30 @@ class Authentication extends StatelessWidget {
                     height: screenSize.height * 0.04,
                   ),
                   createTextField(screenSize.width * textFieldWidthFactor,
-                      screenSize.height * 0.07, "Enter email"),
+                      screenSize.height * 0.07, "Enter email", context),
                   SizedBox(
                     height: screenSize.height * 0.04,
                   ),
                   createTextField(screenSize.width * textFieldWidthFactor,
-                      screenSize.height * 0.07, "Enter password"),
+                      screenSize.height * 0.07, "Enter password", context),
                   SizedBox(
                     height: screenSize.height * 0.04,
                   ),
                   if (isSigningUp)
                     createTextField(screenSize.width * textFieldWidthFactor,
-                        screenSize.height * 0.07, "Confirm password"),
+                        screenSize.height * 0.07, "Confirm password", context),
                   SizedBox(
                     height: screenSize.height * 0.04,
                   ),
                   Material(
                     elevation: 7,
                     borderRadius: BorderRadius.circular(30.0),
-                    shadowColor: Colors.black,
+                    shadowColor: Theme.of(context).colorScheme.shadow,
                     child: WidgetUtil.newMethod(
                         context,
-                        const Color.fromRGBO(117, 116, 116, 1),
+                        Theme.of(context).colorScheme.onPrimaryContainer,
                         const Size(230, 74),
-                        const Color.fromRGBO(176, 218, 243, 1),
+                        Theme.of(context).colorScheme.primaryContainer,
                         () => onPressed(context),
                         "confirm"),
                   )
@@ -74,16 +73,17 @@ class Authentication extends StatelessWidget {
           )
         ],
       ),
-    ));
+    );
   }
 
-  TextField createTextField(double width, double height, String prompt) {
+  TextField createTextField(
+      double width, double height, String prompt, BuildContext context) {
     return TextField(
         //check if the text field is the password one to deicde to blur or not
         obscureText: prompt.contains("password") ? true : false,
         decoration: InputDecoration(
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-          fillColor: Colors.white,
+          fillColor: Theme.of(context).colorScheme.surface,
           constraints: BoxConstraints(maxWidth: width, maxHeight: height),
           filled: true,
           labelText: prompt,

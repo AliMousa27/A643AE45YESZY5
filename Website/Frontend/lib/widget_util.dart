@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class WidgetUtil {
-  static OutlinedButton newMethod(BuildContext context, Color textColor,
+  static ElevatedButton newMethod(BuildContext context, Color textColor,
       Size btnSize, Color btnColor, VoidCallback onPressed, String text) {
-    return OutlinedButton(
+    return ElevatedButton(
         //assign the button to a passed in callback function
         onPressed: onPressed,
         style: ButtonStyle(

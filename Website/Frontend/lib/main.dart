@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'initial_page.dart';
+import 'color_schemes.g.dart';
 
 void main() => runApp(const MyApp());
 
@@ -8,9 +9,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'App',
-      home: InitialPage(),
+      theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
+      darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
+      home: const InitialPage(),
     );
   }
 }
