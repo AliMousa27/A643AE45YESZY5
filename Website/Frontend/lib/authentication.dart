@@ -59,7 +59,7 @@ class Authentication extends StatelessWidget {
                     elevation: 7,
                     borderRadius: BorderRadius.circular(30.0),
                     shadowColor: Theme.of(context).colorScheme.shadow,
-                    child: WidgetUtil.newMethod(
+                    child: WidgetUtil.createBTN(
                         context,
                         Theme.of(context).colorScheme.onPrimaryContainer,
                         const Size(230, 74),

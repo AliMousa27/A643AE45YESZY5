@@ -15,7 +15,7 @@ class InitialPage extends StatelessWidget {
     return Material(
         elevation: shadowElevation,
         borderRadius: BorderRadius.circular(cornerRadius),
-        child: WidgetUtil.newMethod(
+        child: WidgetUtil.createBTN(
             context,
             Theme.of(context).colorScheme.onPrimaryContainer,
             Size(btnWidth, btnHeight),
@@ -28,10 +28,7 @@ class InitialPage extends StatelessWidget {
   Widget build(BuildContext context) {
     //can use screensize.width and height to scale widgets
     Size screenSize = MediaQuery.of(context).size;
-    int mobileWidth = 800;
-    bool isDesktop = screenSize.width > mobileWidth;
     //The 2 following numbers are scaling factors defined by layout trials
-    double bankIDScaleFactor = isDesktop ? 0.2 : 0.57;
     return Scaffold(
       body: Stack(
         alignment: Alignment.topCenter,
@@ -51,40 +48,63 @@ class InitialPage extends StatelessWidget {
               createBTN(
                   "Sign up with email", 22, context, "Sign up BTN", "Sign up"),
               //sizedbox now takes 4% of screen height
-              SizedBox(height: screenSize.height * 0.04),
+              SizedBox(height: screenSize.height * 0.02),
               Container(
                 height: 1,
                 //width is 70% of screen width
                 width: screenSize.width * 0.7,
                 color: Theme.of(context).colorScheme.shadow,
               ),
+              SizedBox(height: screenSize.height * 0.02),
+
               //depending on screen size, the height of the sizedbox is different for
               //desktop and mobile designs
-              SizedBox(
-                  height: isDesktop
-                      ? screenSize.height * 0.02
-                      : screenSize.height * 0.05),
-              GestureDetector(
-                onTap: () => onPressed(context, "BankID BTN"),
-                child: Material(
-                  elevation: 7.0,
-                  borderRadius: BorderRadius.circular(30.0),
-                  color: Theme.of(context).colorScheme.primaryContainer,
-                  child: Container(
-                    // width is 10% of screen width
-                    height: screenSize.height * 0.1,
-                    width: screenSize.width * bankIDScaleFactor,
-                    child: Center(
-                      child: Image.asset(
-                        "assets/BankID.png",
-                        height: screenSize.height * 0.08,
-                        width: screenSize.width * 0.2,
-                        fit: BoxFit.contain,
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () => onPressed(context, "Google BTN"),
+                    child: Material(
+                      elevation: 7.0,
+                      borderRadius: BorderRadius.circular(30.0),
+                      color: Theme.of(context).colorScheme.primaryContainer,
+                      child: Container(
+                        height: 73,
+                        width: 230,
+                        alignment: Alignment.centerLeft,
+                        child: Flexible(
+                          // Add this
+                          child: Row(
+                            children: [
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              Flexible(
+                                // And this
+                                child: Image.asset(
+                                  "assets/google_logo.png",
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 27,
+                              ),
+                              WidgetUtil.createText(
+                                  Theme.of(context)
+                                      .colorScheme
+                                      .onPrimaryContainer,
+                                  23,
+                                  "google"),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
+                ],
+              )
             ],
           )
         ],
@@ -95,7 +115,7 @@ class InitialPage extends StatelessWidget {
   void onPressed(BuildContext context, String buttonId) {
     bool isSigningUp = buttonId == "Sign up BTN";
 
-    if (buttonId == "BankID BTN") {
+    if (buttonId == "Google BTN") {
       //TODO implement band id here
     } else {
       Navigator.push(
