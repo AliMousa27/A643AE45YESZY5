@@ -1,4 +1,4 @@
-# Client – Vue.js Frontend
+# Client – Flutter Frontend
 ## Requirements
 
 * [Visual Studio Code (VSCode)](https://code.visualstudio.com/download) as the IDE
