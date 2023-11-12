@@ -57,12 +57,8 @@ class InitialPage extends StatelessWidget {
               ),
               SizedBox(height: screenSize.height * 0.02),
 
-              //depending on screen size, the height of the sizedbox is different for
-              //desktop and mobile designs
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   GestureDetector(
                     onTap: () => onPressed(context, "Google BTN"),
@@ -70,35 +66,32 @@ class InitialPage extends StatelessWidget {
                       elevation: 7.0,
                       borderRadius: BorderRadius.circular(30.0),
                       color: Theme.of(context).colorScheme.primaryContainer,
-                      child: Container(
+                      child: SizedBox(
                         height: 73,
-                        width: 230,
-                        alignment: Alignment.centerLeft,
-                        child: Flexible(
-                          // Add this
-                          child: Row(
-                            children: [
-                              const SizedBox(
-                                width: 20,
-                              ),
-                              Flexible(
-                                // And this
+                        width: screenSize.width > 230 ? 230 : screenSize.width,
+                        child: Stack(
+                          children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
                                 child: Image.asset(
                                   "assets/google_logo.png",
-                                  fit: BoxFit.cover,
+                                  height: 50,
+                                  width: 50,
                                 ),
                               ),
-                              const SizedBox(
-                                width: 27,
+                            ),
+                            Center(
+                              child: WidgetUtil.createText(
+                                Theme.of(context)
+                                    .colorScheme
+                                    .onPrimaryContainer,
+                                23,
+                                "Google",
                               ),
-                              WidgetUtil.createText(
-                                  Theme.of(context)
-                                      .colorScheme
-                                      .onPrimaryContainer,
-                                  23,
-                                  "google"),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
