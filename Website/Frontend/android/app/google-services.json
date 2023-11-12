@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "9227126683",
+    "project_id": "toothtrek",
+    "storage_bucket": "toothtrek.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:9227126683:android:9cf4af8ae1404a6b80833e",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4daWGOIdF8bYZQic7gPbdO0tRJQYRmcc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
