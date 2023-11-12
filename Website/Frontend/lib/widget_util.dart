@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class WidgetUtil {
-  static ElevatedButton newMethod(BuildContext context, Color textColor,
+  static ElevatedButton createBTN(BuildContext context, Color textColor,
       Size btnSize, Color btnColor, VoidCallback onPressed, String text) {
     return ElevatedButton(
         //assign the button to a passed in callback function
@@ -13,13 +13,17 @@ class WidgetUtil {
               borderRadius: BorderRadius.circular(30.0),
             )),
             backgroundColor: MaterialStateProperty.all<Color>(btnColor)),
-        child: Text(
-          text,
-          style: TextStyle(
-            color: textColor,
-            fontSize: 20,
-            fontFamily: "suezone",
-          ),
-        ));
+        child: createText(textColor, 23, text));
+  }
+
+  static Text createText(Color textColor, double fontSize, String text) {
+    return Text(
+      text,
+      style: TextStyle(
+        color: textColor,
+        fontSize: fontSize,
+        fontFamily: "suezone",
+      ),
+    );
   }
 }
