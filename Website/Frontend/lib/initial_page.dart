@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application/authentication.dart';
 import 'initial_pages_background.dart';
 import 'widget_util.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class InitialPage extends StatelessWidget {
   const InitialPage({super.key});
@@ -105,11 +107,16 @@ class InitialPage extends StatelessWidget {
     );
   }
 
-  void onPressed(BuildContext context, String buttonId) {
+  Future<void> onPressed(BuildContext context, String buttonId) async {
     bool isSigningUp = buttonId == "Sign up BTN";
 
     if (buttonId == "Google BTN") {
-      //TODO implement band id here
+      UserCredential? userCredential = await signInWithGoogle();
+      if (userCredential != null) {
+        print('User signed in: ${userCredential.user?.displayName}');
+      } else {
+        print('Sign-in process canceled.');
+      }
     } else {
       Navigator.push(
         context,
@@ -118,6 +125,30 @@ class InitialPage extends StatelessWidget {
                   isSigningUp: isSigningUp,
                 )),
       );
+    }
+  }
+
+  Future<UserCredential?> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleSignInAccount =
+          await GoogleSignIn().signIn();
+
+      if (googleSignInAccount == null) {
+        return null; // User canceled the sign-in process
+      }
+
+      final GoogleSignInAuthentication googleSignInAuthentication =
+          await googleSignInAccount.authentication;
+
+      final OAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
+
+      return await FirebaseAuth.instance.signInWithCredential(credential);
+    } catch (error) {
+      print(error);
+      return null;
     }
   }
 }
