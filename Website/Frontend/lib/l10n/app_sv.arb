@@ -1,0 +1,12 @@
+{
+    "language": "Svenska",
+
+    "initial_logInButton": "Logga in",
+    "initial_signUpButton": "Registrera",
+
+
+    "authentication_confirmButton": "Bekräfta",
+    "authentication_enterEmail": "Ange din e-postadress",
+    "authentication_enterPassword": "Ange ditt lösenord",
+    "authentication_confirmPassword": "Bekräfta ditt lösenord"
+}
