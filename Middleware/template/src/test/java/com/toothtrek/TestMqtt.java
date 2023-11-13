@@ -1,7 +1,8 @@
 package com.toothtrek;
 
 import org.junit.jupiter.api.Test;
-import com.toothtrek.mqtt.MqttHandler;
+
+import com.middleware.Logs.mqtt.MqttHandler;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

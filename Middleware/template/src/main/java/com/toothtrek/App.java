@@ -1,6 +1,6 @@
 package com.toothtrek;
 
-import com.toothtrek.mqtt.MqttHandler;
+import com.middleware.Logs.mqtt.MqttHandler;
 
 public class App {
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package com.toothtrek.mqtt;
+package com.middleware.Logs.mqtt;
 
 import org.eclipse.paho.mqttv5.client.MqttAsyncClient;
 import org.eclipse.paho.mqttv5.client.MqttConnectionOptions;
@@ -6,6 +6,13 @@ import org.eclipse.paho.mqttv5.client.IMqttToken;
 import org.eclipse.paho.mqttv5.client.persist.MemoryPersistence;
 import org.eclipse.paho.mqttv5.common.MqttException;
 import org.eclipse.paho.mqttv5.common.MqttMessage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+@Component
+
 public class MqttHandler {
 
     // Paho Java Client
@@ -18,7 +25,22 @@ public class MqttHandler {
     private int qos;
     private MemoryPersistence persistence;
     
-    
+    List<String> topics = List.of(
+        "toothtrek/patient/booking/cancel",
+        "toothtrek/patient/booking/create",
+        "toothtrek/patient/booking/get-all",
+        "toothtrek/patient/notification/get-new",
+        "toothtrek/patient/notification/get-all",
+        "toothtrek/patient/authentication/register",
+        "toothtrek/patient/authentication/login",
+        "toothtrek/dentist/authentication/login",
+        "toothtrek/dentist/timeslot/create",
+        "toothtrek/dentist/timeslot/cancel",
+        "toothtrek/dentist/booking/confirm",
+        "toothtrek/dentist/booking/reject",
+        "toothtrek/dentist/notification/get-new",
+        "toothtrek/dentist/notification/get-all"
+        );
     private MqttCallbackHandler mqttCallbackHandler;
 
     /**
@@ -28,9 +50,9 @@ public class MqttHandler {
      * @param clientId      Client ID (e.g. my-client-id)
      * @param qos           Quality of Service (0, 1, 2)
      */
-    public MqttHandler(String brokerAddress, String clientId, int qos) {
+    public MqttHandler(String brokerAddress, String clientId, int qos, MqttCallbackHandler mqttCallbackHandler) {
 
-        this(brokerAddress, clientId, qos, new MemoryPersistence());
+        this(brokerAddress, clientId, qos, new MemoryPersistence(), mqttCallbackHandler);
     }
 
     public MqttHandler() {
@@ -44,11 +66,12 @@ public class MqttHandler {
      * @param qos           Quality of Service (0, 1, 2)
      * @param persistence   Persistence (e.g. new MemoryPersistence())
      */
-    public MqttHandler(String brokerAddress, String clientId, int qos, MemoryPersistence persistence) {
+    public MqttHandler(String brokerAddress, String clientId, int qos, MemoryPersistence persistence, MqttCallbackHandler mqttCallbackHandler) {
         this.qos = qos;
         this.brokerAddress = brokerAddress;
         this.clientId = clientId;
         this.persistence = persistence;
+        this.mqttCallbackHandler = mqttCallbackHandler;
         
     }
 
@@ -70,13 +93,18 @@ public class MqttHandler {
 
             // Client
             this.client = new MqttAsyncClient(this.brokerAddress, this.clientId, this.persistence);
-            MqttCallbackHandler callbackHandler = new MqttCallbackHandler();
-            this.client.setCallback(callbackHandler);
+            //MqttCallbackHandler callbackHandler = new MqttCallbackHandler();
+            this.client.setCallback(this.mqttCallbackHandler);
 
             // Connection
             this.token = this.client.connect(connectionOptions);
 
             token.waitForCompletion();
+
+            //connect to each topic defined to log them
+            for (String topic : topics) {
+                subscribe(topic);
+            }
         } catch (MqttException me) {
             printException(me);
         }

@@ -1,4 +1,4 @@
-package com.toothtrek.mqtt;
+package com.middleware.Logs.mqtt;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -8,9 +8,20 @@ import org.eclipse.paho.mqttv5.client.MqttDisconnectResponse;
 import org.eclipse.paho.mqttv5.common.MqttException;
 import org.eclipse.paho.mqttv5.common.MqttMessage;
 import org.eclipse.paho.mqttv5.common.packet.MqttProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.json.JSONObject;
+
+import com.middleware.Logs.Logs;
+import com.middleware.Logs.LogsService;
 
 public class MqttCallbackHandler implements MqttCallback {
+    private final LogsService logService;
 
+    @Autowired
+    public MqttCallbackHandler(LogsService logService) {
+        this.logService = logService;
+    }
 
     @Override
     public void disconnected(MqttDisconnectResponse disconnectResponse) {
@@ -32,6 +43,18 @@ public class MqttCallbackHandler implements MqttCallback {
         System.out.println("   Topic: " + topic);
         System.out.println("   Message: " + message.toString());
         System.out.println();
+
+        String jsonString = message.toString();
+        JSONObject jsonObject = new JSONObject(jsonString);
+        String patient = jsonObject.getString("patient");
+        String dentist = jsonObject.getString("dentist");
+        String sqlStatement = jsonObject.getString("sqlStatement");
+        String messageString = jsonObject.getString("message");
+        Timestamp time = new Timestamp(new Date().getTime());
+        Logs log = new Logs(patient, dentist, sqlStatement, time, messageString, topic);
+        logService.saveLog(log);
+
+
     }
 
     @Override
