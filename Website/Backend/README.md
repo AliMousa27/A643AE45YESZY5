@@ -11,7 +11,7 @@
 - Make sure you have correctly installed NodeJS and followed all the steps in the installation wizard. Afterwards, you should run the command ```node -v``` to see the current version, which checks if you have Node JS installed correctly. Then you should see something similar to this
 ![Node version](readme_assets/node_version.png)
 
-Make sure, you are in the server directory `cd server`
+Make sure, you are in the backend directory `cd /toothtrek/Website/Backend`
 
 Installs all project dependencies specified in [package.json](./package.json).
 

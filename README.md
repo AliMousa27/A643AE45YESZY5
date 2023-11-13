@@ -13,7 +13,7 @@
 
 ## Purpose
 
-ToothTrek simplifies dental appointments in Sweden, specifically Gothenburg. Our will enable easy booking for patients and dentists alike. Patients can  find available time slots and dental offices, while dentists provide their schedules. 
+ToothTrek simplifies dental appointments in Sweden, specifically Gothenburg. Our application will enable easy booking for patients and dentists alike. Patients can find available time slots and dental offices, while dentists provide their schedules. 
 
 ## Benefits
 
@@ -21,7 +21,7 @@ ToothTrek simplifies dental appointments in Sweden, specifically Gothenburg. Our
 TODO: Add the features we will have
 
 
-Platform Compatability 🔄
+Platform Compatibility 🔄
 
 The application is available on Android, IOS, web browsers, and as a desktop application
 
