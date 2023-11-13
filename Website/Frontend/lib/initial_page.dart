@@ -3,7 +3,7 @@ import 'package:flutter_application/authentication.dart';
 import 'initial_pages_background.dart';
 import 'widget_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'home.dart';
 
 class InitialPage extends StatelessWidget {
   const InitialPage({super.key});
@@ -112,11 +112,8 @@ class InitialPage extends StatelessWidget {
 
     if (buttonId == "Google BTN") {
       UserCredential? userCredential = await signInWithGoogle();
-      if (userCredential != null) {
-        print('User signed in: ${userCredential.user?.displayName}');
-      } else {
-        print('Sign-in process canceled.');
-      }
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const HomePage()));
     } else {
       Navigator.push(
         context,
