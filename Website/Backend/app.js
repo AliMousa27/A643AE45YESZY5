@@ -38,6 +38,7 @@ app.use(morgan('dev'));
 app.options('*', cors());
 app.use(cors());
 
+console.log(new Date().toString());
 // Import routes
 app.get('/api', function(req, res) {
     res.json({'message': 'Message from the express backend!'});
@@ -53,6 +54,7 @@ app.use('/api/*', function (req, res) {
 //regex for logins and registrations to use either or topic. and function to access body with message
 app.post('/logs/:type(logins|registrations)', addMessage, function (req, res, next) {
     try {
+        console.log("endpoint called")
         const topic = `toothtrek/authentication/${req.params.type}`;
         publishToTopic(topic, JSON.stringify(req.bodyWithMessage), next);
         res.status(201).json({ 'message': req.body });
@@ -88,7 +90,7 @@ function publishToTopic(topic, message,next) {
     })
 }
 function addMessage(req, res, next) {
-    const message = `User with UID ${req.body.uid} ${req.path.includes('logins') ? 'logged in' : 'registered'} at ${req.body.timestamp} with email ${req.body.email}`;
+    const message = `User with UID ${req.body.uid} ${req.path.includes('logins') ? 'logged in' : 'registered'} at ${new Date().toString()} with email ${req.body.email}`;
     req.bodyWithMessage = { ...req.body, "message": message };
     next();
 }
