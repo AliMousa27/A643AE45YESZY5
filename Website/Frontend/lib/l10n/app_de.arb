@@ -1,0 +1,12 @@
+{
+    "language": "Deutsch",
+
+    "initial_logInButton": "Anmelden",
+    "initial_signUpButton": "Registrieren",
+
+    
+    "authentication_confirmButton": "Bestätigen",
+    "authentication_enterEmail": "E-Mail-Adresse eingeben",
+    "authentication_enterPassword": "Passwort eingeben",
+    "authentication_confirmPassword": "Passwort bestätigen"
+}

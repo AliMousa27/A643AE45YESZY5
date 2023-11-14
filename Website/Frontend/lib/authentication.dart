@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'initial_pages_background.dart';
 import 'widget_util.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class Authentication extends StatelessWidget {
   final bool isSigningUp;
   const Authentication({Key? key, required this.isSigningUp}) : super(key: key);
@@ -30,7 +32,10 @@ class Authentication extends StatelessWidget {
                     // 20% of screen height
                     height: screenSize.height * 0.2,
                   ),
-                  Text(isSigningUp ? "Sign Up" : "Log In",
+                  Text(
+                      isSigningUp
+                          ? AppLocalizations.of(context)!.initial_signUpButton
+                          : AppLocalizations.of(context)!.initial_logInButton,
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.onSurface,
                           fontSize: 50,
@@ -39,19 +44,33 @@ class Authentication extends StatelessWidget {
                     // 4% of screen height
                     height: screenSize.height * 0.04,
                   ),
-                  createTextField(screenSize.width * textFieldWidthFactor,
-                      screenSize.height * 0.07, "Enter email", context),
+                  createTextField(
+                      screenSize.width * textFieldWidthFactor,
+                      screenSize.height * 0.07,
+                      AppLocalizations.of(context)!.authentication_enterEmail,
+                      context,
+                      false),
                   SizedBox(
                     height: screenSize.height * 0.04,
                   ),
-                  createTextField(screenSize.width * textFieldWidthFactor,
-                      screenSize.height * 0.07, "Enter password", context),
+                  createTextField(
+                      screenSize.width * textFieldWidthFactor,
+                      screenSize.height * 0.07,
+                      AppLocalizations.of(context)!
+                          .authentication_enterPassword,
+                      context,
+                      true),
                   SizedBox(
                     height: screenSize.height * 0.04,
                   ),
                   if (isSigningUp)
-                    createTextField(screenSize.width * textFieldWidthFactor,
-                        screenSize.height * 0.07, "Confirm password", context),
+                    createTextField(
+                        screenSize.width * textFieldWidthFactor,
+                        screenSize.height * 0.07,
+                        AppLocalizations.of(context)!
+                            .authentication_confirmPassword,
+                        context,
+                        true),
                   SizedBox(
                     height: screenSize.height * 0.04,
                   ),
@@ -60,12 +79,14 @@ class Authentication extends StatelessWidget {
                     borderRadius: BorderRadius.circular(30.0),
                     shadowColor: Theme.of(context).colorScheme.shadow,
                     child: WidgetUtil.createBTN(
-                        context,
-                        Theme.of(context).colorScheme.onPrimaryContainer,
-                        const Size(230, 74),
-                        Theme.of(context).colorScheme.primaryContainer,
-                        () => onPressed(context),
-                        "confirm"),
+                      context,
+                      Theme.of(context).colorScheme.onPrimaryContainer,
+                      const Size(230, 74),
+                      Theme.of(context).colorScheme.primaryContainer,
+                      () => onPressed(context),
+                      AppLocalizations.of(context)!
+                          .authentication_confirmButton,
+                    ),
                   )
                 ],
               ),
@@ -76,11 +97,11 @@ class Authentication extends StatelessWidget {
     );
   }
 
-  TextField createTextField(
-      double width, double height, String prompt, BuildContext context) {
+  TextField createTextField(double width, double height, String prompt,
+      BuildContext context, bool obscureText) {
     return TextField(
-        //check if the text field is the password one to deicde to blur or not
-        obscureText: prompt.contains("password") ? true : false,
+        // obscure the text in the password field
+        obscureText: obscureText,
         decoration: InputDecoration(
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
           fillColor: Theme.of(context).colorScheme.surface,
