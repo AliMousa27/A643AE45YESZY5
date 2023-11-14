@@ -1,0 +1,12 @@
+{
+    "language": "Български",
+
+    "initial_logInButton": "Вход",
+    "initial_signUpButton": "Регистрация",
+
+
+    "authentication_confirmButton": "Потвърди",
+    "authentication_enterEmail": "Въведете имейл",
+    "authentication_enterPassword": "Въведете парола",
+    "authentication_confirmPassword": "Потвърдете паролата"
+}

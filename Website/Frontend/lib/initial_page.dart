@@ -4,6 +4,7 @@ import 'initial_pages_background.dart';
 import 'widget_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'home.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class InitialPage extends StatelessWidget {
   const InitialPage({super.key});
@@ -41,14 +42,14 @@ class InitialPage extends StatelessWidget {
             children: [
               //sizedbox now takes 27% of screen height
               SizedBox(height: screenSize.height * 0.27),
-              createBTN(
-                  "Log in with email", 23, context, "Log in BTN", "Log in"),
+              createBTN("Log in with email", 23, context, "Log in BTN",
+                  AppLocalizations.of(context)!.initial_logInButton),
               //sizedbox now takes 4% of screen height
               SizedBox(
                 height: screenSize.height * 0.04,
               ),
-              createBTN(
-                  "Sign up with email", 22, context, "Sign up BTN", "Sign up"),
+              createBTN("Sign up with email", 22, context, "Sign up BTN",
+                  AppLocalizations.of(context)!.initial_signUpButton),
               //sizedbox now takes 4% of screen height
               SizedBox(height: screenSize.height * 0.02),
               Container(

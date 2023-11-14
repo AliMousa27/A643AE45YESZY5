@@ -4,6 +4,8 @@ import 'package:flutter_application/home.dart';
 import 'initial_pages_background.dart';
 import 'widget_util.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class Authentication extends StatefulWidget {
   final bool isSigningUp;
   Authentication({Key? key, required this.isSigningUp}) : super(key: key);
@@ -42,7 +44,10 @@ class _AuthenticationState extends State<Authentication> {
                     // 20% of screen height
                     height: screenSize.height * 0.2,
                   ),
-                  Text(widget.isSigningUp ? "Sign Up" : "Log In",
+                  Text(
+                      widget.isSigningUp
+                          ? AppLocalizations.of(context)!.initial_signUpButton
+                          : AppLocalizations.of(context)!.initial_logInButton,
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.onSurface,
                           fontSize: 50,
@@ -57,18 +62,22 @@ class _AuthenticationState extends State<Authentication> {
                       createTextField(
                           screenSize.width * textFieldWidthFactor,
                           screenSize.height * 0.07,
-                          "Enter email",
+                          AppLocalizations.of(context)!
+                              .authentication_enterEmail,
                           emailController,
-                          context),
+                          context,
+                          false),
                       SizedBox(
                         height: screenSize.height * 0.04,
                       ),
                       createTextField(
                           screenSize.width * textFieldWidthFactor,
                           screenSize.height * 0.07,
-                          "Enter password",
+                          AppLocalizations.of(context)!
+                              .authentication_enterPassword,
                           passwordController,
-                          context),
+                          context,
+                          true),
                       SizedBox(
                         height: screenSize.height * 0.04,
                       ),
@@ -76,9 +85,11 @@ class _AuthenticationState extends State<Authentication> {
                         createTextField(
                             screenSize.width * textFieldWidthFactor,
                             screenSize.height * 0.07,
-                            "Confirm password",
+                            AppLocalizations.of(context)!
+                                .authentication_confirmPassword,
                             confirmPasswordController,
-                            context),
+                            context,
+                            true),
                       SizedBox(
                         height: screenSize.height * 0.04,
                       ),
@@ -87,12 +98,14 @@ class _AuthenticationState extends State<Authentication> {
                         borderRadius: BorderRadius.circular(30.0),
                         shadowColor: Theme.of(context).colorScheme.shadow,
                         child: WidgetUtil.createBTN(
-                            context,
-                            Theme.of(context).colorScheme.onPrimaryContainer,
-                            const Size(230, 74),
-                            Theme.of(context).colorScheme.primaryContainer,
-                            () => onPressed(context),
-                            "confirm"),
+                          context,
+                          Theme.of(context).colorScheme.onPrimaryContainer,
+                          const Size(230, 74),
+                          Theme.of(context).colorScheme.primaryContainer,
+                          () => onPressed(context),
+                          AppLocalizations.of(context)!
+                              .authentication_confirmButton,
+                        ),
                       ),
                     ]),
                   ),
@@ -115,11 +128,16 @@ class _AuthenticationState extends State<Authentication> {
     );
   }
 
-  TextFormField createTextField(double width, double height, String prompt,
-      TextEditingController controller, BuildContext context) {
+  TextFormField createTextField(
+      double width,
+      double height,
+      String prompt,
+      TextEditingController controller,
+      BuildContext context,
+      bool obscureText) {
     return TextFormField(
         //check if the text field is the password one to deicde to blur or not
-        obscureText: prompt.contains("password") ? true : false,
+        obscureText: obscureText,
         controller: controller,
         validator: (value) {
           if (value == null || value.isEmpty) {

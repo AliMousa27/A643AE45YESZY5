@@ -1,0 +1,35 @@
+{
+    "language": "English",
+    "@language": {
+        "description": "The current display language"
+    },
+
+    
+
+    "initial_logInButton": "Log in",
+    "@initial_logInButton": {
+        "description": "The log in button on the initial page"
+    },
+    "initial_signUpButton": "Sign up",
+    "@initial_signUpButton": {
+        "description": "The sign up button on the initial page"
+    },
+
+
+    "authentication_confirmButton": "Confirm",
+    "@authentication_logInButton": {
+        "description": "The confirm button on the authentication page"
+    },
+    "authentication_enterEmail": "Enter email",
+    "@authentication_enterEmailLabel": {
+        "description": "The email label on the authentication page"
+    },
+    "authentication_enterPassword": "Enter password",
+    "@authentication_enterPasswordLabel": {
+        "description": "The password label on the authentication page"
+    },
+    "authentication_confirmPassword": "Confirm password",
+    "@authentication_confirmPassword": {
+        "description": "The confirm password label on the authentication page"
+    }
+}
