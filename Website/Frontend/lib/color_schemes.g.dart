@@ -39,5 +39,5 @@ const darkColorScheme = ColorScheme(
   onBackground: Color(0xFFEAFFFD),
   surface: Color(0xFF3f3f3f),
   onSurface: Color(0xFFFFFFFF),
-  shadow: Color(0xFFFFFFFF),
+  shadow: Color(0xFF000000),
 );
