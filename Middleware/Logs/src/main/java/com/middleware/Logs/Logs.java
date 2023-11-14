@@ -15,17 +15,15 @@ public class Logs {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
    private Long id;
-    private String patient;
-    private String dentist;
+    private String email;
     private String sql_statement;
     private Timestamp timestamp;
     private String message;
     private String topic;
     
-    public Logs(String patient, String dentist, String sql_statement, java.sql.Timestamp timestamps,
+    public Logs(String email, String sql_statement, java.sql.Timestamp timestamps,
             String message, String topic) {
-        this.patient = patient;
-        this.dentist = dentist;
+        this.email = email;
         this.sql_statement = sql_statement;
         this.timestamp = timestamps;
         this.message = message;

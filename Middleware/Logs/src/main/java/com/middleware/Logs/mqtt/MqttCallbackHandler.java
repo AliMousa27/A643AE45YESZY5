@@ -43,16 +43,19 @@ public class MqttCallbackHandler implements MqttCallback {
         System.out.println("   Topic: " + topic);
         System.out.println("   Message: " + message.toString());
         System.out.println();
-
+        try{
         String jsonString = message.toString();
         JSONObject jsonObject = new JSONObject(jsonString);
-        String patient = jsonObject.getString("patient");
-        String dentist = jsonObject.getString("dentist");
-        String sqlStatement = jsonObject.getString("sqlStatement");
+        String email = jsonObject.getString("email");
+        //have to wrap with object since sometimes we send null
+        Object sqlStatement = jsonObject.get("sql_statement");
         String messageString = jsonObject.getString("message");
         Timestamp time = new Timestamp(new Date().getTime());
-        Logs log = new Logs(patient, dentist, sqlStatement, time, messageString, topic);
-        logService.saveLog(log);
+        Logs log = new Logs(email, sqlStatement.toString(), time, messageString, topic);
+        logService.saveLog(log);}
+        catch(Exception e){
+            System.out.println("Error: " + e);
+        }
 
 
     }
