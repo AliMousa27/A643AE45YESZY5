@@ -5,6 +5,7 @@ import 'widget_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'home.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'request.dart';
 
 class InitialPage extends StatelessWidget {
   const InitialPage({super.key});
@@ -113,6 +114,8 @@ class InitialPage extends StatelessWidget {
 
     if (buttonId == "Google BTN") {
       UserCredential? userCredential = await signInWithGoogle();
+      Request.sendLoginRequest(
+          userCredential.user!.uid, userCredential.user!.email!);
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const HomePage()));
     } else {
@@ -135,8 +138,5 @@ class InitialPage extends StatelessWidget {
 
     // Once signed in, return the UserCredential
     return await FirebaseAuth.instance.signInWithPopup(googleProvider);
-
-    // Or use signInWithRedirect
-    // return await FirebaseAuth.instance.signInWithRedirect(googleProvider);
   }
 }

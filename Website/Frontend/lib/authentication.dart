@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_application/home.dart';
 import 'initial_pages_background.dart';
 import 'widget_util.dart';
+import 'request.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -171,8 +172,9 @@ class _AuthenticationState extends State<Authentication> {
   Future<void> signUp(
       String email, String password, BuildContext context) async {
     try {
-      await FirebaseAuth.instance
+      final credential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
+      Request.sendSignupRequest(credential.user!.uid, credential.user!.email!);
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const HomePage()));
     } on FirebaseAuthException catch (e) {
@@ -196,8 +198,9 @@ class _AuthenticationState extends State<Authentication> {
   Future<void> logIn(
       String email, String password, BuildContext context) async {
     try {
-      await FirebaseAuth.instance
+      final credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
+      Request.sendLoginRequest(credential.user!.uid, credential.user!.email!);
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const HomePage()));
     } on FirebaseAuthException catch (e) {
