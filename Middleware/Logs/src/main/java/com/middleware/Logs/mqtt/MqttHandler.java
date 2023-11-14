@@ -31,15 +31,14 @@ public class MqttHandler {
         "toothtrek/patient/booking/get-all",
         "toothtrek/patient/notification/get-new",
         "toothtrek/patient/notification/get-all",
-        "toothtrek/patient/authentication/register",
-        "toothtrek/patient/authentication/login",
-        "toothtrek/dentist/authentication/login",
         "toothtrek/dentist/timeslot/create",
         "toothtrek/dentist/timeslot/cancel",
         "toothtrek/dentist/booking/confirm",
         "toothtrek/dentist/booking/reject",
         "toothtrek/dentist/notification/get-new",
-        "toothtrek/dentist/notification/get-all"
+        "toothtrek/dentist/notification/get-all",
+        "toothtrek/authentication/registrations",
+        "toothtrek/authentication/logins"
         );
     private MqttCallbackHandler mqttCallbackHandler;
 
