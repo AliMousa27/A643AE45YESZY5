@@ -15,9 +15,14 @@ workflow:
     # When committing run the pipeline
     - if: $CI_COMMIT_BRANCH
 
-# add in the future
-# services:
-  # - postgres:latest
+services:
+  - postgres:latest
+
+variables:
+  POSTGRES_DB: ToothTrekLogsTest
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: Allawi11
+  POSTGRES_HOST_AUTH_METHOD: trust
 
 stages:
   - build
