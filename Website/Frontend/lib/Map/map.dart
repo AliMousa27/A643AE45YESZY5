@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application/Map/side_drawer.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'map_page_navbar.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,6 +24,10 @@ class HomePageState extends State<HomePage> {
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
     bool resizeProfilePic = screenWidth < 443;
+    Future<String> loadStyle() async {
+      return await rootBundle.loadString('assets/style.json');
+    }
+
     return Scaffold(
       body: Stack(
         children: [
@@ -43,6 +48,8 @@ class HomePageState extends State<HomePage> {
                       width: screenWidth,
                       height: screenHeight * 0.89,
                       child: MapboxMap(
+                        styleString:
+                            "mapbox://styles/bigman360/clpa24zoi004g01p95rqx61hw",
                         // only allow zooming when sidebar is collapsed otherwise it will interfere with the sidebar
                         zoomGesturesEnabled: sideBarIsCollapsed,
                         initialCameraPosition: const CameraPosition(
@@ -50,7 +57,7 @@ class HomePageState extends State<HomePage> {
                             target: LatLng(57.7089, 11.9746),
                             zoom: 14),
                         accessToken:
-                            "pk.eyJ1IjoibWVobWV0YXNpbTM1IiwiYSI6ImNsb3I2YzNxeDBzZTgyaW82am9tazF2azAifQ.QTpwJIy1HytUC2w0vagkWQ",
+                            "pk.eyJ1IjoiYmlnbWFuMzYwIiwiYSI6ImNscDl5dmM5MzAyMHAyanBkYmw1a24yd2EifQ.L1FfrH4Als9i33KTf0wStw",
                       ),
                     ),
                   ],
