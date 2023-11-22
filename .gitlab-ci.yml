@@ -15,9 +15,14 @@ workflow:
     # When committing run the pipeline
     - if: $CI_COMMIT_BRANCH
 
-# add in the future
-# services:
-  # - postgres:latest
+services:
+  - postgres:latest
+
+variables:
+  POSTGRES_DB: ToothTrekLogsTest
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: Allawi11
+  POSTGRES_HOST_AUTH_METHOD: trust
 
 stages:
   - build
@@ -29,8 +34,7 @@ build-frontend:
   stage: build
 
   script:
-    - cd Website
-    - cd Frontend
+    - cd Website/Frontend
     - flutter pub get
     - flutter build web 
   tags:
@@ -50,8 +54,7 @@ test-frontend:
     - docker
 
   script:
-    - cd Website
-    - cd Frontend
+    - cd Website/Frontend
     - flutter test
 
 # Express
@@ -63,8 +66,7 @@ build-backend:
     - docker
 
   script:
-    - cd Website
-    - cd Backend
+    - cd Website/Backend
     - npm install
 
 test-backend:
@@ -76,8 +78,7 @@ test-backend:
     - docker
 
   script:
-    - cd Website
-    - cd Backend
+    - cd Website/Backend
     - npm test 
 
   # Allow failure til we have tests
@@ -87,6 +88,7 @@ test-backend:
 
 # !!! Add one per service !!!
 
+# Template
 build-template-middleware:
   stage: build
 
@@ -95,8 +97,7 @@ build-template-middleware:
     - docker
 
   script:
-    - cd Middleware
-    - cd template
+    - cd Middleware/template
     - mvn --show-version install -DskipTests
 
 test-template-middleware:
@@ -108,7 +109,30 @@ test-template-middleware:
     - docker
 
   script:
-    - cd Middleware
-    - cd template
+    - cd Middleware/template
     - mvn --show-version test
   retry: 2
+
+# Logs
+build-logs-middleware:
+  stage: build
+
+  image: maven:3.9.5-eclipse-temurin-21-alpine
+  tags:
+    - docker
+
+  script:
+    - cd Middleware/Logs
+    - mvn --show-version install -DskipTests
+
+test-logs-middleware:
+  stage: test
+  needs: ["build-logs-middleware"]
+
+  image: maven:3.9.5-eclipse-temurin-21-alpine
+  tags:
+    - docker
+
+  script:
+    - cd Middleware/Logs
+    - mvn --show-version test
