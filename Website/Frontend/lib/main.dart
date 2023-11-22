@@ -7,7 +7,7 @@ import 'firebase_options.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'home.dart';
+import 'Map/map.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,9 +17,9 @@ void main() async {
 
   FirebaseAuth.instance.authStateChanges().listen((User? user) {
     if (user == null) {
-      runApp(const MyApp(home: InitialPage()));
-    } else {
       runApp(const MyApp(home: HomePage()));
+    } else {
+      runApp(const MyApp(home: InitialPage()));
     }
   });
 }

@@ -3,7 +3,7 @@ import 'package:flutter_application/authentication.dart';
 import 'initial_pages_background.dart';
 import 'widget_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'home.dart';
+import 'Map/map.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'request.dart';
 

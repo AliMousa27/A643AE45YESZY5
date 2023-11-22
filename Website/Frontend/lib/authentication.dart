@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_application/home.dart';
+import 'package:flutter_application/Map/map.dart';
 import 'initial_pages_background.dart';
 import 'widget_util.dart';
 import 'request.dart';
