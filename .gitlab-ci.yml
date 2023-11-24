@@ -19,16 +19,16 @@ services:
   - postgres:latest
 
 variables:
-  POSTGRES_DB: ToothTrekLogsTest
+  POSTGRES_DB: ToothTrekTest
   POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: Allawi11
+  POSTGRES_PASSWORD: test
   POSTGRES_HOST_AUTH_METHOD: trust
 
 stages:
   - build
   - test
 
-# Flutter
+# Flutter Frontend
 build-frontend:
   image: "ghcr.io/cirruslabs/flutter:3.13.9"
   stage: build
@@ -57,7 +57,7 @@ test-frontend:
     - cd Website/Frontend
     - flutter test
 
-# Express
+# Express Backend
 build-backend:
   stage: build
 
@@ -84,11 +84,7 @@ test-backend:
   # Allow failure til we have tests
   allow_failure: true
 
-# Java Middleware
-
-# !!! Add one per service !!!
-
-# Template
+# Java Middleware - Template
 build-template-middleware:
   stage: build
 
@@ -113,7 +109,7 @@ test-template-middleware:
     - mvn --show-version test
   retry: 2
 
-# Logs
+# Java Middleware - Logs
 build-logs-middleware:
   stage: build
 
@@ -137,7 +133,7 @@ test-logs-middleware:
     - cd Middleware/Logs
     - mvn --show-version test
 
-# Bookings
+# Java Middleware - Bookings
 build-bookings-middleware:
   stage: build
 
