@@ -1,31 +1,19 @@
 package com.toothtrek.bookings;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
-import com.toothtrek.bookings.entity.Booking;
-import com.toothtrek.bookings.entity.Dentist;
-import com.toothtrek.bookings.entity.Office;
-import com.toothtrek.bookings.entity.Patient;
-import com.toothtrek.bookings.entity.TimeSlot;
 import com.toothtrek.bookings.mqtt.MqttHandler;
-import com.toothtrek.bookings.repository.BookingRepository;
-import com.toothtrek.bookings.repository.DentistRepository;
-import com.toothtrek.bookings.repository.OfficeRepository;
-import com.toothtrek.bookings.repository.PatientRepository;
-import com.toothtrek.bookings.repository.TimeSlotRepository;
 
 @SpringBootApplication
 @EntityScan("com.toothtrek.bookings.entity")
 public class BookingsApplication implements CommandLineRunner {
 
+	/*
 	@Autowired
 	private BookingRepository bookingRepo;
 
@@ -40,6 +28,7 @@ public class BookingsApplication implements CommandLineRunner {
 
 	@Autowired
 	private TimeSlotRepository timeSlotRepo;
+	*/
 
 	private MqttHandler mqttHandler;
 
@@ -65,6 +54,7 @@ public class BookingsApplication implements CommandLineRunner {
 		mqttHandler = new MqttHandler(broker, clientId, qos);
 		this.mqttHandler.connect(true, true);
 
+		/*
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		long time = sdf.parse("2027-11-22 12:40").getTime();
 		Timestamp ts = new Timestamp(time);
@@ -83,6 +73,7 @@ public class BookingsApplication implements CommandLineRunner {
 
 		Booking booking = new Booking(patient.getId(), timeSlot.getId());
 		bookingRepo.save(booking);
+		*/
 	}
 
 }
