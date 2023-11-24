@@ -92,7 +92,7 @@ test-backend:
 build-template-middleware:
   stage: build
 
-  image: maven:3.9.5-eclipse-temurin-21-alpine
+  image: maven:3.9.5-eclipse-temurin-17-alpine
   tags:
     - docker
 
@@ -104,7 +104,7 @@ test-template-middleware:
   stage: test
   needs: ["build-template-middleware"]
 
-  image: maven:3.9.5-eclipse-temurin-21-alpine
+  image: maven:3.9.5-eclipse-temurin-17-alpine
   tags:
     - docker
 
@@ -117,7 +117,7 @@ test-template-middleware:
 build-logs-middleware:
   stage: build
 
-  image: maven:3.9.5-eclipse-temurin-21-alpine
+  image: maven:3.9.5-eclipse-temurin-17-alpine
   tags:
     - docker
 
@@ -129,10 +129,34 @@ test-logs-middleware:
   stage: test
   needs: ["build-logs-middleware"]
 
-  image: maven:3.9.5-eclipse-temurin-21-alpine
+  image: maven:3.9.5-eclipse-temurin-17-alpine
   tags:
     - docker
 
   script:
     - cd Middleware/Logs
+    - mvn --show-version test
+
+# Bookings
+build-bookings-middleware:
+  stage: build
+
+  image: maven:3.9.5-eclipse-temurin-17-alpine
+  tags:
+    - docker
+
+  script:
+    - cd Middleware/bookings
+    - mvn --show-version install -DskipTests
+
+test-bookings-middleware:
+  stage: test
+  needs: ["build-bookings-middleware"]
+
+  image: maven:3.9.5-eclipse-temurin-17-alpine
+  tags:
+    - docker
+
+  script:
+    - cd Middleware/bookings
     - mvn --show-version test
