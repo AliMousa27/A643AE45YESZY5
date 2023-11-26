@@ -1,4 +1,4 @@
-package com.toothtrek.mqtt;
+package com.toothtrek.template.mqtt;
 
 import org.eclipse.paho.mqttv5.client.MqttAsyncClient;
 import org.eclipse.paho.mqttv5.client.MqttConnectionOptions;
@@ -12,6 +12,7 @@ public class MqttHandler {
     // Paho Java Client
     private MqttAsyncClient client;
     private IMqttToken token;
+    private MqttCallbackHandler callbackHandler;
 
     // Options
     private String brokerAddress;
@@ -56,6 +57,15 @@ public class MqttHandler {
      */
     public void connect(boolean cleanStart, boolean automaticReconnect) {
         try {
+            // Print connection details
+
+            System.out.println("\nAttempting MQTT connection.");
+            System.out.println("   Connecting to broker: " + this.brokerAddress);
+            System.out.println("   Client ID: " + this.clientId);
+            System.out.println("   QoS: " + this.qos);
+            System.out.println("   Clean Start: " + cleanStart);
+            System.out.println("   Automatic Reconnect: " + automaticReconnect + "\n");
+
             // Options
             MqttConnectionOptions connectionOptions = new MqttConnectionOptions();
             connectionOptions.setCleanStart(cleanStart);
@@ -63,12 +73,13 @@ public class MqttHandler {
 
             // Client
             this.client = new MqttAsyncClient(this.brokerAddress, this.clientId, this.persistence);
-            MqttCallbackHandler callbackHandler = new MqttCallbackHandler();
+            this.callbackHandler = new MqttCallbackHandler();
             this.client.setCallback(callbackHandler);
 
             // Connection
             this.token = this.client.connect(connectionOptions);
             token.waitForCompletion();
+
         } catch (MqttException me) {
             printException(me);
         }
@@ -158,16 +169,28 @@ public class MqttHandler {
         return this.client.isConnected();
     }
 
+    /**
+     * Get client.
+     * 
+     * @return MqttAsyncClient
+     */
     public MqttAsyncClient getClient() {
         return this.client;
     }
 
-    public void printException(MqttException me) {
-        System.out.println("reason " + me.getReasonCode());
-        System.out.println("msg " + me.getMessage());
-        System.out.println("loc " + me.getLocalizedMessage());
-        System.out.println("cause " + me.getCause());
-        System.out.println("excep " + me);
-        me.printStackTrace();
+    /**
+     * Print exception to console.
+     * 
+     * *NOTE* Further exception handling may be needed on a service by series basis.
+     * 
+     * @param mqttException MqttException object.
+     */
+    public void printException(MqttException mqttException) {
+        System.out.println("reason " + mqttException.getReasonCode());
+        System.out.println("msg " + mqttException.getMessage());
+        System.out.println("loc " + mqttException.getLocalizedMessage());
+        System.out.println("cause " + mqttException.getCause());
+        System.out.println("excep " + mqttException);
+        mqttException.printStackTrace();
     }
 }

@@ -1,4 +1,4 @@
-package com.toothtrek.mqtt;
+package com.toothtrek.template.mqtt;
 
 import org.eclipse.paho.mqttv5.client.IMqttToken;
 import org.eclipse.paho.mqttv5.client.MqttCallback;
