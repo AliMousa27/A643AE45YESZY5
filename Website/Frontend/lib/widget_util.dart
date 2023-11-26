@@ -19,10 +19,10 @@ class WidgetUtil {
   }
 
   static double textScaleFactor(BuildContext context,
-      {double maxTextScaleFactor = 1.2}) {
+      {double maxTextScaleFactor = 1}) {
     final width = MediaQuery.of(context).size.width;
     double val = (width / 1400) * maxTextScaleFactor;
-    return max(1, min(val, maxTextScaleFactor));
+    return max(0.7, min(val, maxTextScaleFactor));
   }
 
   static Text createText(Color textColor, double fontSize, String text,

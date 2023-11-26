@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application/widget_util.dart';
+import 'package:flutter_application/Map/map_page_util.dart';
 
 class NavBar extends StatefulWidget {
   final double screenHeight;
@@ -44,15 +44,6 @@ class NavBarState extends State<NavBar> {
     );
   }
 
-  Widget buildCircleAvatar(
-      String assetName, bool resizeProfilePic, double screenWidth) {
-    return CircleAvatar(
-      backgroundColor: Colors.transparent,
-      radius: resizeProfilePic ? screenWidth * 0.05 : 30,
-      backgroundImage: AssetImage(assetName),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -69,11 +60,11 @@ class NavBarState extends State<NavBar> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(width: widget.screenWidth * 0.01),
-              buildCircleAvatar("../assets/Fulltooth.png",
+              MapUtil.buildCircleAvatar("../assets/Fulltooth.png",
                   widget.resizeProfilePic, widget.screenWidth),
               const SizedBox(width: 20),
               //TODO change to user profile picture
-              buildCircleAvatar("../assets/profile.png",
+              MapUtil.buildCircleAvatar("../assets/profile.png",
                   widget.resizeProfilePic, widget.screenWidth),
               const Spacer(),
             ],
@@ -89,26 +80,7 @@ class NavBarState extends State<NavBar> {
               children: [
                 SizedBox(width: widget.screenWidth * 0.01),
                 Expanded(
-                  child: Center(
-                    child: SearchAnchor(
-                      builder:
-                          (BuildContext context, SearchController controller) {
-                        return SearchBar(
-                          controller: controller,
-                          onTap: () {
-                            //controller.openView();
-                          },
-                          onChanged: (_) {
-                            //controller.openView();
-                          },
-                          leading: const Icon(Icons.search),
-                        );
-                      },
-                      suggestionsBuilder: (context, pattern) {
-                        return [];
-                      },
-                    ),
-                  ),
+                  child: Center(child: MapUtil.buildSearchWidget()),
                 ),
                 SizedBox(width: widget.screenWidth * 0.01),
                 Container(
@@ -145,19 +117,7 @@ class NavBarState extends State<NavBar> {
           width: widget.screenWidth * 0.35,
           height: 66,
           color: Theme.of(context).colorScheme.primary,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(width: widget.screenWidth * .01),
-              WidgetUtil.createText(Theme.of(context).colorScheme.onSurface, 20,
-                  "Dentist offices: ", context),
-              SizedBox(width: widget.screenWidth * 0.01),
-              //TODO provide correct number of offices
-              WidgetUtil.createText(
-                  Theme.of(context).colorScheme.onSurface, 19, "45", context),
-            ],
-          ),
+          child: MapUtil.createDentistOfficesText(context, widget.screenWidth),
         ),
       ],
     );

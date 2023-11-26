@@ -117,7 +117,7 @@ class InitialPage extends StatelessWidget {
       Request.sendLoginRequest(
           userCredential.user!.uid, userCredential.user!.email!);
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const HomePage()));
+          context, MaterialPageRoute(builder: (context) => const MapPage()));
     } else {
       Navigator.push(
         context,

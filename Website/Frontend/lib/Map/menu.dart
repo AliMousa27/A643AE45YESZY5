@@ -1,7 +1,12 @@
 //side menu code documentation
 //https://docs.flutter.dev/cookbook/effects/staggered-menu-animation
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application/Map/map_page_util.dart';
+import 'package:http/http.dart';
+import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
+
+import '../widget_util.dart';
 
 class Menu extends StatefulWidget {
   const Menu({super.key});
@@ -12,22 +17,19 @@ class Menu extends StatefulWidget {
 
 class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   //Todo request the data and popualte it in init state probably
+  DateTime? selectedDate;
   static const _menuTitles = [
-    'Declarative style',
-    'Premade widgets',
-    'Stateful hot reload',
-    'Native performance',
-    'Great community',
-    'Great community',
-    'Great community',
-    'Great community',
-    'Great community',
-    'Great community',
-    'Great community',
-    'Great community',
-    'Great community',
-    'Great community',
-    'Great community',
+    'Some Office',
+    'Some Office',
+    'Some Office',
+    'Some Office',
+    'Some Office',
+    'Some Office',
+    'Some Office',
+    'Some Office',
+    'Some Office',
+    'Some Office',
+    'Some Office',
   ];
 
   static const _initialDelayTime = Duration(milliseconds: 50);
@@ -83,7 +85,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
           child: ListView(
             children: [
               Container(
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.primaryContainer,
                 child: _buildContent(),
               ),
             ],
@@ -113,37 +115,35 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
             ),
           ),
           child: AnimatedBuilder(
-            animation: _staggeredController,
-            builder: (context, child) {
-              final animationPercent = Curves.easeOut.transform(
-                _itemSlideIntervals[i].transform(_staggeredController.value),
-              );
-              final opacity = animationPercent;
-              final slideDistance = (1.0 - animationPercent) * 150;
+              animation: _staggeredController,
+              builder: (context, child) {
+                final animationPercent = Curves.easeOut.transform(
+                  _itemSlideIntervals[i].transform(_staggeredController.value),
+                );
+                final opacity = animationPercent;
+                final slideDistance = (1.0 - animationPercent) * 150;
 
-              return Opacity(
-                opacity: opacity,
-                child: Transform.translate(
-                  offset: Offset(slideDistance, 0),
-                  child: child,
-                ),
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 16),
-              child: Text(
-                _menuTitles[i],
-                textAlign: TextAlign.left,
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ),
+                return Opacity(
+                  opacity: opacity,
+                  child: Transform.translate(
+                    offset: Offset(slideDistance, 0),
+                    child: child,
+                  ),
+                );
+              },
+              child: MapUtil.createListCalendars(context, _menuTitles[i],
+                  (DateTime date) {
+                selectedDate = date;
+              }, bookApoinment)),
         ),
       );
     }
     return listItems;
+  }
+
+  void bookApoinment() {
+    //TODO send request to server
+    //TODO show confirmation
+    print(selectedDate);
   }
 }

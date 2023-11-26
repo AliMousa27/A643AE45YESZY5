@@ -176,7 +176,7 @@ class _AuthenticationState extends State<Authentication> {
           .createUserWithEmailAndPassword(email: email, password: password);
       Request.sendSignupRequest(credential.user!.uid, credential.user!.email!);
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const HomePage()));
+          context, MaterialPageRoute(builder: (context) => const MapPage()));
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         errorMsg = 'The password provided is too weak.';
@@ -202,7 +202,7 @@ class _AuthenticationState extends State<Authentication> {
           .signInWithEmailAndPassword(email: email, password: password);
       Request.sendLoginRequest(credential.user!.uid, credential.user!.email!);
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const HomePage()));
+          context, MaterialPageRoute(builder: (context) => const MapPage()));
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         errorMsg = 'No user found for that email.';

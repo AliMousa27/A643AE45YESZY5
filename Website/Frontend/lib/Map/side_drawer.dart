@@ -122,9 +122,9 @@ class SideDrawerState extends State<SideDrawer>
 }
 
 class DrawerState extends ChangeNotifier {
-  static late HomePageState observer;
+  static late MapPageState observer;
 
-  static void registerObserver(HomePageState mapPage) {
+  static void registerObserver(MapPageState mapPage) {
     observer = mapPage;
   }
 

@@ -43,6 +43,9 @@ dependencies:
   firebase_auth: ^4.13.0
   google_sign_in: ^6.1.6
   mapbox_gl: ^0.16.0
+  bottom_sheet: ^4.0.0
+  syncfusion_flutter_calendar: ^23.2.4
+  drop_shadow: ^0.1.0
 
 dev_dependencies:
   flutter_test:
