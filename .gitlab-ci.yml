@@ -84,6 +84,34 @@ test-backend:
   # Allow failure til we have tests
   allow_failure: true
 
+# Dentist UI
+
+build-dentistUI:
+  stage: build
+
+  image: node:18
+  tags:
+    - docker
+
+  script:
+    - cd DentistUI
+    - npm install
+
+test-dentistUI:
+  stage: test
+  needs: ["build-dentistUI"]
+
+  image: node:18
+  tags:
+    - docker
+
+  script:
+    - cd DentistUI
+    - npm test 
+
+  # Allow failure til we have tests
+  allow_failure: true
+
 # Java Middleware
 
 # !!! Add one per service !!!
