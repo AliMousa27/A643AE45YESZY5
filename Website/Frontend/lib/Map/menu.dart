@@ -99,7 +99,6 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   }
 
   List<Widget> _buildListItems() {
-    print("the passed in offices are ${widget.offices}");
     final listItems = <Widget>[];
     for (var i = 0; i < widget.offices.length; ++i) {
       listItems.add(
