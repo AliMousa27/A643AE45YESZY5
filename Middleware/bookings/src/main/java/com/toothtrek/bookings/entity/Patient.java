@@ -2,6 +2,7 @@ package com.toothtrek.bookings.entity;
 
 import java.sql.Timestamp;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.Data;
 import jakarta.persistence.Id;
@@ -14,19 +15,21 @@ public class Patient {
     @Id
     private String id;
     private String name;
-    private Timestamp date_of_birth;
+
+    @Column(name = "date_of_birth")
+    private Timestamp dateOfBirth;
 
     /**
      * Patient constructor
      * 
      * @param id            id of patient, given by Firebase.
      * @param name          name of patient
-     * @param date_of_birth date of birth of patient
+     * @param dateOfBirth date of birth of patient
      */
-    public Patient(String id, String name, Timestamp date_of_birth) {
+    public Patient(String id, String name, Timestamp dateOfBirth) {
         this.id = id;
         this.name = name;
-        this.date_of_birth = date_of_birth;
+        this.dateOfBirth = dateOfBirth;
     }
 
     public Patient() {

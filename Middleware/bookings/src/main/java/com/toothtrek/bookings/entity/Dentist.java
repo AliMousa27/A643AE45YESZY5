@@ -2,6 +2,7 @@ package com.toothtrek.bookings.entity;
 
 import java.sql.Timestamp;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,17 +20,19 @@ public class Dentist {
     @SequenceGenerator(name = "dentist_id_seq", sequenceName = "dentist_id_seq", allocationSize = 1)
     private Long id;
     private String name;
-    private Timestamp date_of_birth;
+
+    @Column(name = "date_of_birth")
+    private Timestamp dateOfBirth;
 
     /**
      * Dentist constructor
      * 
      * @param name          name of dentist
-     * @param date_of_birth date of birth of dentist
+     * @param dateOfBirth date of birth of dentist
      */
-    public Dentist(String name, Timestamp date_of_birth) {
+    public Dentist(String name, Timestamp dateOfBirth) {
         this.name = name;
-        this.date_of_birth = date_of_birth;
+        this.dateOfBirth = dateOfBirth;
     }
 
     public Dentist() {

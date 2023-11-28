@@ -18,7 +18,7 @@ CREATE TABLE dentist (
     date_of_birth date,
     PRIMARY KEY (id)
 );
-CREATE TABLE time_slot (
+CREATE TABLE timeslot (
     id SERIAL NOT NULL,
     date_and_time timestamp NOT NULL,
     office_id bigint NOT NULL,
@@ -30,8 +30,8 @@ CREATE TABLE time_slot (
 CREATE TABLE booking (
     id SERIAL NOT NULL,
     patient_id varchar(255) NOT NULL,
-    time_slot_id bigint NOT NULL,
+    timeslot_id bigint NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT fk_patient FOREIGN KEY(patient_id) REFERENCES patient(id),
-    CONSTRAINT fk_time_slot FOREIGN KEY(time_slot_id) REFERENCES time_slot(id)
+    CONSTRAINT fk_time_slot FOREIGN KEY(timeslot_id) REFERENCES timeslot(id)
 );

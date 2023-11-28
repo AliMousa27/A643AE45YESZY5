@@ -2,8 +2,8 @@ package com.toothtrek.bookings.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.toothtrek.bookings.entity.TimeSlot;
+import com.toothtrek.bookings.entity.Timeslot;
 
-public interface TimeSlotRepository extends JpaRepository<TimeSlot, Integer> {
+public interface TimeslotRepository extends JpaRepository<Timeslot, Integer> {
 
 }

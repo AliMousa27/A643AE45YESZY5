@@ -2,17 +2,26 @@ package com.toothtrek.bookings.mqtt;
 
 import org.eclipse.paho.mqttv5.client.MqttAsyncClient;
 import org.eclipse.paho.mqttv5.client.MqttConnectionOptions;
+
+import java.util.UUID;
+
 import org.eclipse.paho.mqttv5.client.IMqttToken;
 import org.eclipse.paho.mqttv5.client.persist.MemoryPersistence;
 import org.eclipse.paho.mqttv5.common.MqttException;
 import org.eclipse.paho.mqttv5.common.MqttMessage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MqttHandler {
 
     // Paho Java Client
     private MqttAsyncClient client;
     private IMqttToken token;
-    private MqttCallbackHandler callbackHandler;
+
+    @Autowired
+    private Environment env;
 
     // Options
     private String brokerAddress;
@@ -22,28 +31,32 @@ public class MqttHandler {
 
     /**
      * MqttHandler constructor.
-     * 
-     * @param brokerAddress Broker address (e.g. tcp://localhost:1883)
-     * @param clientId      Client ID (e.g. my-client-id)
-     * @param qos           Quality of Service (0, 1, 2)
      */
-    public MqttHandler(String brokerAddress, String clientId, int qos) {
-        this(brokerAddress, clientId, qos, new MemoryPersistence());
+    public MqttHandler() {
     }
 
     /**
-     * MqttHandler constructor.
+     * Initialize MqttHandler by setting up attributes and creating a client.
      * 
-     * @param brokerAddress Broker address (e.g. tcp://localhost:1883)
-     * @param clientId      Client ID (e.g. my-client-id)
-     * @param qos           Quality of Service (0, 1, 2)
-     * @param persistence   Persistence (e.g. new MemoryPersistence())
+     * @param mqttCallbackHandler MqttCallbackHandler object.
      */
-    public MqttHandler(String brokerAddress, String clientId, int qos, MemoryPersistence persistence) {
-        this.qos = qos;
-        this.brokerAddress = brokerAddress;
-        this.clientId = clientId;
-        this.persistence = persistence;
+    public void initialize(MqttCallbackHandler mqttCallbackHandler) {
+        try {
+            // Setup options
+            if (this.clientId == null) {
+                // random client id
+                this.clientId = (UUID.randomUUID().toString());
+            }
+            this.brokerAddress = env.getProperty("mqtt.broker");
+            this.qos = Integer.parseInt(env.getProperty("mqtt.qos"));
+            this.persistence = new MemoryPersistence();
+
+            // Client
+            this.client = new MqttAsyncClient(this.brokerAddress, this.clientId, this.persistence);
+            this.client.setCallback(mqttCallbackHandler);
+        } catch (MqttException me) {
+            printException(me);
+        }
     }
 
     /**
@@ -58,28 +71,23 @@ public class MqttHandler {
     public void connect(boolean cleanStart, boolean automaticReconnect) {
         try {
             // Print connection details
-
-            System.out.println("\nAttempting MQTT connection.");
+            System.out.println();
+            System.out.println("Attempting to connect to MQTT");
             System.out.println("   Connecting to broker: " + this.brokerAddress);
             System.out.println("   Client ID: " + this.clientId);
             System.out.println("   QoS: " + this.qos);
             System.out.println("   Clean Start: " + cleanStart);
-            System.out.println("   Automatic Reconnect: " + automaticReconnect + "\n");
+            System.out.println("   Automatic Reconnect: " + automaticReconnect);
+            System.out.println();
 
-            // Options
+            // Connection Options
             MqttConnectionOptions connectionOptions = new MqttConnectionOptions();
             connectionOptions.setCleanStart(cleanStart);
             connectionOptions.setAutomaticReconnect(automaticReconnect);
 
-            // Client
-            this.client = new MqttAsyncClient(this.brokerAddress, this.clientId, this.persistence);
-            this.callbackHandler = new MqttCallbackHandler();
-            this.client.setCallback(callbackHandler);
-
             // Connection
             this.token = this.client.connect(connectionOptions);
             token.waitForCompletion();
-
         } catch (MqttException me) {
             printException(me);
         }
@@ -110,6 +118,20 @@ public class MqttHandler {
     }
 
     /**
+     * Unsubscribe from topic.
+     * 
+     * @param topic Topic (e.g. a/b/c)
+     */
+    public void unsubscribe(String topic) {
+        try {
+            this.token = this.client.unsubscribe(topic);
+            this.token.waitForCompletion();
+        } catch (MqttException me) {
+            printException(me);
+        }
+    }
+
+    /**
      * Publish a payload to specified topic.
      * 
      * @param topic   Topic (e.g. a/b/c)
@@ -127,9 +149,19 @@ public class MqttHandler {
      * @param qos     Quality of Service (0, 1, 2)
      */
     public void publish(String topic, String content, int qos) {
+        MqttMessage message = new MqttMessage(content.getBytes());
+        message.setQos(qos);
+        publish(topic, message);
+    }
+
+    /**
+     * Publish a payload to specified topic.
+     * 
+     * @param topic   Topic (e.g. a/b/c)
+     * @param message MqttMessage object.
+     */
+    public void publish(String topic, MqttMessage message) {
         try {
-            MqttMessage message = new MqttMessage(content.getBytes());
-            message.setQos(qos);
             this.token = this.client.publish(topic, message);
             this.token.waitForCompletion();
         } catch (MqttException me) {
@@ -176,6 +208,15 @@ public class MqttHandler {
      */
     public MqttAsyncClient getClient() {
         return this.client;
+    }
+
+    /**
+     * Get client id.
+     * 
+     * @return String
+     */
+    public String getClientId() {
+        return this.clientId;
     }
 
     /**
