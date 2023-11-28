@@ -4,7 +4,6 @@ import org.eclipse.paho.mqttv5.common.MqttMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.toothtrek.bookings.mqtt.MqttHandler;
 
@@ -50,10 +49,6 @@ public class ResponseHandler {
     public void reply(ResponseStatus status, String message, MqttMessage request) {
         // Get response topic from message properties
         String topic = request.getProperties().getResponseTopic();
-        if (topic == null) {
-            JsonObject json = new Gson().fromJson(new String(request.getPayload()), JsonObject.class);
-            topic = json.get("responseTopic").getAsString();
-        }
 
         reply(status, message, topic);
     }
