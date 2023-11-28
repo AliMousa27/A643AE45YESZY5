@@ -153,6 +153,13 @@ test-bookings-middleware:
   tags:
     - docker
 
+  variables:
+    POSTGRES_DB: test_booking_DB
+
   script:
-    - cd Middleware/bookings
+    - apk update && apk add postgresql-client
+    - cd Middleware/bookings/src/main/resources
+    - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -tc "SELECT 1 FROM pg_database WHERE datname = 'test_booking_DB'" | grep -q 1 || PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -c "CREATE DATABASE test_booking_DB"
+    - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -d test_booking_DB -f schema.sql
+    - cd ../../../
     - mvn --show-version test
