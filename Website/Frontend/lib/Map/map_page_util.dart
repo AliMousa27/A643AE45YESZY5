@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 import '../widget_util.dart';
@@ -62,7 +61,7 @@ class MapUtil {
   }
 
   static Padding createListCalendars(
-      BuildContext context, menuTitle, onDateSelected, bookApoinment) {
+      BuildContext context, office, onDateSelected, bookApoinment) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16),
       //wrapped with theme to remove annoying needless borders
@@ -72,14 +71,14 @@ class MapUtil {
           title: WidgetUtil.createText(
             Theme.of(context).colorScheme.onPrimaryContainer,
             20,
-            menuTitle,
+            office.name,
             context,
           ),
           //TODO change to the actual address or whatever we will be using
           subtitle: WidgetUtil.createText(
             Theme.of(context).colorScheme.onPrimary,
             20,
-            "Lundbygatan 5",
+            office.address,
             context,
           ),
           children: [
@@ -109,7 +108,7 @@ class MapUtil {
                 ),
               ),
               cellEndPadding: 0,
-              dataSource: DentistAppointmentDataSource(getDataSource(context)),
+              dataSource: DentistAppointmentDataSource(office.timeSlots),
               allowAppointmentResize: false,
               allowDragAndDrop: false,
               showCurrentTimeIndicator: false,
@@ -150,19 +149,5 @@ class MapUtil {
         ),
       ),
     );
-  }
-
-  static List<DentistAppointment> getDataSource(BuildContext context) {
-    final List<DentistAppointment> dentistAppointments = <DentistAppointment>[];
-    final DateTime today = DateTime.now();
-    final DateTime startTime =
-        DateTime(today.year, today.month, today.day, today.hour, today.minute);
-    final DateTime endTime = startTime.add(const Duration(hours: 2));
-    String formattedTime = DateFormat('h:mm')
-        .format(today); // This will give you the minutes with leading zeros
-
-    dentistAppointments.add(DentistAppointment(startTime, endTime,
-        Theme.of(context).colorScheme.secondary, formattedTime));
-    return dentistAppointments;
   }
 }

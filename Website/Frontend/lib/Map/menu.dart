@@ -1,12 +1,8 @@
 //side menu code documentation
 //https://docs.flutter.dev/cookbook/effects/staggered-menu-animation
 import 'package:flutter/material.dart';
+import 'package:flutter_application/Map/dentist_apointment.dart';
 import 'package:flutter_application/Map/map_page_util.dart';
-import 'package:http/http.dart';
-import 'package:intl/intl.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
-
-import '../widget_util.dart';
 
 class Menu extends StatefulWidget {
   const Menu({super.key});
@@ -18,6 +14,7 @@ class Menu extends StatefulWidget {
 class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   //Todo request the data and popualte it in init state probably
   DateTime? selectedDate;
+  DentistOfficeController dentistOfficeController = DentistOfficeController();
   static const _menuTitles = [
     'Some Office',
     'Some Office',
@@ -96,15 +93,26 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   }
 
   Widget _buildContent() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: _buildListItems(),
+    return FutureBuilder<List>(
+      future: dentistOfficeController.requestOffices(),
+      builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: _buildListItems(snapshot.data),
+          );
+        }
+      },
     );
   }
 
-  List<Widget> _buildListItems() {
+  List<Widget> _buildListItems(data) {
     final listItems = <Widget>[];
-    for (var i = 0; i < _menuTitles.length; ++i) {
+    for (var i = 0; i < data.length; ++i) {
       listItems.add(
         Container(
           width: MediaQuery.of(context).size.width * 0.54,
@@ -131,7 +139,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                   ),
                 );
               },
-              child: MapUtil.createListCalendars(context, _menuTitles[i],
+              child: MapUtil.createListCalendars(context, data[i],
                   (DateTime date) {
                 selectedDate = date;
               }, bookApoinment)),

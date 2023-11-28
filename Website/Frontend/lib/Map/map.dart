@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application/Map/bottom_sheet.dart';
 import 'package:flutter_application/Map/side_drawer.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
@@ -14,6 +17,7 @@ class MapPage extends StatefulWidget {
 
 class MapPageState extends State<MapPage> {
   bool sideBarIsCollapsed = true;
+  late MapboxMapController mapController;
   double bottomSheetValue = 0.5;
   @override
   void initState() {
@@ -140,13 +144,13 @@ class MapPageState extends State<MapPage> {
   Widget createMap(
       String styleURL, String apiKey, double screenWidth, double screenHeight) {
     return AnimatedContainer(
-      duration: const Duration(
-          milliseconds: 150), // specify the duration for the animation
-
+      duration: const Duration(milliseconds: 100),
       width: sideBarIsCollapsed ? screenWidth : screenWidth * 0.65,
       height: screenHeight * (1 - bottomSheetValue),
       child: MapboxMap(
-          styleString: styleURL,
+          //onStyleLoadedCallback: func,
+          //onMapCreated: onMapCreated,
+          //styleString: styleURL,
           initialCameraPosition: const CameraPosition(
               //gothenburg coordiantes
               target: LatLng(57.7089, 11.9746),
@@ -155,6 +159,11 @@ class MapPageState extends State<MapPage> {
           scrollGesturesEnabled: bottomSheetValue <= 0.11,
           zoomGesturesEnabled: bottomSheetValue <= 0.11),
     );
+  }
+
+  void func() async {
+    Uint8List bytes = await loadMarkerImage();
+    await mapController.addImage("testImage", bytes);
   }
 
   void notify(Object newValue) {
@@ -167,5 +176,25 @@ class MapPageState extends State<MapPage> {
         bottomSheetValue = newValue;
       }
     });
+  }
+
+  void onMapCreated(MapboxMapController controller) async {
+    mapController = controller;
+    await addIcon();
+  }
+
+  Future<void> addIcon() async {
+    var options = const SymbolOptions(
+      geometry: LatLng(57.7089, 11.9746),
+      iconSize: 0.1,
+      iconImage: "testImage",
+    );
+    //the library is just slow so i have to delya the addSymbol function :)))))
+    Timer(const Duration(seconds: 2), () => mapController.addSymbol(options));
+  }
+
+  Future<Uint8List> loadMarkerImage() async {
+    var byteData = await rootBundle.load("assets/pin.png");
+    return byteData.buffer.asUint8List();
   }
 }
