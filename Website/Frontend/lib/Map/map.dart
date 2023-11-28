@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application/Map/bottom_sheet.dart';
+import 'package:flutter_application/Map/dentist_apointment.dart';
 import 'package:flutter_application/Map/side_drawer.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'map_page_navbar.dart';
@@ -19,11 +20,22 @@ class MapPageState extends State<MapPage> {
   bool sideBarIsCollapsed = true;
   late MapboxMapController mapController;
   double bottomSheetValue = 0.5;
+  List<DentistOffice> dentistOffices = [];
+  Future<List<DentistOffice>>? dentistOfficesFuture;
+
   @override
   void initState() {
     super.initState();
     DrawerState.registerObserver(this);
     BottomSheetState.registerObserver(this);
+    dentistOfficesFuture = fetchDentistOffices();
+  }
+
+  Future<List<DentistOffice>> fetchDentistOffices() async {
+    DentistOfficeController dentistOfficeController = DentistOfficeController();
+    List<DentistOffice> offices =
+        await dentistOfficeController.requestOffices();
+    return offices;
   }
 
   @override
@@ -101,42 +113,54 @@ class MapPageState extends State<MapPage> {
   Scaffold desktopLayout(
       double screenHeight, double screenWidth, bool resizeProfilePic) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              NavBar(
-                screenHeight: screenHeight,
-                screenWidth: screenWidth,
-                resizeProfilePic: resizeProfilePic,
-              ),
-              Expanded(
-                child: Row(
+      body: FutureBuilder<List<DentistOffice>>(
+        future: dentistOfficesFuture,
+        builder: (BuildContext context,
+            AsyncSnapshot<List<DentistOffice>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator(); // or some other loading widget
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else {
+            return Stack(
+              children: [
+                Column(
                   mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    createMap(
-                      "mapbox://styles/bigman360/clpa24zoi004g01p95rqx61hw",
-                      "pk.eyJ1IjoiYmlnbWFuMzYwIiwiYSI6ImNscDl5dmM5MzAyMHAyanBkYmw1a24yd2EifQ.L1FfrH4Als9i33KTf0wStw",
-                      screenWidth,
-                      screenHeight,
-                    )
+                    NavBar(
+                      screenHeight: screenHeight,
+                      screenWidth: screenWidth,
+                      resizeProfilePic: resizeProfilePic,
+                    ),
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          createMap(
+                            "mapbox://styles/bigman360/clpa24zoi004g01p95rqx61hw",
+                            "pk.eyJ1IjoiYmlnbWFuMzYwIiwiYSI6ImNscDl5dmM5MzAyMHAyanBkYmw1a24yd2EifQ.L1FfrH4Als9i33KTf0wStw",
+                            screenWidth,
+                            screenHeight,
+                          )
+                        ],
+                      ),
+                    ),
                   ],
                 ),
-              ),
-            ],
-          ),
-          Align(
-            alignment: Alignment.topRight,
-            child: SizedBox(
-              //controls how much it "slides" in and out
-              width: screenWidth * 0.35,
-              height: screenHeight,
-              child: const SideDrawer(),
-            ),
-          ),
-        ],
+                Align(
+                  alignment: Alignment.topRight,
+                  child: SizedBox(
+                    //controls how much it "slides" in and out
+                    width: screenWidth * 0.35,
+                    height: screenHeight,
+                    child: SideDrawer(offices: snapshot.data!),
+                  ),
+                ),
+              ],
+            );
+          }
+        },
       ),
     );
   }

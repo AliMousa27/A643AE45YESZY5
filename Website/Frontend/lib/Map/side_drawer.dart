@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application/Map/dentist_apointment.dart';
 import 'package:flutter_application/Map/map.dart';
 
 import 'menu.dart';
 
 class SideDrawer extends StatefulWidget {
-  const SideDrawer({Key? key}) : super(key: key);
+  final List<DentistOffice> offices;
+  const SideDrawer({Key? key, required this.offices}) : super(key: key);
 
   @override
   SideDrawerState createState() => SideDrawerState();
@@ -13,11 +15,9 @@ class SideDrawer extends StatefulWidget {
 class SideDrawerState extends State<SideDrawer>
     with SingleTickerProviderStateMixin {
   late AnimationController drawerSlideController;
-
   @override
   void initState() {
     super.initState();
-
     drawerSlideController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 150),
@@ -106,7 +106,7 @@ class SideDrawerState extends State<SideDrawer>
             width: MediaQuery.of(context).size.width * 0.35,
             child: Stack(
               children: [
-                if (!isDrawerClosed()) const Menu(),
+                if (!isDrawerClosed()) Menu(offices: widget.offices),
                 Positioned(
                   top: 0,
                   right: 0,

@@ -5,7 +5,8 @@ import 'package:flutter_application/Map/dentist_apointment.dart';
 import 'package:flutter_application/Map/map_page_util.dart';
 
 class Menu extends StatefulWidget {
-  const Menu({super.key});
+  final List<DentistOffice> offices;
+  const Menu({Key? key, required this.offices}) : super(key: key);
 
   @override
   State<Menu> createState() => _MenuState();
@@ -45,7 +46,6 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-
     _createAnimationIntervals();
 
     _staggeredController = AnimationController(
@@ -93,26 +93,15 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   }
 
   Widget _buildContent() {
-    return FutureBuilder<List>(
-      future: dentistOfficeController.requestOffices(),
-      builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        } else {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: _buildListItems(snapshot.data),
-          );
-        }
-      },
-    );
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: _buildListItems());
   }
 
-  List<Widget> _buildListItems(data) {
+  List<Widget> _buildListItems() {
+    print("the passed in offices are ${widget.offices}");
     final listItems = <Widget>[];
-    for (var i = 0; i < data.length; ++i) {
+    for (var i = 0; i < widget.offices.length; ++i) {
       listItems.add(
         Container(
           width: MediaQuery.of(context).size.width * 0.54,
@@ -139,7 +128,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                   ),
                 );
               },
-              child: MapUtil.createListCalendars(context, data[i],
+              child: MapUtil.createListCalendars(context, widget.offices[i],
                   (DateTime date) {
                 selectedDate = date;
               }, bookApoinment)),
