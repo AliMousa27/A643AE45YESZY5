@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
@@ -57,6 +58,20 @@ class DentistAppointment {
   Color background;
 
   String eventName;
+  factory DentistAppointment.fromJson(Map<String, dynamic> json) {
+    DateTime from = DateTime.parse(json["date_and_time"]);
+    DateTime to = from.add(const Duration(hours: 2));
+    String eventName = "${from.hour} : ${from.minute}";
+    return DentistAppointment(from, to, const Color(0xFF0F8644), eventName);
+  }
+  Map<String, dynamic> toJson() {
+    return {
+      'from': from.toIso8601String(),
+      'to': to.toIso8601String(),
+      'background': background.value.toString(),
+      'eventName': eventName,
+    };
+  }
 }
 
 class DentistOffice {
@@ -66,78 +81,16 @@ class DentistOffice {
   LatLng location;
   DentistOffice(this.address, this.name, this.timeSlots, this.location);
 
-  Future<void> loadAppointments() async {}
-}
-
-class DentistOfficeController {
-  Future<List<DentistOffice>> requestOffices() async {
-    //TODO make api request and parse it for now this will do
-    return <DentistOffice>[
-      DentistOffice(
-        "Some Address",
-        "Some Office",
-        <DentistAppointment>[
-          DentistAppointment(
-            DateTime.now(),
-            DateTime.now().add(const Duration(hours: 2)),
-            const Color(0xFF0F8644),
-            "Some Event",
-          ),
-        ],
-        const LatLng(57.7089, 11.9746),
-      ),
-      DentistOffice(
-        "Some Address",
-        "Some Office",
-        <DentistAppointment>[
-          DentistAppointment(
-            DateTime.now(),
-            DateTime.now().add(const Duration(hours: 2)),
-            const Color(0xFF0F8644),
-            "Some Event",
-          ),
-        ],
-        const LatLng(57.7089, 11.9746),
-      ),
-      DentistOffice(
-        "Some Address",
-        "Some Office",
-        <DentistAppointment>[
-          DentistAppointment(
-            DateTime.now(),
-            DateTime.now().add(const Duration(hours: 2)),
-            const Color(0xFF0F8644),
-            "Some Event",
-          ),
-        ],
-        const LatLng(57.7089, 11.9746),
-      ),
-      DentistOffice(
-        "Some Address",
-        "Some Office",
-        <DentistAppointment>[
-          DentistAppointment(
-            DateTime.now(),
-            DateTime.now().add(const Duration(hours: 2)),
-            const Color(0xFF0F8644),
-            "Some Event",
-          ),
-        ],
-        const LatLng(57.7089, 11.9746),
-      ),
-      DentistOffice(
-        "Some Address",
-        "Some Office",
-        <DentistAppointment>[
-          DentistAppointment(
-            DateTime.now(),
-            DateTime.now().add(const Duration(hours: 2)),
-            const Color(0xFF0F8644),
-            "Some Event",
-          ),
-        ],
-        const LatLng(57.7089, 11.9746),
-      )
-    ];
+  factory DentistOffice.fromJson(Map<String, dynamic> json) {
+    List<DentistAppointment> timeSlots = [];
+    for (var slot in json["timeslot"]) {
+      timeSlots.add(DentistAppointment.fromJson(slot));
+    }
+    return DentistOffice(
+      json["address"],
+      json["name"],
+      timeSlots,
+      LatLng(json["latitude"], json["longitude"]),
+    );
   }
 }

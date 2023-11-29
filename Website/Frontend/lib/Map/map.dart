@@ -6,6 +6,7 @@ import 'package:flutter_application/Map/bottom_sheet.dart';
 import 'package:flutter_application/Map/dentist_apointment.dart';
 import 'package:flutter_application/Map/side_drawer.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
+import '../request.dart';
 import 'map_page_navbar.dart';
 import 'map_page_util.dart';
 
@@ -20,7 +21,6 @@ class MapPageState extends State<MapPage> {
   bool sideBarIsCollapsed = true;
   late MapboxMapController mapController;
   double bottomSheetValue = 0.5;
-  List<DentistOffice> dentistOffices = [];
   Future<List<DentistOffice>>? dentistOfficesFuture;
 
   @override
@@ -28,14 +28,7 @@ class MapPageState extends State<MapPage> {
     super.initState();
     DrawerState.registerObserver(this);
     BottomSheetState.registerObserver(this);
-    dentistOfficesFuture = fetchDentistOffices();
-  }
-
-  Future<List<DentistOffice>> fetchDentistOffices() async {
-    DentistOfficeController dentistOfficeController = DentistOfficeController();
-    List<DentistOffice> offices =
-        await dentistOfficeController.requestOffices();
-    return offices;
+    dentistOfficesFuture = Request.getOffices();
   }
 
   @override
@@ -118,7 +111,9 @@ class MapPageState extends State<MapPage> {
         builder: (BuildContext context,
             AsyncSnapshot<List<DentistOffice>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator(); // or some other loading widget
+            return const Center(
+                child:
+                    CircularProgressIndicator()); // or some other loading widget
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
@@ -172,8 +167,8 @@ class MapPageState extends State<MapPage> {
       width: sideBarIsCollapsed ? screenWidth : screenWidth * 0.65,
       height: screenHeight * (1 - bottomSheetValue),
       child: MapboxMap(
-          //onStyleLoadedCallback: func,
-          //onMapCreated: onMapCreated,
+          onStyleLoadedCallback: func,
+          onMapCreated: onMapCreated,
           //styleString: styleURL,
           initialCameraPosition: const CameraPosition(
               //gothenburg coordiantes
@@ -188,6 +183,7 @@ class MapPageState extends State<MapPage> {
   void func() async {
     Uint8List bytes = await loadMarkerImage();
     await mapController.addImage("testImage", bytes);
+    addIcon();
   }
 
   void notify(Object newValue) {
@@ -204,17 +200,19 @@ class MapPageState extends State<MapPage> {
 
   void onMapCreated(MapboxMapController controller) async {
     mapController = controller;
-    await addIcon();
   }
 
-  Future<void> addIcon() async {
-    var options = const SymbolOptions(
-      geometry: LatLng(57.7089, 11.9746),
-      iconSize: 0.1,
-      iconImage: "testImage",
-    );
-    //the library is just slow so i have to delya the addSymbol function :)))))
-    Timer(const Duration(seconds: 2), () => mapController.addSymbol(options));
+  void addIcon() async {
+    List<DentistOffice>? d = await dentistOfficesFuture;
+
+    for (DentistOffice office in d!) {
+      SymbolOptions options = SymbolOptions(
+        geometry: office.location,
+        iconSize: 0.1,
+        iconImage: "testImage",
+      );
+      mapController.addSymbol(options);
+    }
   }
 
   Future<Uint8List> loadMarkerImage() async {

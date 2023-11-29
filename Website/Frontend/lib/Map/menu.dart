@@ -15,30 +15,13 @@ class Menu extends StatefulWidget {
 class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   //Todo request the data and popualte it in init state probably
   DateTime? selectedDate;
-  DentistOfficeController dentistOfficeController = DentistOfficeController();
-  static const _menuTitles = [
-    'Some Office',
-    'Some Office',
-    'Some Office',
-    'Some Office',
-    'Some Office',
-    'Some Office',
-    'Some Office',
-    'Some Office',
-    'Some Office',
-    'Some Office',
-    'Some Office',
-  ];
 
   static const _initialDelayTime = Duration(milliseconds: 50);
   static const _itemSlideTime = Duration(milliseconds: 250);
   static const _staggerTime = Duration(milliseconds: 50);
   static const _buttonDelayTime = Duration(milliseconds: 150);
   static const _buttonTime = Duration(milliseconds: 500);
-  final _animationDuration = _initialDelayTime +
-      (_staggerTime * _menuTitles.length) +
-      _buttonDelayTime +
-      _buttonTime;
+  late Duration _animationDuration;
 
   late AnimationController _staggeredController;
   final List<Interval> _itemSlideIntervals = [];
@@ -46,6 +29,10 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    _animationDuration = _initialDelayTime +
+        (_staggerTime * widget.offices.length) +
+        _buttonDelayTime +
+        _buttonTime;
     _createAnimationIntervals();
 
     _staggeredController = AnimationController(
@@ -55,7 +42,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   }
 
   void _createAnimationIntervals() {
-    for (var i = 0; i < _menuTitles.length; ++i) {
+    for (var i = 0; i < widget.offices.length; ++i) {
       final startTime = _initialDelayTime + (_staggerTime * i);
       final endTime = startTime + _itemSlideTime;
       _itemSlideIntervals.add(
