@@ -6,7 +6,17 @@ import org.eclipse.paho.mqttv5.client.MqttDisconnectResponse;
 import org.eclipse.paho.mqttv5.common.MqttException;
 import org.eclipse.paho.mqttv5.common.MqttMessage;
 import org.eclipse.paho.mqttv5.common.packet.MqttProperties;
+import org.springframework.stereotype.Component;
 
+/**
+ * MqttCallbackHandler class.
+ * 
+ * This class implements the MqttCallback interface and overrides all of its
+ * methods. This class is used to handle callbacks from the Paho Java Client.
+ * 
+ * @see org.eclipse.paho.mqttv5.client.MqttCallback
+ */
+@Component
 public class MqttCallbackHandler implements MqttCallback {
 
     @Override

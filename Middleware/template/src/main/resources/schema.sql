@@ -1,5 +1,5 @@
 CREATE TABLE template (
-    id varchar(255) NOT NULL,
+    id SERIAL NOT NULL,
     message varchar(255) NOT NULL,
     number INTEGER NOT NULL,
     PRIMARY KEY (id)
