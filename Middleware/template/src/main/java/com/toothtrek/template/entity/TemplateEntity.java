@@ -8,9 +8,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
-@Entity
-@Table(name = "template") // Name of the table in the database
-@Data
+@Entity // Marks this class as an entity.
+@Table(name = "template") // Name of the table in the database.
+@Data // Automatically generates getters and setters.
 public class TemplateEntity {
     // Primary key for the table (the attribute after this annotation)
     @Id
