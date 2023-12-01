@@ -1,7 +1,5 @@
 package com.toothtrek.template;
 
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -39,7 +37,7 @@ public class TemplateApplication implements CommandLineRunner {
 		// Initialize MQTT
 		mqttHandler.initialize(mqttCallbackHandler);
 		mqttHandler.connect(true, true);
-		mqttHandler.subscribe("toothtrek/booking_service/+/+/", 1);
+		mqttHandler.subscribe("toothtrek/template_service/+/+/", 1);
 
 		/*
 		 * Example MQTT publish:
