@@ -43,7 +43,8 @@ public class MqttHandler {
     public void initialize(MqttCallbackHandler mqttCallbackHandler) {
         try {
             // Setup options
-            if (this.clientId == null) {
+            this.clientId = env.getProperty("mqtt.clientId");
+            if (this.clientId.toLowerCase() == "random" || this.clientId.toLowerCase() == "r") {
                 // random client id
                 this.clientId = (UUID.randomUUID().toString());
             }

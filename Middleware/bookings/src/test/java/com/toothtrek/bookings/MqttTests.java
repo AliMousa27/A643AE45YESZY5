@@ -82,8 +82,18 @@ public class MqttTests {
 
     @Test
     void mqttPubAndSub() {
+        // Will automatically wait for completion.
+        // See IMqttToken.waitForCompletion()
         mqttHandler.subscribe(topic);
         mqttHandler.publish(topic, content);
+
+        // Guarantee that the callback has sufficient time to execute.
+        // To avoid race conditions.
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         assertEquals(true, messageArrived);
         assertEquals(true, messageDelivered);
