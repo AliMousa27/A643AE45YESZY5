@@ -32,11 +32,9 @@ class Request {
       return http
           .get(url, headers: {"Accept": "application/json"}).then((response) {
         var data = jsonDecode(response.body);
-        print("data type is ${data.runtimeType}");
         List<DentistOffice> offices = [];
         for (var office in data) {
           offices.add(DentistOffice.fromJson(office));
-          print(offices[0]);
         }
         return offices;
       });

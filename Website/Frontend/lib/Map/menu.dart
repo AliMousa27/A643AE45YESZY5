@@ -1,21 +1,19 @@
-//side menu code documentation
-//https://docs.flutter.dev/cookbook/effects/staggered-menu-animation
 import 'package:flutter/material.dart';
-import 'package:flutter_application/Map/dentist_apointment.dart';
-import 'package:flutter_application/Map/map_page_util.dart';
+import 'dentist_apointment.dart';
+import 'expansion_tile.dart';
 
 class Menu extends StatefulWidget {
   final List<DentistOffice> offices;
-  const Menu({Key? key, required this.offices}) : super(key: key);
+  late List<GlobalKey<CustomExpansionTileState>> keys;
+  final ScrollController scrollController;
+  Menu({Key? key, required this.offices, required this.scrollController})
+      : super(key: key);
 
   @override
-  State<Menu> createState() => _MenuState();
+  State<Menu> createState() => MenuState();
 }
 
-class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
-  //Todo request the data and popualte it in init state probably
-  DateTime? selectedDate;
-
+class MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   static const _initialDelayTime = Duration(milliseconds: 50);
   static const _itemSlideTime = Duration(milliseconds: 250);
   static const _staggerTime = Duration(milliseconds: 50);
@@ -67,6 +65,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
         const SizedBox(height: 65),
         Expanded(
           child: ListView(
+            controller: widget.scrollController,
             children: [
               Container(
                 color: Theme.of(context).colorScheme.primaryContainer,
@@ -81,12 +80,18 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
 
   Widget _buildContent() {
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: _buildListItems());
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: _buildListItems(),
+    );
   }
 
   List<Widget> _buildListItems() {
+    //creating keys to be assigned to tiles
+    widget.keys = List.generate(
+        widget.offices.length, (index) => GlobalKey<CustomExpansionTileState>(),
+        growable: false);
     final listItems = <Widget>[];
+
     for (var i = 0; i < widget.offices.length; ++i) {
       listItems.add(
         Container(
@@ -98,35 +103,43 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
             ),
           ),
           child: AnimatedBuilder(
-              animation: _staggeredController,
-              builder: (context, child) {
-                final animationPercent = Curves.easeOut.transform(
-                  _itemSlideIntervals[i].transform(_staggeredController.value),
-                );
-                final opacity = animationPercent;
-                final slideDistance = (1.0 - animationPercent) * 150;
+            animation: _staggeredController,
+            builder: (context, child) {
+              final animationPercent = Curves.easeOut.transform(
+                _itemSlideIntervals[i].transform(_staggeredController.value),
+              );
+              final opacity = animationPercent;
+              final slideDistance = (1.0 - animationPercent) * 150;
 
-                return Opacity(
-                  opacity: opacity,
-                  child: Transform.translate(
-                    offset: Offset(slideDistance, 0),
-                    child: child,
-                  ),
-                );
-              },
-              child: MapUtil.createListCalendars(context, widget.offices[i],
-                  (DateTime date) {
-                selectedDate = date;
-              }, bookApoinment)),
+              return Opacity(
+                opacity: opacity,
+                child: Transform.translate(
+                  offset: Offset(slideDistance, 0),
+                  child: child,
+                ),
+              );
+            },
+            child: CustomExpansionTile(
+              key: widget.keys[i],
+              index: i,
+              expanded: false,
+              office: widget.offices[i],
+              scrollController: widget.scrollController,
+            ),
+          ),
         ),
       );
     }
     return listItems;
   }
 
-  void bookApoinment() {
-    //TODO send request to server
-    //TODO show confirmation
-    print(selectedDate);
+  void scrollToAndExpandTile(int index) {
+    GlobalKey<CustomExpansionTileState> key = widget.keys[index];
+    widget.scrollController.animateTo(
+      100.0 * index,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
+    key.currentState?.expandTile();
   }
 }

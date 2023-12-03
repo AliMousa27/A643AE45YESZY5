@@ -79,6 +79,7 @@ class DentistOffice {
   String name;
   List<DentistAppointment> timeSlots;
   LatLng location;
+
   DentistOffice(this.address, this.name, this.timeSlots, this.location);
 
   factory DentistOffice.fromJson(Map<String, dynamic> json) {

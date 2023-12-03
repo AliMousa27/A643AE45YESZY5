@@ -6,7 +6,8 @@ import 'menu.dart';
 
 class SideDrawer extends StatefulWidget {
   final List<DentistOffice> offices;
-  const SideDrawer({Key? key, required this.offices}) : super(key: key);
+  ScrollController s = ScrollController();
+  SideDrawer({Key? key, required this.offices}) : super(key: key);
 
   @override
   SideDrawerState createState() => SideDrawerState();
@@ -15,6 +16,8 @@ class SideDrawer extends StatefulWidget {
 class SideDrawerState extends State<SideDrawer>
     with SingleTickerProviderStateMixin {
   late AnimationController drawerSlideController;
+  GlobalKey<MenuState> menuKey = GlobalKey<MenuState>();
+
   @override
   void initState() {
     super.initState();
@@ -106,7 +109,12 @@ class SideDrawerState extends State<SideDrawer>
             width: MediaQuery.of(context).size.width * 0.35,
             child: Stack(
               children: [
-                if (!isDrawerClosed()) Menu(offices: widget.offices),
+                if (!isDrawerClosed())
+                  Menu(
+                    key: menuKey,
+                    offices: widget.offices,
+                    scrollController: widget.s,
+                  ),
                 Positioned(
                   top: 0,
                   right: 0,
@@ -118,6 +126,16 @@ class SideDrawerState extends State<SideDrawer>
         );
       },
     );
+  }
+
+  void scrollToAndExpand(int officeIndex) {
+    //open the menu and wait for 5 seconds
+    drawerSlideController.forward();
+    DrawerState.notifyObserver(false);
+    //slight delay to build the menu widget
+    Future.delayed(const Duration(milliseconds: 300), () {
+      menuKey.currentState?.scrollToAndExpandTile(officeIndex);
+    });
   }
 }
 
