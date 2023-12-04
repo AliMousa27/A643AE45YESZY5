@@ -5,18 +5,17 @@
     "node": "18.x"
   },
   "private": true,
-  "description": "Template for ExpressJS API with Mongoose for Web and Mobile Engineering (DIT342)",
+  "description": "ExpressJS API for ToothTrek project",
   "main": "./app.js",
   "scripts": {
     "start": "node ./app.js",
     "dev": "nodemon ./app.js",
     "lint": "eslint .",
-    "test": "cross-env-shell MONGODB_URI=mongodb://localhost:27017/serverTestDB \"npm run newman-server\"",
+    "test": "npm run newman-server",
     "ci-test": "npm run newman-server",
     "newman-server": "cross-env-shell PORT=3001 \"npm run dropdb && run-p --race start newman-wait\"",
     "newman-wait": "wait-on http://localhost:3001/api && npm run newman",
-    "newman": "newman run ./tests/server.postman_collection.json --env-var host=http://localhost:3001",
-    "dropdb": "node ./tests/dropdb.js"
+    "newman": "newman run ./tests/server.postman_collection.json --env-var host=http://localhost:3001"
   },
   "repository": {
     "type": "git",
@@ -27,7 +26,6 @@
     "connect-history-api-fallback": "^1.6.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "mongoose": "^7.4.4",
     "morgan": "^1.10.0",
     "mqtt": "^5.2.2"
   },
