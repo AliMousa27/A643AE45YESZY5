@@ -174,9 +174,11 @@ class _AuthenticationState extends State<Authentication> {
     try {
       final credential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
+      FirebaseAuth.instance.currentUser?.sendEmailVerification();
       Request.sendSignupRequest(credential.user!.uid, credential.user!.email!);
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const MapPage()));
+      errorMsg = "Please verify your email and log in";
+      setState(() {});
+      await FirebaseAuth.instance.signOut();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         errorMsg = 'The password provided is too weak.';

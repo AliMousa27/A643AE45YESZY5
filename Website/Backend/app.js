@@ -2,8 +2,9 @@ var express = require('express');
 var morgan = require('morgan');
 var path = require('path');
 var cors = require('cors');
-var logs = require('./logs.js');
-var timeslots = require('./timeslots.js');
+
+// template controller
+var template = require('./template.js');
 
 var port = process.env.PORT || 3000;
 
@@ -18,6 +19,9 @@ app.use(morgan('dev'));
 // Enable cross-origin resource sharing for frontend must be registered before api
 app.options('*', cors());
 app.use(cors());
+
+
+app.use(template);
 
 
 app.use(logs);

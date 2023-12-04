@@ -9,7 +9,7 @@ import com.middleware.Logs.mqtt.MqttCallbackHandler;
 @Configuration
 public class config {
 
-    @Bean    
+    @Bean
     public MqttCallbackHandler mqttCallbackHandler(LogsService logsService) {
         return new MqttCallbackHandler(logsService);
     }

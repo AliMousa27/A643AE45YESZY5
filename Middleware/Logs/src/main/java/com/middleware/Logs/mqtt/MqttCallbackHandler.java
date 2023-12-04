@@ -1,4 +1,5 @@
 package com.middleware.Logs.mqtt;
+
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -58,8 +59,6 @@ public class MqttCallbackHandler implements MqttCallback {
         Timestamp time = new Timestamp(new Date().getTime());
         Logs log = new Logs(email, sqlStatement.toString(), time, messageString, topic);
         logService.saveLog(log);
-
-
     }
 
     @Override
