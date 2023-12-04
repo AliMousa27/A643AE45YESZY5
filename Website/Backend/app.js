@@ -7,7 +7,7 @@ var cors = require('cors');
 var template = require('./template.js');
 
 var port = process.env.PORT || 3000;
-
+var timeslots = require('./routers/timeslots.js');
 // Create Express app
 var app = express();
 // Parse requests of content-type 'application/json'
@@ -22,9 +22,6 @@ app.use(cors());
 
 
 app.use(template);
-
-
-app.use(logs);
 app.use(timeslots);
 console.log(new Date().toString());
 // Import routes

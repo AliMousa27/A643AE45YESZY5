@@ -84,14 +84,14 @@ class DentistOffice {
 
   factory DentistOffice.fromJson(Map<String, dynamic> json) {
     List<DentistAppointment> timeSlots = [];
-    for (var slot in json["timeslot"]) {
-      timeSlots.add(DentistAppointment.fromJson(slot));
+    for (var slot in json["timeslots"]) {
+      timeSlots.add(DentistAppointment.fromJson(slot["timeslot"]));
     }
     return DentistOffice(
-      json["address"],
-      json["name"],
+      json["office"]["address"],
+      json["office"]["name"],
       timeSlots,
-      LatLng(json["latitude"], json["longitude"]),
+      LatLng(json["office"]["latitude"], json["office"]["longitude"]),
     );
   }
 }

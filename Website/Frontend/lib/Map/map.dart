@@ -48,51 +48,54 @@ class MapPageState extends State<MapPage> {
     return mobileLayout(screenHeight, screenWidth, resizeProfilePic);
   }
 
-  Scaffold mobileLayout(
+  Widget mobileLayout(
       double screenHeight, double screenWidth, bool resizeProfilePic) {
-    return Scaffold(
-      appBar: AppBar(
-        actions: [
-          Row(
-            //TODO define path in a dropdown menu for user navigation
-            children: [
-              Container(
-                width: screenWidth * 0.5,
-                height: double.infinity,
-                color: Theme.of(context).colorScheme.secondary,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    MapUtil.buildCircleAvatar(
-                        "../assets/Fulltooth.png", false, screenWidth),
-                    SizedBox(width: screenWidth * 0.05),
-                    //TODO change to user profile picture
-                    MapUtil.buildCircleAvatar(
-                        "../assets/profile.png", false, screenWidth),
-                  ],
-                ),
+    return FutureBuilder(
+        future: dentistOfficesFuture,
+        builder: (BuildContext context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Text("Error: ${snapshot.error}");
+          } else {
+            return Scaffold(
+              appBar: AppBar(
+                actions: [
+                  Row(
+                    //TODO define path in a dropdown menu for user navigation
+                    children: [
+                      Container(
+                        width: screenWidth * 0.5,
+                        height: double.infinity,
+                        color: Theme.of(context).colorScheme.secondary,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            MapUtil.buildCircleAvatar(
+                                "../assets/Fulltooth.png", false, screenWidth),
+                            SizedBox(width: screenWidth * 0.05),
+                            //TODO change to user profile picture
+                            MapUtil.buildCircleAvatar(
+                                "../assets/profile.png", false, screenWidth),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(left: screenWidth * 0.07),
+                    height: double.infinity,
+                    width: screenWidth * 0.5,
+                    color: Theme.of(context).colorScheme.primary,
+                    child: MapUtil.createDentistOfficesText(
+                      context,
+                      screenWidth,
+                      snapshot.data!.length,
+                    ),
+                  )
+                ],
               ),
-            ],
-          ),
-          Container(
-            padding: EdgeInsets.only(left: screenWidth * 0.07),
-            height: double.infinity,
-            width: screenWidth * 0.5,
-            color: Theme.of(context).colorScheme.primary,
-            child: MapUtil.createDentistOfficesText(context, screenWidth),
-          )
-        ],
-      ),
-      body: FutureBuilder(
-          future: dentistOfficesFuture,
-          builder: (BuildContext context,
-              AsyncSnapshot<List<DentistOffice>> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Text("Error: ${snapshot.error}");
-            } else {
-              return Stack(children: [
+              body: Stack(children: [
                 createMap(
                   "mapbox://styles/bigman360/clpa24zoi004g01p95rqx61hw",
                   "pk.eyJ1IjoiYmlnbWFuMzYwIiwiYSI6ImNscDl5dmM5MzAyMHAyanBkYmw1a24yd2EifQ.L1FfrH4Als9i33KTf0wStw",
@@ -114,10 +117,10 @@ class MapPageState extends State<MapPage> {
                     ),
                   ],
                 ),
-              ]);
-            }
-          }),
-    );
+              ]),
+            );
+          }
+        });
   }
 
   Scaffold desktopLayout(
@@ -141,6 +144,7 @@ class MapPageState extends State<MapPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     NavBar(
+                      dentistOfficesCount: snapshot.data!.length,
                       screenHeight: screenHeight,
                       screenWidth: screenWidth,
                       resizeProfilePic: resizeProfilePic,
@@ -221,10 +225,8 @@ class MapPageState extends State<MapPage> {
 
   void addIcon() async {
     List<DentistOffice>? dentists = await dentistOfficesFuture;
-
     for (int i = 0; i < dentists!.length; i++) {
       DentistOffice office = dentists[i];
-
       SymbolOptions options = SymbolOptions(
         geometry: office.location,
         iconSize: 0.1,
@@ -233,6 +235,7 @@ class MapPageState extends State<MapPage> {
 
       mapController.addSymbol(options);
     }
+
     mapController.onSymbolTapped.add((argument) {
       onSymbolClick(argument);
     });

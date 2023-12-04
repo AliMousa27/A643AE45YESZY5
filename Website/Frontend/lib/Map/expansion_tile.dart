@@ -56,7 +56,7 @@ class CustomExpansionTileState extends State<CustomExpansionTile> {
     });
   }
 
-  Padding createListCalendars(BuildContext context, office) {
+  Padding createListCalendars(BuildContext context, DentistOffice office) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16),
       //wrapped with theme to remove annoying needless borders
@@ -64,23 +64,19 @@ class CustomExpansionTileState extends State<CustomExpansionTile> {
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
           key: tileKey,
-
           title: WidgetUtil.createText(
             Theme.of(context).colorScheme.onPrimaryContainer,
             20,
             office.name,
             context,
           ),
-
           controller: expansionTileController,
-          //TODO change to the actual address or whatever we will be using
           subtitle: WidgetUtil.createText(
             Theme.of(context).colorScheme.onPrimary,
             20,
             office.address,
             context,
           ),
-
           children: [
             SfCalendar(
               onTap: (calendarTapDetails) {
