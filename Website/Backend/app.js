@@ -2,7 +2,6 @@ var express = require('express');
 var morgan = require('morgan');
 var path = require('path');
 var cors = require('cors');
-var logs = require('./logs.js');
 
 // template controller
 var template = require('./template.js');
@@ -22,7 +21,6 @@ app.options('*', cors());
 app.use(cors());
 
 
-app.use(logs);
 app.use(template);
 
 console.log(new Date().toString());
