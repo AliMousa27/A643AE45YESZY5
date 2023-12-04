@@ -28,7 +28,7 @@ class Request {
 
   static Future<List<DentistOffice>> getOffices() async {
     try {
-      var url = Uri.http('127.0.0.1:3000', 'offices');
+      var url = Uri.http('127.0.0.1:3000', 'offices/UID');
       return http
           .get(url, headers: {"Accept": "application/json"}).then((response) {
         var data = jsonDecode(response.body);

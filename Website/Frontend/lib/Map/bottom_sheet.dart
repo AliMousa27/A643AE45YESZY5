@@ -27,7 +27,6 @@ class BottomSheetMenuState extends State<BottomSheetMenu> {
 
   void _onChanged() {
     final currentSize = _controller.size;
-    BottomSheetState.notifyObserver(currentSize);
     if (currentSize <= 0.05) _collapse();
   }
 
@@ -119,17 +118,5 @@ class BottomSheetMenuState extends State<BottomSheetMenu> {
   void bookApoinment() {
     //TODO: implement bookApoinment
     print("selected date is $selectedDate");
-  }
-}
-
-class BottomSheetState extends ChangeNotifier {
-  static late MapPageState observer;
-
-  static void registerObserver(MapPageState bottomSheet) {
-    observer = bottomSheet;
-  }
-
-  static void notifyObserver(double newValue) {
-    observer.notify(newValue);
   }
 }

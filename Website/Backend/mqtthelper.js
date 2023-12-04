@@ -20,21 +20,33 @@ mqttClient.on('connect', () => {
 mqttClient.on('error', (err) => {
     return next(err)
 })
+mqttClient.handleRequest = function(req, res, requestTopic, uid) {
+    try {
+        console.log('Requesting timeslots for office:', uid);
+        const responseTopic = `${requestTopic}/${uid}`;
 
-function publishToTopic(topic, message, next) {
-    mqttClient.publish(topic, message, { qos: QOS, retain: false }, (error) => {
-        if (error) {
-            return next(error)
-        }
-    })
-}
+        this.subscribe(responseTopic);
+        this.publish(requestTopic, JSON.stringify({ id: uid }));
 
-function subscribeToTopic(topic, next) {
-    mqttClient.subscribe(topic, { qos: QOS }, (error) => {
-        if (error) {
-            return next(error)
-        }
-    })
-}
+        const timeout = setTimeout(() => {
+            res.status(500).json({ error: 'Request timed out' });
+            this.unsubscribe(responseTopic);
+        }, 5000);
+
+        this.once('message', (topic, message) => {
+            if (topic === responseTopic) {
+                clearTimeout(timeout);
+                res.json(JSON.parse(message.toString()));
+                this.unsubscribe(responseTopic);
+            }
+        });
+
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+module.exports = mqttClient;
 
 module.exports = mqttClient;

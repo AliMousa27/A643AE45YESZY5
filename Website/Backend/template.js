@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var mqttClient = require('./mqttHelper.js');
-/*
+
 router.get('/:id', async function (req, res, next) {
     try {
         console.log('Requesting timeslots for office:', req.params.id);
@@ -32,7 +32,7 @@ router.get('/:id', async function (req, res, next) {
         console.error('Error:', error);
         res.status(500).send('Internal Server Error');
     }
-});*/
+});
 
 
 module.exports = router;

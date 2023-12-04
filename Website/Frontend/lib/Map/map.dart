@@ -20,7 +20,6 @@ class MapPage extends StatefulWidget {
 class MapPageState extends State<MapPage> {
   bool sideBarIsCollapsed = true;
   late MapboxMapController mapController;
-  double bottomSheetValue = 0.5;
   Future<List<DentistOffice>>? dentistOfficesFuture;
   GlobalKey<SideDrawerState> sideDrawerKey = GlobalKey<SideDrawerState>();
   GlobalKey<BottomSheetMenuState> bottomSheetKey =
@@ -29,7 +28,6 @@ class MapPageState extends State<MapPage> {
   void initState() {
     super.initState();
     DrawerState.registerObserver(this);
-    BottomSheetState.registerObserver(this);
     dentistOfficesFuture = Request.getOffices();
   }
 
@@ -40,7 +38,6 @@ class MapPageState extends State<MapPage> {
     bool resizeProfilePic = screenWidth < 443;
     if (screenWidth > 668) {
       //reset bottom sheet value as screensize is desktop
-      notify(0);
       return desktopLayout(screenHeight, screenWidth, resizeProfilePic);
     }
     //if the screen changes to from desktop to mobile make mark sidebar as collapsed to avoid map issues
@@ -207,15 +204,11 @@ class MapPageState extends State<MapPage> {
     addIcon();
   }
 
-  void notify(Object newValue) {
+  void notify(bool newValue) {
     setState(() {
       //bool for sidebar collapsed notifcations
-      if (newValue is bool) {
-        sideBarIsCollapsed = newValue;
-        //double for bottom sheet notifications
-      } else if (newValue is double) {
-        bottomSheetValue = newValue;
-      }
+      sideBarIsCollapsed = newValue;
+      //double for bottom sheet notifications
     });
   }
 
