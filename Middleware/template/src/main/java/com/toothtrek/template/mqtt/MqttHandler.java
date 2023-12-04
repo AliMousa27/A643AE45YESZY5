@@ -47,7 +47,7 @@ public class MqttHandler {
         try {
             // Setup options
             this.clientId = env.getProperty("mqtt.clientId");
-            if (this.clientId.toLowerCase() == "random" || this.clientId.toLowerCase() == "r") {
+            if (this.clientId.toLowerCase().equalsIgnoreCase("random") || this.clientId.toLowerCase().equalsIgnoreCase("r")) {
                 // random client id
                 this.clientId = (UUID.randomUUID().toString());
             }
