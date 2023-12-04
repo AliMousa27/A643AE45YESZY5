@@ -1,4 +1,4 @@
-package com.toothtrek.mqtt;
+package com.toothtrek.template.mqtt;
 
 import org.eclipse.paho.mqttv5.client.IMqttToken;
 import org.eclipse.paho.mqttv5.client.MqttCallback;
@@ -6,8 +6,26 @@ import org.eclipse.paho.mqttv5.client.MqttDisconnectResponse;
 import org.eclipse.paho.mqttv5.common.MqttException;
 import org.eclipse.paho.mqttv5.common.MqttMessage;
 import org.eclipse.paho.mqttv5.common.packet.MqttProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import com.toothtrek.template.request.templateEntity.TemplateRequestAllocatorService;
+import com.toothtrek.template.request.templateEntity.TemplateRequestType;
+
+
+/**
+ * MqttCallbackHandler class.
+ * 
+ * This class implements the MqttCallback interface and overrides all of its
+ * methods. This class is used to handle callbacks from the Paho Java Client.
+ * 
+ * @see org.eclipse.paho.mqttv5.client.MqttCallback
+ */
+@Component
 public class MqttCallbackHandler implements MqttCallback {
+
+    @Autowired
+    TemplateRequestAllocatorService templateRequestAllocatorService;
 
     @Override
     public void disconnected(MqttDisconnectResponse disconnectResponse) {
@@ -29,6 +47,17 @@ public class MqttCallbackHandler implements MqttCallback {
         System.out.println("   Topic: " + topic);
         System.out.println("   Message: " + message.toString());
         System.out.println();
+        String[] topicParts = topic.split("/");
+
+        switch (topicParts[2]) {
+            case "template":
+                templateRequestAllocatorService.handleRequest(TemplateRequestType.fromString(topicParts[3]), message);
+                break;
+
+            default:
+                throw new UnsupportedOperationException("Unknown request type.");
+            // break;
+        }
     }
 
     @Override
