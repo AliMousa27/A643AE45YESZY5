@@ -15,7 +15,7 @@ Java 17 or above installed with environment variable set.
 
     * `DB_HOST`: The host of the database. (e.g. `localhost`)
     * `DB_PORT`: The port of the database. (e.g. `5432`)
-    * `DB_NAME`: The name of the database. (e.g. `postgres`)
+    * `DB_NAME`: The name of the database. (e.g. `bookings`)
     * `DB_USERNAME`: The username of the database. (e.g. `postgres`)
     * `DB_PASSWORD`: The password of the database. (e.g. `password`)
     * `MQTT_BROKER`: The address of the broker. (e.g. `tcp://localhost:1883`)
