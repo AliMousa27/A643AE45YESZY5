@@ -1,4 +1,9 @@
+import 'dart:convert';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application/Map/map.dart';
+import 'package:flutter_application/request.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import '../widget_util.dart';
 import 'dentist_apointment.dart';
@@ -8,7 +13,6 @@ class CustomExpansionTile extends StatefulWidget {
   final DentistOffice office;
   final ScrollController scrollController;
   final int index;
-
   CustomExpansionTile({
     Key? key,
     required this.expanded,
@@ -24,8 +28,8 @@ class CustomExpansionTile extends StatefulWidget {
 class CustomExpansionTileState extends State<CustomExpansionTile> {
   bool isExpanded = false;
   final tileKey = GlobalKey();
+  late int selectedAppointmentId;
 
-  late DateTime? selectedDate;
   final ExpansionTileController expansionTileController =
       ExpansionTileController();
 
@@ -40,14 +44,104 @@ class CustomExpansionTileState extends State<CustomExpansionTile> {
     return createListCalendars(context, widget.office);
   }
 
-  void onDateSelected(DateTime? date) {
-    setState(() {
-      selectedDate = date;
-    });
+  void onDateSelected(CalendarTapDetails calendarTapDetails) {
+    var appointmentIndex = calendarTapDetails.appointments!.first;
+    selectedAppointmentId = appointmentIndex.id;
   }
 
-  void bookApointment() {
-    print("booking");
+  void bookApointment() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+
+    if (user != null) {
+      var patient = {
+        "id": user.uid,
+        "name": user.displayName,
+        "email": user.email,
+        "dateOfBirth": "bogus date"
+      };
+      var payload = {"patient": patient, "timeSlotId": selectedAppointmentId};
+      String json = jsonEncode(payload);
+
+      late BuildContext dialogContext;
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          dialogContext = context;
+
+          return const Dialog(
+            child: Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(width: 30),
+                  Text("Processing..."),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+
+      bool success = await Request.sendBookingRequest();
+      if (context.mounted) Navigator.pop(dialogContext);
+
+      if (success && context.mounted) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return showSuc(
+                "Booking successful",
+                "Your booking was successfully completed",
+                const Icon(Icons.check, color: Colors.green),
+                success);
+          },
+        );
+      } else if (context.mounted) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return showSuc(
+                "Booking failed",
+                "Your booking was not completed, please try again later",
+                const Icon(Icons.error, color: Colors.red),
+                success);
+          },
+        );
+      }
+    }
+  }
+
+  AlertDialog showSuc(
+      String titleMessage, String subtitleMessage, Icon icon, bool success) {
+    return AlertDialog(
+      title: Text(titleMessage),
+      content: Row(
+        children: [
+          icon,
+          Text(subtitleMessage),
+        ],
+      ),
+      actions: <Widget>[
+        Center(
+          child: TextButton(
+            child: const Text('OK'),
+            onPressed: () {
+              Navigator.of(context).pop();
+              //reload the page to reflect that the booking is not there
+              //logic: request back from server to get timeslots -> timeslot wont be shown since its booked
+              if (success) {
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => const MapPage()));
+              }
+            },
+          ),
+        ),
+      ],
+    );
   }
 
   void expandTile() {
@@ -80,7 +174,7 @@ class CustomExpansionTileState extends State<CustomExpansionTile> {
           children: [
             SfCalendar(
               onTap: (calendarTapDetails) {
-                onDateSelected(calendarTapDetails.date);
+                onDateSelected(calendarTapDetails);
               },
               appointmentBuilder: (context, calendarAppointmentDetails) =>
                   Container(

@@ -31,7 +31,7 @@ mqttClient.handleRequest = function(req, res, requestTopic, uid) {
         const timeout = setTimeout(() => {
             res.status(500).json({ error: 'Request timed out' });
             this.unsubscribe(responseTopic);
-        }, 5000);
+        }, 50000);//CHANGE BACK TO 10 SEC
 
         this.once('message', (topic, message) => {
             if (topic === responseTopic) {

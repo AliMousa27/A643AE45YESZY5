@@ -1,7 +1,7 @@
 
 var express = require('express');
 var router = express.Router();
-var mqttClient = require('./../mqttHelper.js');
+var mqttClient = require('./../mqtthelper.js');
 
 
 router.get('/offices/:id', (req, res) => {

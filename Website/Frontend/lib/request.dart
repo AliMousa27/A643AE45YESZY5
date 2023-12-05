@@ -26,6 +26,21 @@ class Request {
         }));
   }
 
+  static Future<bool> sendBookingRequest() async {
+    try {
+      var url = Uri.http('127.0.0.1:3000', 'bookings/UID');
+      return http
+          .post(url, headers: {"Accept": "application/json"}).then((response) {
+        Map<String, dynamic> data = jsonDecode(response.body);
+        bool success = data["success"];
+        return success;
+      });
+    } catch (error) {
+      print(error);
+      return false;
+    }
+  }
+
   static Future<List<DentistOffice>> getOffices() async {
     try {
       var url = Uri.http('127.0.0.1:3000', 'offices/UID');

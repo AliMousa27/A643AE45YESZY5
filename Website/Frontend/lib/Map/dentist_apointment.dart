@@ -44,7 +44,8 @@ class DentistAppointmentDataSource extends CalendarDataSource {
 
 class DentistAppointment {
   /// Creates a DentistAppointment class with required details.
-  DentistAppointment(this.from, this.to, this.background, this.eventName);
+  DentistAppointment(
+      this.from, this.to, this.background, this.eventName, this.id);
 
   /// Event name which is equivalent to subject property of [Appointment].
 
@@ -56,13 +57,15 @@ class DentistAppointment {
 
   /// Background which is equivalent to color property of [Appointment].
   Color background;
+  int id;
 
   String eventName;
   factory DentistAppointment.fromJson(Map<String, dynamic> json) {
     DateTime from = DateTime.parse(json["date_and_time"]);
     DateTime to = from.add(const Duration(hours: 2));
     String eventName = "${from.hour} : ${from.minute}";
-    return DentistAppointment(from, to, const Color(0xFF0F8644), eventName);
+    int id = json["id"];
+    return DentistAppointment(from, to, const Color(0xFF0F8644), eventName, id);
   }
   Map<String, dynamic> toJson() {
     return {
