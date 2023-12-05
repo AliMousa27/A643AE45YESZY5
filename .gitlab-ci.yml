@@ -35,6 +35,7 @@ build-frontend:
 
   script:
     - cd Website/Frontend
+    - flutter upgrade
     - flutter pub get
     - flutter build web 
   tags:
