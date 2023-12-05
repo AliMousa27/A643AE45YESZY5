@@ -1,4 +1,4 @@
-package com.toothtrek.template.mqtt;
+package com.toothtrek.bookings.mqtt;
 
 import org.eclipse.paho.mqttv5.client.MqttAsyncClient;
 import org.eclipse.paho.mqttv5.client.MqttConnectionOptions;
@@ -30,16 +30,13 @@ public class MqttHandler {
     private MemoryPersistence persistence;
 
     /**
-     * Empty MqttHandler constructor, required by Spring Boot.
+     * MqttHandler constructor.
      */
     public MqttHandler() {
     }
 
     /**
      * Initialize MqttHandler by setting up attributes and creating a client.
-     * Requires a MqttCallbackHandler object.
-     * <p>
-     * Hint: Use Autowired to inject MqttCallbackHandler object.
      * 
      * @param mqttCallbackHandler MqttCallbackHandler object.
      */
@@ -64,7 +61,7 @@ public class MqttHandler {
     }
 
     /**
-     * Connect to broker using set attributes. Use initialize() before calling this.
+     * Connect to broker.
      * 
      * @param cleanStart         - Sets whether the client and server should
      *                           remember state across restarts and reconnects.
@@ -98,7 +95,7 @@ public class MqttHandler {
     }
 
     /**
-     * Subscribe to topic using set QoS.
+     * Subscribe to topic.
      * 
      * @param topic Topic (e.g. a/b/c)
      */
@@ -107,7 +104,7 @@ public class MqttHandler {
     }
 
     /**
-     * Subscribe to topic with specified QoS.
+     * Subscribe to topic.
      * 
      * @param topic Topic (e.g. a/b/c)
      * @param qos   Quality of Service (0, 1, 2)
@@ -136,7 +133,7 @@ public class MqttHandler {
     }
 
     /**
-     * Publish a payload to specified topic using set QoS.
+     * Publish a payload to specified topic.
      * 
      * @param topic   Topic (e.g. a/b/c)
      * @param content Payload (e.g. lorem ipsum)
@@ -146,7 +143,7 @@ public class MqttHandler {
     }
 
     /**
-     * Publish a payload to specified topic with specified QoS.
+     * Publish a payload to specified topic.
      * 
      * @param topic   Topic (e.g. a/b/c)
      * @param content Payload (e.g. lorem ipsum)
@@ -221,24 +218,6 @@ public class MqttHandler {
      */
     public String getClientId() {
         return this.clientId;
-    }
-
-    /**
-     * Get broker address.
-     * 
-     * @return String
-     */
-    public String getBrokerAddress() {
-        return this.brokerAddress;
-    }
-
-    /**
-     * Get QoS.
-     * 
-     * @return int
-     */
-    public int getQos() {
-        return this.qos;
     }
 
     /**

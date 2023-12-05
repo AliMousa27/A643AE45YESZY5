@@ -12,10 +12,10 @@
 	</parent>
 
 	<groupId>com.toothtrek</groupId>
-	<artifactId>template</artifactId>
+	<artifactId>bookings</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>template</name>
-	<description>Template Middleware Service</description>
+	<name>bookings</name>
+	<description>Bookings Middleware Service</description>
 
 	<properties>
 		<java.version>17</java.version>

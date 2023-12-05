@@ -1,4 +1,4 @@
-package com.toothtrek.template.mqtt;
+package com.toothtrek.bookings.mqtt;
 
 import org.eclipse.paho.mqttv5.client.IMqttToken;
 import org.eclipse.paho.mqttv5.client.MqttCallback;
@@ -9,9 +9,10 @@ import org.eclipse.paho.mqttv5.common.packet.MqttProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.toothtrek.template.request.templateEntity.TemplateRequestAllocatorService;
-import com.toothtrek.template.request.templateEntity.TemplateRequestType;
-
+import com.toothtrek.bookings.request.booking.BookingRequestAllocatorService;
+import com.toothtrek.bookings.request.booking.BookingRequestType;
+import com.toothtrek.bookings.request.timeslot.TimeslotRequestAllocatorService;
+import com.toothtrek.bookings.request.timeslot.TimeslotRequestType;
 
 /**
  * MqttCallbackHandler class.
@@ -25,7 +26,10 @@ import com.toothtrek.template.request.templateEntity.TemplateRequestType;
 public class MqttCallbackHandler implements MqttCallback {
 
     @Autowired
-    TemplateRequestAllocatorService templateRequestAllocatorService;
+    BookingRequestAllocatorService bookingRequestAllocatorService;
+
+    @Autowired
+    TimeslotRequestAllocatorService timeslotRequestAllocatorService;
 
     @Override
     public void disconnected(MqttDisconnectResponse disconnectResponse) {
@@ -42,7 +46,7 @@ public class MqttCallbackHandler implements MqttCallback {
     }
 
     @Override
-    public void messageArrived(String topic, MqttMessage message) throws Exception {
+    public void messageArrived(String topic, MqttMessage message) {
         System.out.println("Message arrived!");
         System.out.println("   Topic: " + topic);
         System.out.println("   Message: " + message.toString());
@@ -50,11 +54,16 @@ public class MqttCallbackHandler implements MqttCallback {
         String[] topicParts = topic.split("/");
 
         switch (topicParts[2]) {
-            case "template":
-                templateRequestAllocatorService.handleRequest(TemplateRequestType.fromString(topicParts[3]), message);
+            case "booking":
+                bookingRequestAllocatorService.handleRequest(BookingRequestType.fromString(topicParts[3]), message);
+                break;
+
+            case "timeslot":
+                timeslotRequestAllocatorService.handleRequest(TimeslotRequestType.fromString(topicParts[3]), message);
                 break;
 
             default:
+                // TODO: Implement unknown request type
                 throw new UnsupportedOperationException("Unknown request type.");
             // break;
         }

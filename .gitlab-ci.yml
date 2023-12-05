@@ -19,7 +19,7 @@ services:
   - postgres:latest
 
 variables:
-  POSTGRES_DB: ToothTrekLogsTest
+  POSTGRES_DB: ToothTrekTest
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: test
   POSTGRES_HOST_AUTH_METHOD: trust
@@ -28,7 +28,7 @@ stages:
   - build
   - test
 
-# Flutter
+# Flutter Frontend
 build-frontend:
   image: "ghcr.io/cirruslabs/flutter:3.13.9"
   stage: build
@@ -57,7 +57,7 @@ test-frontend:
     - cd Website/Frontend
     - flutter test
 
-# Express
+# Express Backend
 build-backend:
   stage: build
 
@@ -120,7 +120,7 @@ test-dentistUI:
 build-template-middleware:
   stage: build
 
-  image: maven:3.9.5-eclipse-temurin-21-alpine
+  image: maven:3.9.5-eclipse-temurin-17-alpine
   tags:
     - docker
 
@@ -149,11 +149,11 @@ test-template-middleware:
     - mvn --show-version test
 
 
-# Logs
+# Java Middleware - Logs
 build-logs-middleware:
   stage: build
 
-  image: maven:3.9.5-eclipse-temurin-21-alpine
+  image: maven:3.9.5-eclipse-temurin-17-alpine
   tags:
     - docker
 
@@ -165,10 +165,41 @@ test-logs-middleware:
   stage: test
   needs: ["build-logs-middleware"]
 
-  image: maven:3.9.5-eclipse-temurin-21-alpine
+  image: maven:3.9.5-eclipse-temurin-17-alpine
   tags:
     - docker
 
   script:
     - cd Middleware/Logs
+    - mvn --show-version test
+
+# Java Middleware - Bookings
+build-bookings-middleware:
+  stage: build
+
+  image: maven:3.9.5-eclipse-temurin-17-alpine
+  tags:
+    - docker
+
+  script:
+    - cd Middleware/bookings
+    - mvn --show-version install -DskipTests
+
+test-bookings-middleware:
+  stage: test
+  needs: ["build-bookings-middleware"]
+
+  image: maven:3.9.5-eclipse-temurin-17-alpine
+  tags:
+    - docker
+
+  variables:
+    POSTGRES_DB: test_booking_db
+
+  script:
+    - apk update && apk add postgresql-client
+    - cd Middleware/bookings/src/main/resources
+    - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -tc "SELECT 1 FROM pg_database WHERE datname = 'test_booking_db'" | grep -q 1 || PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -c "CREATE DATABASE test_booking_db"
+    - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -d test_booking_db -f schema.sql
+    - cd ../../../
     - mvn --show-version test
