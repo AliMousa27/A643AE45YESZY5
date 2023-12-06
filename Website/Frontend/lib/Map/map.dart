@@ -208,7 +208,6 @@ class MapPageState extends State<MapPage> {
     setState(() {
       //bool for sidebar collapsed notifcations
       sideBarIsCollapsed = newValue;
-      //double for bottom sheet notifications
     });
   }
 

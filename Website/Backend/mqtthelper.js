@@ -18,32 +18,37 @@ mqttClient.on('connect', () => {
     console.log(`Connected to mqtt server with url ${connectUrl}`)
 })
 mqttClient.on('error', (err) => {
-    return next(err)
+    print(err)
 })
-mqttClient.handleRequest = function(req, res, requestTopic, uid) {
+mqttClient.handleRequest = function(req, res, requestTopic, uid,body) {
     try {
-        console.log('Requesting timeslots for office:', uid);
         const responseTopic = `${requestTopic}/${uid}`;
-
         this.subscribe(responseTopic);
-        this.publish(requestTopic, JSON.stringify({ id: uid }));
-
+        var publishJson;
+        console.log("the response topic is: " + responseTopic);
+        if(body){
+            publishJson = JSON.stringify({ "responseTopic": responseTopic, ...body });        }
+        else{
+            publishJson = JSON.stringify({ "responseTopic": responseTopic });
+        }
+        this.publish(requestTopic, publishJson);
         const timeout = setTimeout(() => {
-            res.status(500).json({ error: 'Request timed out' });
             this.unsubscribe(responseTopic);
+            return res.status(500).json({ error: 'Request timed out' });
         }, 50000);//CHANGE BACK TO 10 SEC
 
         this.once('message', (topic, message) => {
             if (topic === responseTopic) {
                 clearTimeout(timeout);
-                res.json(JSON.parse(message.toString()));
                 this.unsubscribe(responseTopic);
+                return res.json(JSON.parse(message.toString()));
+
             }
         });
 
     } catch (error) {
         console.error('Error:', error);
-        res.status(500).send('Internal Server Error');
+        return res.status(500).send('Internal Server Error');
     }
 };
 

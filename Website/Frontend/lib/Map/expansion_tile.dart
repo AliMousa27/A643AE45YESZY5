@@ -7,6 +7,7 @@ import 'package:flutter_application/request.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import '../widget_util.dart';
 import 'dentist_apointment.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CustomExpansionTile extends StatefulWidget {
   final bool expanded;
@@ -56,13 +57,12 @@ class CustomExpansionTileState extends State<CustomExpansionTile> {
     if (user != null) {
       var patient = {
         "id": user.uid,
-        "name": user.displayName,
+        "name": "a name thats not null lmao",
         "email": user.email,
-        "dateOfBirth": "bogus date"
+        "dateOfBirth": "2023-10-10"
       };
-      var payload = {"patient": patient, "timeSlotId": selectedAppointmentId};
+      var payload = {"patient": patient, "timeslotId": selectedAppointmentId};
       String json = jsonEncode(payload);
-
       late BuildContext dialogContext;
       showDialog(
         context: context,
@@ -86,14 +86,14 @@ class CustomExpansionTileState extends State<CustomExpansionTile> {
         },
       );
 
-      bool success = await Request.sendBookingRequest();
+      bool success = await Request.sendBookingRequest(json);
       if (context.mounted) Navigator.pop(dialogContext);
 
       if (success && context.mounted) {
         showDialog(
           context: context,
           builder: (BuildContext context) {
-            return showSuc(
+            return showSuccessOrFailure(
                 "Booking successful",
                 "Your booking was successfully completed",
                 const Icon(Icons.check, color: Colors.green),
@@ -104,7 +104,7 @@ class CustomExpansionTileState extends State<CustomExpansionTile> {
         showDialog(
           context: context,
           builder: (BuildContext context) {
-            return showSuc(
+            return showSuccessOrFailure(
                 "Booking failed",
                 "Your booking was not completed, please try again later",
                 const Icon(Icons.error, color: Colors.red),
@@ -115,7 +115,7 @@ class CustomExpansionTileState extends State<CustomExpansionTile> {
     }
   }
 
-  AlertDialog showSuc(
+  AlertDialog showSuccessOrFailure(
       String titleMessage, String subtitleMessage, Icon icon, bool success) {
     return AlertDialog(
       title: Text(titleMessage),
@@ -231,7 +231,7 @@ class CustomExpansionTileState extends State<CustomExpansionTile> {
               child: WidgetUtil.createText(
                 Theme.of(context).colorScheme.surface,
                 20,
-                "Confirm",
+                AppLocalizations.of(context)!.authentication_confirmButton,
                 context,
               ),
             ),

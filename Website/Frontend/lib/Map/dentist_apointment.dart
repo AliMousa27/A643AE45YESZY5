@@ -65,7 +65,7 @@ class DentistAppointment {
     DateTime to = from.add(const Duration(hours: 2));
     String eventName = "${from.hour} : ${from.minute}";
     int id = json["id"];
-    return DentistAppointment(from, to, const Color(0xFF0F8644), eventName, id);
+    return DentistAppointment(from, to, const Color(0xFFEEC4B8), eventName, id);
   }
   Map<String, dynamic> toJson() {
     return {

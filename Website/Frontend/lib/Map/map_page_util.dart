@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
-
 import '../widget_util.dart';
-import 'dentist_apointment.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MapUtil {
   static Widget buildCircleAvatar(
@@ -24,7 +22,7 @@ class MapUtil {
         WidgetUtil.createText(
           Theme.of(context).colorScheme.onSurface,
           20,
-          "Dentist offices: ",
+          AppLocalizations.of(context)!.dentist_offices,
           context,
         ),
         SizedBox(width: screenWidth * 0.01),
