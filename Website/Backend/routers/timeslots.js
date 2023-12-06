@@ -1,8 +1,7 @@
 
 var express = require('express');
 var router = express.Router();
-var mqttClient = require('./../mqtthelper.js');
-
+var mqttClient = require('../mqttHelper');
 
 router.get('/offices/:id', (req, res) => {
   console.log('Requesting offices with id:', req.params.id);
