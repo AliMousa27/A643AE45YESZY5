@@ -1,5 +1,7 @@
 package com.toothtrek.template.mqtt;
 
+import java.util.concurrent.ExecutorService;
+
 import org.eclipse.paho.mqttv5.client.IMqttToken;
 import org.eclipse.paho.mqttv5.client.MqttCallback;
 import org.eclipse.paho.mqttv5.client.MqttDisconnectResponse;
@@ -11,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 import com.toothtrek.template.request.templateEntity.TemplateRequestAllocatorService;
 import com.toothtrek.template.request.templateEntity.TemplateRequestType;
-
 
 /**
  * MqttCallbackHandler class.
@@ -26,6 +27,9 @@ public class MqttCallbackHandler implements MqttCallback {
 
     @Autowired
     TemplateRequestAllocatorService templateRequestAllocatorService;
+
+    @Autowired
+    ExecutorService executorService;
 
     @Override
     public void disconnected(MqttDisconnectResponse disconnectResponse) {
@@ -47,16 +51,22 @@ public class MqttCallbackHandler implements MqttCallback {
         System.out.println("   Topic: " + topic);
         System.out.println("   Message: " + message.toString());
         System.out.println();
+
+        // [0] = "toothtrek"
+        // [1] = "template_service"
+        // [2] = "template" -> the entity
+        // [3] = "create"
         String[] topicParts = topic.split("/");
 
         switch (topicParts[2]) {
             case "template":
-                templateRequestAllocatorService.handleRequest(TemplateRequestType.fromString(topicParts[3]), message);
+                executorService.submit(() -> templateRequestAllocatorService
+                        .handleRequest(TemplateRequestType.fromString(topicParts[3]), message));
                 break;
 
             default:
-                throw new UnsupportedOperationException("Unknown request type.");
-            // break;
+                System.out.println("Unknown topic: " + topic);
+                break;
         }
     }
 

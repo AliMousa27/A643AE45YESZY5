@@ -3,6 +3,8 @@ package com.toothtrek.template.mqtt;
 import org.eclipse.paho.mqttv5.client.MqttAsyncClient;
 import org.eclipse.paho.mqttv5.client.MqttConnectionOptions;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import org.eclipse.paho.mqttv5.client.IMqttToken;
@@ -47,9 +49,10 @@ public class MqttHandler {
         try {
             // Setup options
             this.clientId = env.getProperty("mqtt.clientId");
-            if (this.clientId.toLowerCase().equalsIgnoreCase("random") || this.clientId.toLowerCase().equalsIgnoreCase("r")) {
+            List<String> validIds = Arrays.asList("random", "r", "uuid");
+            if (validIds.contains(this.clientId.toLowerCase())) {
                 // random client id
-                this.clientId = (UUID.randomUUID().toString());
+                this.clientId = UUID.randomUUID().toString();
             }
             this.brokerAddress = env.getProperty("mqtt.broker");
             this.qos = Integer.parseInt(env.getProperty("mqtt.qos"));
@@ -178,6 +181,7 @@ public class MqttHandler {
      */
     public void disconnect() {
         try {
+            System.out.println("Disconnecting from broker: " + this.brokerAddress);
             this.token = this.client.disconnect();
             token.waitForCompletion();
         } catch (MqttException me) {
