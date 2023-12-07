@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.toothtrek.notifications.email.EmailService;
 import com.toothtrek.notifications.entity.Notification;
 import com.toothtrek.notifications.repository.NotificationRepository;
 import com.toothtrek.notifications.request.RequestHandlerInterface;
@@ -22,6 +23,9 @@ public class NotificationCreateRequestHandler implements RequestHandlerInterface
 
     @Autowired
     private ResponseHandler responseHandler;
+
+    @Autowired
+    private EmailService emailService;
 
     @Override
     // !NOTE! 'synchronized'
@@ -39,8 +43,13 @@ public class NotificationCreateRequestHandler implements RequestHandlerInterface
         // Create json object from payload
         JsonObject json = new Gson().fromJson(new String(request.getPayload()), JsonObject.class);
 
+        System.out.println("1 Sending email");
         if (!json.get("scheduled").getAsBoolean()) {
-            // TODO: send email here
+            String email = json.get("email").getAsString();
+            String title = json.get("title").getAsString();
+            String message = json.get("message").getAsString();
+            System.out.println("2 Sending email to: " + email);
+            emailService.sendNotificationEmail(email, title, message);
         } else {
             // Create notification
             Notification notification = new Notification();
