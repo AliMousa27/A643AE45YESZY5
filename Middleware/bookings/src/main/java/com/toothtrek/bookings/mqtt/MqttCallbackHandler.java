@@ -1,5 +1,7 @@
 package com.toothtrek.bookings.mqtt;
 
+import java.util.concurrent.ExecutorService;
+
 import org.eclipse.paho.mqttv5.client.IMqttToken;
 import org.eclipse.paho.mqttv5.client.MqttCallback;
 import org.eclipse.paho.mqttv5.client.MqttDisconnectResponse;
@@ -31,6 +33,9 @@ public class MqttCallbackHandler implements MqttCallback {
     @Autowired
     TimeslotRequestAllocatorService timeslotRequestAllocatorService;
 
+    @Autowired
+    private ExecutorService executorService;
+
     @Override
     public void disconnected(MqttDisconnectResponse disconnectResponse) {
         System.out.println("Disconnected!");
@@ -55,11 +60,13 @@ public class MqttCallbackHandler implements MqttCallback {
 
         switch (topicParts[2]) {
             case "booking":
-                bookingRequestAllocatorService.handleRequest(BookingRequestType.fromString(topicParts[3]), message);
+                executorService.submit(() -> bookingRequestAllocatorService
+                        .handleRequest(BookingRequestType.fromString(topicParts[3]), message));
                 break;
 
             case "timeslot":
-                timeslotRequestAllocatorService.handleRequest(TimeslotRequestType.fromString(topicParts[3]), message);
+                executorService.submit(() -> timeslotRequestAllocatorService
+                        .handleRequest(TimeslotRequestType.fromString(topicParts[3]), message));
                 break;
 
             default:
