@@ -8,8 +8,8 @@ CREATE TABLE office (
     id SERIAL NOT NULL,
     name varchar(255) NOT NULL,
     address varchar(255) NOT NULL,
-    longitude float NOT NULL,
     latitude float NOT NULL,
+    longitude float NOT NULL,
     PRIMARY KEY (id)
 );
 CREATE TABLE dentist (

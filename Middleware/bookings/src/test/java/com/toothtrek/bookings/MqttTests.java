@@ -5,15 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.UUID;
 
 import org.eclipse.paho.mqttv5.client.IMqttToken;
-import org.eclipse.paho.mqttv5.client.MqttCallback;
-import org.eclipse.paho.mqttv5.client.MqttDisconnectResponse;
-import org.eclipse.paho.mqttv5.common.MqttException;
 import org.eclipse.paho.mqttv5.common.MqttMessage;
-import org.eclipse.paho.mqttv5.common.packet.MqttProperties;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -21,69 +14,40 @@ import com.toothtrek.bookings.mqtt.MqttCallbackHandler;
 import com.toothtrek.bookings.mqtt.MqttHandler;
 
 @SpringBootTest
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class MqttTests {
 
     @Autowired
     private MqttHandler mqttHandler;
 
-    @Autowired
-    private MqttCallbackHandler mqttCallbackHandler;
-
-    private static MqttCallback callback = null;
-
-    // Flags to check if message arrived and delivered
+    // Flags to check if message arrived and delivered.
     private static boolean messageArrived = false;
     private static boolean messageDelivered = false;
 
-    // MQTT topic and payload content for testing
-    private static String topic = "toothtrek/test/" + UUID.randomUUID().toString().replace("-", "");
+    // MQTT topic and payload content for testing.
+    private static String topic = "toothtrek/test/" + UUID.randomUUID().toString();
     private static String content = "lorem ipsum";
 
-    @BeforeAll
-    public void setup() {
-        callback = new MqttCallback() {
+    // Customized MQTT callback handler for testing.
+    private static MqttCallbackHandler mqttCallbackHandler = new MqttCallbackHandler() {
 
-            @Override
-            public void disconnected(MqttDisconnectResponse disconnectResponse) {
-            }
+        @Override
+        public void messageArrived(String topic, MqttMessage message) {
+            messageArrived = true;
+        }
 
-            @Override
-            public void mqttErrorOccurred(MqttException exception) {
-            }
-
-            @Override
-            public void messageArrived(String topic, MqttMessage message) throws Exception {
-                messageArrived = true;
-            }
-
-            @Override
-            public void deliveryComplete(IMqttToken token) {
-                messageDelivered = true;
-            }
-
-            @Override
-            public void connectComplete(boolean reconnect, String serverURI) {
-            }
-
-            @Override
-            public void authPacketArrived(int reasonCode, MqttProperties properties) {
-            }
-
-        };
-
-        mqttHandler.getClient().setCallback(callback);
-    }
+        @Override
+        public void deliveryComplete(IMqttToken token) {
+            messageDelivered = true;
+        }
+    };
 
     @Test
-    void mqttConnection() {
+    void testMqttConnectionAndPubSub() {
+        mqttHandler.initialize(mqttCallbackHandler);
+        mqttHandler.connect(false, false);
+
         assert (mqttHandler.isConnected());
-    }
 
-    @Test
-    void mqttPubAndSub() {
-        // Will automatically wait for completion.
-        // See IMqttToken.waitForCompletion()
         mqttHandler.subscribe(topic);
         mqttHandler.publish(topic, content);
 
@@ -97,11 +61,10 @@ public class MqttTests {
 
         assertEquals(true, messageArrived);
         assertEquals(true, messageDelivered);
-    }
 
-    @AfterAll
-    public void cleanup() {
+        // Cleanup
         mqttHandler.unsubscribe(topic);
-        mqttHandler.getClient().setCallback(mqttCallbackHandler);
+        mqttHandler.disconnect();
     }
 }
+
