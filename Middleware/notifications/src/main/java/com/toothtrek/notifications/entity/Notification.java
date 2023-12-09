@@ -17,7 +17,7 @@ import lombok.Data;
 public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "notification_id_seq")
-    @SequenceGenerator(name = "notification_id_seq", sequenceName = "notifcation_id_seq", allocationSize = 1)
+    @SequenceGenerator(name = "notification_id_seq", sequenceName = "notification_id_seq", allocationSize = 1)
     private Long id;
 
     @Column(name = "title")
