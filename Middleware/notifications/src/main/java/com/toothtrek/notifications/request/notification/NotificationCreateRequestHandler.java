@@ -45,13 +45,11 @@ public class NotificationCreateRequestHandler implements RequestHandlerInterface
         // Create json object from payload
         JsonObject json = new Gson().fromJson(new String(request.getPayload()), JsonObject.class);
 
-        System.out.println("1 Sending email");
         if (!json.get("scheduled").getAsBoolean()) {
 
             String email = json.get("email").getAsString();
             String title = json.get("title").getAsString();
             String message = json.get("message").getAsString();
-            System.out.println("2 Sending email to: " + email);
             emailService.sendNotificationEmail(email, title, message);
 
         } else {
@@ -65,16 +63,15 @@ public class NotificationCreateRequestHandler implements RequestHandlerInterface
 
             // Convert date to timestamp
             try {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
                 long time = sdf.parse(json.get("time").getAsString()).getTime();
                 Timestamp ts = new Timestamp(time);
                 notification.setTime(ts);
+                notificationRepo.save(notification);
             } catch (ParseException pe) {
                 responseHandler.reply(ResponseStatus.ERROR, "Wrongly formatted date", request);
                 return;
             }
-
-            notificationRepo.save(notification);
         }
 
         // Reply with success
