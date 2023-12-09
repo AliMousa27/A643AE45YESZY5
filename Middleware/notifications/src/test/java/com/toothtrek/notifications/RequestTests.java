@@ -1,12 +1,9 @@
 package com.toothtrek.notifications;
 
-import org.eclipse.paho.mqttv5.client.IMqttToken;
-import org.eclipse.paho.mqttv5.client.MqttCallback;
-import org.eclipse.paho.mqttv5.client.MqttDisconnectResponse;
-import org.eclipse.paho.mqttv5.common.MqttException;
 import org.eclipse.paho.mqttv5.common.MqttMessage;
 import org.eclipse.paho.mqttv5.common.packet.MqttProperties;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -28,55 +25,30 @@ public class RequestTests {
     private MqttHandler mqttHandler;
 
     @Autowired
-    private MqttCallbackHandler mqttCallbackHandler;
-
-    @Autowired
     private NotificationRepository notificationRepository;
 
     @Autowired
     private NotificationCreateRequestHandler notificationCreateRequestHandler;
 
-    private static MqttCallback callback = null;
-
-    private static boolean replied = false;
     private static boolean arrived = false;
     private static MqttMessage response;
 
+    // Customized MQTT callback handler for testing.
+    private static MqttCallbackHandler mqttCallbackHandler = new MqttCallbackHandler() {
+
+        @Override
+        public void messageArrived(String topic, MqttMessage message) {
+            response = message;
+            arrived = true;
+        }
+    };
+
     @BeforeAll
     public void setup() {
-        callback = new MqttCallback() {
-
-            @Override
-            public void disconnected(MqttDisconnectResponse disconnectResponse) {
-            }
-
-            @Override
-            public void mqttErrorOccurred(MqttException exception) {
-            }
-
-            @Override
-            public void messageArrived(String topic, MqttMessage message) throws Exception {
-                response = message;
-                arrived = true;
-            }
-
-            @Override
-            public void deliveryComplete(IMqttToken token) {
-                replied = true;
-            }
-
-            @Override
-            public void connectComplete(boolean reconnect, String serverURI) {
-            }
-
-            @Override
-            public void authPacketArrived(int reasonCode, MqttProperties properties) {
-            }
-
-        };
-
-        mqttHandler.getClient().setCallback(callback);
+        mqttHandler.initialize(mqttCallbackHandler);
+        mqttHandler.connect(false, false);
     }
+
 
     @Test
     public void createRequest() {
@@ -100,13 +72,18 @@ public class RequestTests {
         mqttHandler.subscribe(responseTopic);
         notificationCreateRequestHandler.handle(message);
 
-        while (!replied || !arrived) {
-            try {
-                Thread.sleep(333);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        for (int i = 0; i < 10; i++) {
+            if (!arrived) {
+                try {
+                    Thread.sleep(333);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                break;
             }
         }
+
 
         // Check if reply is success
         assert (response != null);
@@ -119,9 +96,17 @@ public class RequestTests {
         assert (notification.getEmail().equals("this@that.com"));
     }
 
-    @AfterAll
-    public void cleanup() {
-        notificationRepository.deleteAll();
-        mqttHandler.getClient().setCallback(mqttCallbackHandler);
+    @AfterEach
+    public void reset() {
+        arrived = false;
+        response = null;
     }
+
+    @AfterAll
+    public void cleanUp() {
+        mqttHandler.disconnect();
+
+        notificationRepository.deleteAll();
+    }
+
 }
