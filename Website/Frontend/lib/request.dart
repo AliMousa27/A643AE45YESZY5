@@ -14,8 +14,7 @@ class Request {
           .then((response) {
         Map<String, dynamic> data = jsonDecode(response.body);
         print("the data is $data");
-        bool success = data["success"];
-        return success;
+        return data["status"] == "success";
       });
     } catch (error) {
       print(error);
