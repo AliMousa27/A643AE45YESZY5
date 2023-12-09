@@ -27,7 +27,7 @@ public class Booking {
     /**
      * Booking constructor
      * 
-     * @param patientId   foreign key to patient table, given by Firebase.
+     * @param patientId  foreign key to patient table, given by Firebase.
      * @param timeslotId foreign key to timeslotId table
      */
     public Booking(String patientId, long timeslotId) {
