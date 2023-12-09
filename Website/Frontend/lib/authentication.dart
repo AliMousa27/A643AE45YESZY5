@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_application/home.dart';
+import 'package:flutter_application/Map/map.dart';
 import 'initial_pages_background.dart';
 import 'widget_util.dart';
-import 'request.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -172,10 +171,11 @@ class _AuthenticationState extends State<Authentication> {
   Future<void> signUp(
       String email, String password, BuildContext context) async {
     try {
-      final credential = await FirebaseAuth.instance
+      await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
+      FirebaseAuth.instance.currentUser!;
+
       FirebaseAuth.instance.currentUser?.sendEmailVerification();
-      Request.sendSignupRequest(credential.user!.uid, credential.user!.email!);
       errorMsg = "Please verify your email and log in";
       setState(() {});
       await FirebaseAuth.instance.signOut();
@@ -200,16 +200,11 @@ class _AuthenticationState extends State<Authentication> {
   Future<void> logIn(
       String email, String password, BuildContext context) async {
     try {
-      final credential = await FirebaseAuth.instance
+      await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
-      if (!credential.user!.emailVerified) {
-        errorMsg = "Please verify your email before logging in";
-        setState(() {});
-        await FirebaseAuth.instance.signOut();
-      } else {
-        Request.sendLoginRequest(credential.user!.uid, credential.user!.email!);
+      if (context.mounted) {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const HomePage()));
+            context, MaterialPageRoute(builder: (context) => const MapPage()));
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
