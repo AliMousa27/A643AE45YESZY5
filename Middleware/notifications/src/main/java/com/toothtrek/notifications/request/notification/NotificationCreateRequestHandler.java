@@ -1,6 +1,8 @@
 package com.toothtrek.notifications.request.notification;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import org.eclipse.paho.mqttv5.common.MqttMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,19 +47,33 @@ public class NotificationCreateRequestHandler implements RequestHandlerInterface
 
         System.out.println("1 Sending email");
         if (!json.get("scheduled").getAsBoolean()) {
+
             String email = json.get("email").getAsString();
             String title = json.get("title").getAsString();
             String message = json.get("message").getAsString();
             System.out.println("2 Sending email to: " + email);
             emailService.sendNotificationEmail(email, title, message);
+
         } else {
+
             // Create notification
             Notification notification = new Notification();
             notification.setTitle(json.get("title").getAsString());
             notification.setMessage(json.get("message").getAsString());
             notification.setEmail(json.get("email").getAsString());
-            notification.setTime(Timestamp.valueOf(json.get("time").getAsString()));
             notification.setBookingId(json.get("booking_id").getAsString());
+
+            // Convert date to timestamp
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                long time = sdf.parse(json.get("time").getAsString()).getTime();
+                Timestamp ts = new Timestamp(time);
+                notification.setTime(ts);
+            } catch (ParseException pe) {
+                responseHandler.reply(ResponseStatus.ERROR, "Wrongly formatted date", request);
+                return;
+            }
+
             notificationRepo.save(notification);
         }
 
