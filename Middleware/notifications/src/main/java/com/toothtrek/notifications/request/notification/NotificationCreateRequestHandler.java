@@ -37,7 +37,7 @@ public class NotificationCreateRequestHandler implements RequestHandlerInterface
         // "title": "Your appointment is coming up!",
         // "message": "Your appointment is coming up tomorrow.",
         // "email": "this@that.com",
-        // "time": "2021-05-05T00:00:00.000+00:00"
+        // "time": "2021-05-05T00:00:00.000+00:00",
         // "booking_id": "1234567890",
         // "scheduled": "true"
         // }

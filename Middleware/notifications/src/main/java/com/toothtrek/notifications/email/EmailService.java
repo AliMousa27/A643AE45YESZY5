@@ -16,7 +16,6 @@ public class EmailService {
         message.setTo(to);
         message.setSubject(subject);
         message.setText(body);
-        System.out.println("3 Sending email to: " + to);
 
         javaMailSender.send(message);
     }

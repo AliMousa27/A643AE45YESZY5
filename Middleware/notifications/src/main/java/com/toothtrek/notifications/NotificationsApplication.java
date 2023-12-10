@@ -11,6 +11,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import com.toothtrek.notifications.mqtt.MqttCallbackHandler;
 import com.toothtrek.notifications.mqtt.MqttHandler;
@@ -20,6 +21,7 @@ import io.github.cdimascio.dotenv.DotenvException;
 
 @SpringBootApplication
 @EntityScan("com.toothtrek.notifications.entity")
+@EnableScheduling
 public class NotificationsApplication implements CommandLineRunner {
 
 	// Necessary to decouple the MQTT handler from the MQTT callback handler.
