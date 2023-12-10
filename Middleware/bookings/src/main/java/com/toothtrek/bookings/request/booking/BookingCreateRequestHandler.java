@@ -50,12 +50,16 @@ public class BookingCreateRequestHandler implements RequestHandlerInterface {
         }
 
         // Check if JSON contains all required properties
-        checkJSONProperties(json, MESSAGE_PROPERTIES, request);
+        if (checkMissingJSONProperties(json, MESSAGE_PROPERTIES, request)) {
+            return;
+        }
 
         JsonObject patientJSON = json.get("patient").getAsJsonObject();
 
         // Check if patient JSON contains all required properties
-        checkJSONProperties(patientJSON, MESSAGE_PROPERTIES_PATIENT, request);
+        if (checkMissingJSONProperties(patientJSON, MESSAGE_PROPERTIES_PATIENT, request)) {
+            return;
+        }
 
         // Check if timeslot exists
         try {
@@ -118,12 +122,13 @@ public class BookingCreateRequestHandler implements RequestHandlerInterface {
      * @param properties Required String[] properties
      * @param request    MqttMessage request to reply to
      */
-    private void checkJSONProperties(JsonObject json, String[] properties, MqttMessage request) {
+    private boolean checkMissingJSONProperties(JsonObject json, String[] properties, MqttMessage request) {
         for (String property : properties) {
             if (!json.has(property)) {
                 responseHandler.reply(ResponseStatus.ERROR, "No " + property + " provided", request);
-                return;
+                return true;
             }
         }
+        return false;
     }
 }

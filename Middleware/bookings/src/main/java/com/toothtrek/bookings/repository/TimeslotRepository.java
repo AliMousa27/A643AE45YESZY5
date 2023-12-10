@@ -1,5 +1,6 @@
 package com.toothtrek.bookings.repository;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,6 +11,9 @@ import com.toothtrek.bookings.entity.Timeslot;
 import com.toothtrek.bookings.view.Timeslot.TimeslotDentist;
 
 public interface TimeslotRepository extends JpaRepository<Timeslot, Long> {
+    @Query("SELECT t FROM Timeslot t WHERE t.dentistId = :dentistId AND t.officeId = :officeId AND t.dateAndTime = :dateAndTime")
+    Timeslot findByDentistIdAndOfficeIdAndDateAndTime(Long dentistId, Long officeId, Timestamp dateAndTime);
+
     List<Timeslot> findByOfficeId(Long officeId);
 
     /**
