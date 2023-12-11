@@ -5,7 +5,6 @@ import 'widget_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'Map/map.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'request.dart';
 
 class InitialPage extends StatelessWidget {
   const InitialPage({super.key});
@@ -113,9 +112,6 @@ class InitialPage extends StatelessWidget {
     bool isSigningUp = buttonId == "Sign up BTN";
 
     if (buttonId == "Google BTN") {
-      UserCredential? userCredential = await signInWithGoogle();
-      Request.sendLoginRequest(
-          userCredential.user!.uid, userCredential.user!.email!);
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const MapPage()));
     } else {

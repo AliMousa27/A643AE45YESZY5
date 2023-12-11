@@ -5,9 +5,10 @@ class NavBar extends StatefulWidget {
   final double screenHeight;
   final double screenWidth;
   final bool resizeProfilePic;
-
+  final int dentistOfficesCount;
   const NavBar({
     super.key,
+    required this.dentistOfficesCount,
     required this.screenHeight,
     required this.screenWidth,
     required this.resizeProfilePic,
@@ -117,7 +118,8 @@ class NavBarState extends State<NavBar> {
           width: widget.screenWidth * 0.35,
           height: 66,
           color: Theme.of(context).colorScheme.primary,
-          child: MapUtil.createDentistOfficesText(context, widget.screenWidth),
+          child: MapUtil.createDentistOfficesText(
+              context, widget.screenWidth, widget.dentistOfficesCount),
         ),
       ],
     );

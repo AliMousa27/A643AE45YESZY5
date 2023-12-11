@@ -9,6 +9,8 @@
     "authentication_enterEmail": "E-Mail-Adresse eingeben",
     "authentication_enterPassword": "Passwort eingeben",
     "authentication_confirmPassword": "Passwort bestätigen",
+    "dentist_offices" : "Zahnarztpraxen:"
+    ,
 
     "setting_title": "Einstellungen",
     "setting_notification": "Benachrichtigungen",

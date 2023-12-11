@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
-
 import '../widget_util.dart';
-import 'dentist_apointment.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MapUtil {
   static Widget buildCircleAvatar(
@@ -16,7 +13,7 @@ class MapUtil {
   }
 
   static Widget createDentistOfficesText(
-      BuildContext context, double screenWidth) {
+      BuildContext context, double screenWidth, int dentistOfficesCount) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -25,7 +22,7 @@ class MapUtil {
         WidgetUtil.createText(
           Theme.of(context).colorScheme.onSurface,
           20,
-          "Dentist offices: ",
+          AppLocalizations.of(context)!.dentist_offices,
           context,
         ),
         SizedBox(width: screenWidth * 0.01),
@@ -33,7 +30,7 @@ class MapUtil {
           child: WidgetUtil.createText(
             Theme.of(context).colorScheme.onSurface,
             20,
-            "45",
+            dentistOfficesCount.toString(),
             context,
           ),
         ),
@@ -59,110 +56,5 @@ class MapUtil {
         return [];
       },
     );
-  }
-
-  static Padding createListCalendars(
-      BuildContext context, menuTitle, onDateSelected, bookApoinment) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      //wrapped with theme to remove annoying needless borders
-      child: Theme(
-        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-        child: ExpansionTile(
-          title: WidgetUtil.createText(
-            Theme.of(context).colorScheme.onPrimaryContainer,
-            20,
-            menuTitle,
-            context,
-          ),
-          //TODO change to the actual address or whatever we will be using
-          subtitle: WidgetUtil.createText(
-            Theme.of(context).colorScheme.onPrimary,
-            20,
-            "Lundbygatan 5",
-            context,
-          ),
-          children: [
-            SfCalendar(
-              onTap: (calendarTapDetails) {
-                onDateSelected(calendarTapDetails.date);
-              },
-              appointmentBuilder: (context, calendarAppointmentDetails) =>
-                  Container(
-                decoration: BoxDecoration(
-                    color: calendarAppointmentDetails
-                        .appointments.first.background,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 20,
-                        spreadRadius: 2,
-                        offset: const Offset(0, 10),
-                      )
-                    ]),
-                child: Center(
-                  child: Text(
-                      calendarAppointmentDetails.appointments.first.eventName,
-                      style: TextStyle(
-                          fontFamily: "balsamiq",
-                          color: Theme.of(context).colorScheme.background)),
-                ),
-              ),
-              cellEndPadding: 0,
-              dataSource: DentistAppointmentDataSource(getDataSource(context)),
-              allowAppointmentResize: false,
-              allowDragAndDrop: false,
-              showCurrentTimeIndicator: false,
-              monthViewSettings: const MonthViewSettings(
-                  appointmentDisplayMode:
-                      MonthAppointmentDisplayMode.appointment),
-              view: CalendarView.week,
-              headerStyle: CalendarHeaderStyle(
-                textAlign: TextAlign.center,
-                textStyle: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  color: Theme.of(context).colorScheme.onPrimary,
-                ),
-              ),
-            ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-            TextButton(
-              style: TextButton.styleFrom(
-                shadowColor: Colors.black,
-                backgroundColor:
-                    Theme.of(context).colorScheme.secondaryContainer,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              ),
-              onPressed: bookApoinment,
-              child: WidgetUtil.createText(
-                Theme.of(context).colorScheme.surface,
-                20,
-                "Confirm",
-                context,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  static List<DentistAppointment> getDataSource(BuildContext context) {
-    final List<DentistAppointment> dentistAppointments = <DentistAppointment>[];
-    final DateTime today = DateTime.now();
-    final DateTime startTime =
-        DateTime(today.year, today.month, today.day, today.hour, today.minute);
-    final DateTime endTime = startTime.add(const Duration(hours: 2));
-    String formattedTime = DateFormat('h:mm')
-        .format(today); // This will give you the minutes with leading zeros
-
-    dentistAppointments.add(DentistAppointment(startTime, endTime,
-        Theme.of(context).colorScheme.secondary, formattedTime));
-    return dentistAppointments;
   }
 }

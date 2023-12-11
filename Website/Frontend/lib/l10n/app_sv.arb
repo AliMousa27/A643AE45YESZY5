@@ -9,6 +9,7 @@
     "authentication_enterEmail": "Ange din e-postadress",
     "authentication_enterPassword": "Ange ditt lösenord",
     "authentication_confirmPassword": "Bekräfta ditt lösenord",
+    "dentist_offices" : "Tandläkarmottagningar: " ,
 
     "setting_title": "Inställningar",
     "setting_notification": "Aviseringar",

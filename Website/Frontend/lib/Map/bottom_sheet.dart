@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 
+import 'dentist_apointment.dart';
+import 'expansion_tile.dart';
 import 'map.dart';
-import 'map_page_util.dart';
 
 class BottomSheetMenu extends StatefulWidget {
-  const BottomSheetMenu({super.key});
+  final List<DentistOffice> offices;
+  late final List<GlobalKey<CustomExpansionTileState>> keys;
+  BottomSheetMenu({Key? key, required this.offices}) : super(key: key);
 
   @override
   State<BottomSheetMenu> createState() => BottomSheetMenuState();
@@ -12,25 +15,10 @@ class BottomSheetMenu extends StatefulWidget {
 
 class BottomSheetMenuState extends State<BottomSheetMenu> {
   final _sheet = GlobalKey();
+  final ScrollController scrollController = ScrollController();
   DateTime? selectedDate;
   final _controller = DraggableScrollableController();
-  static const _menuTitles = [
-    'Declarative style',
-    'Premade widgets',
-    'Stateful hot reload',
-    'Native performance',
-    'Great community',
-    'Great community',
-    'Great community',
-    'Great community',
-    'Great community',
-    'Great community',
-    'Great community',
-    'Great community',
-    'Great community',
-    'Great community',
-    'Great community',
-  ];
+
   @override
   void initState() {
     super.initState();
@@ -39,7 +27,6 @@ class BottomSheetMenuState extends State<BottomSheetMenu> {
 
   void _onChanged() {
     final currentSize = _controller.size;
-    BottomSheetState.notifyObserver(currentSize);
     if (currentSize <= 0.05) _collapse();
   }
 
@@ -74,47 +61,29 @@ class BottomSheetMenuState extends State<BottomSheetMenu> {
         MediaQuery.of(context).size.height);
   }
 
-  DraggableScrollableSheet createBottomsheet(
+  Widget createBottomsheet(
       BuildContext context, double screenWidth, double screenHeight) {
-    final controller = DraggableScrollableController();
-
-    controller.addListener(() {
-      final currentSize = controller.size;
-      BottomSheetState.notifyObserver(currentSize);
-      if (currentSize <= 0.05) _collapse();
-    });
-
-    return DraggableScrollableSheet(
-      key: _sheet, // Use the existing key
-      initialChildSize: 0.5,
-      maxChildSize: 0.75,
-      minChildSize: 0.1,
-      expand: true,
-      snap: true,
-      snapSizes: [
-        67 / screenHeight,
-      ],
-
-      controller: controller,
-      builder: (BuildContext context, ScrollController scrollController) {
-        return DecoratedBox(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primaryContainer,
-          ),
-          child: SingleChildScrollView(
-              controller: scrollController,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: _buildListItems(),
-              )),
-        );
-      },
+    return Container(
+      height: screenHeight * 0.4, // Adjust this value as needed
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.primaryContainer,
+      ),
+      child: SingleChildScrollView(
+        controller: scrollController,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: _buildListItems(),
+        ),
+      ),
     );
   }
 
   List<Widget> _buildListItems() {
+    widget.keys = List.generate(
+        widget.offices.length, (index) => GlobalKey<CustomExpansionTileState>(),
+        growable: false);
     final listItems = <Widget>[];
-    for (var i = 0; i < _menuTitles.length; ++i) {
+    for (var i = 0; i < widget.offices.length; ++i) {
       listItems.add(
         Container(
             width: MediaQuery.of(context).size.width,
@@ -124,29 +93,30 @@ class BottomSheetMenuState extends State<BottomSheetMenu> {
                 width: 1,
               ),
             ),
-            child: MapUtil.createListCalendars(context, _menuTitles[i],
-                (DateTime date) {
-              selectedDate = date;
-            }, bookApoinment)),
+            child: CustomExpansionTile(
+              key: widget.keys[i],
+              index: i,
+              expanded: false,
+              office: widget.offices[i],
+              scrollController: scrollController,
+            )),
       );
     }
     return listItems;
   }
 
+  void scrollToAndExpandTile(int index) {
+    GlobalKey<CustomExpansionTileState> key = widget.keys[index];
+    scrollController.animateTo(
+      100.0 * index,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
+    key.currentState?.expandTile();
+  }
+
   void bookApoinment() {
     //TODO: implement bookApoinment
     print("selected date is $selectedDate");
-  }
-}
-
-class BottomSheetState extends ChangeNotifier {
-  static late MapPageState observer;
-
-  static void registerObserver(MapPageState bottomSheet) {
-    observer = bottomSheet;
-  }
-
-  static void notifyObserver(double newValue) {
-    observer.notify(newValue);
   }
 }
