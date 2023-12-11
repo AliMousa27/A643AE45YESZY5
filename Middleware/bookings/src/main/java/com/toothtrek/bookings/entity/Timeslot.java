@@ -2,6 +2,8 @@ package com.toothtrek.bookings.entity;
 
 import java.sql.Timestamp;
 
+import com.google.gson.annotations.SerializedName;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,6 +29,7 @@ public class Timeslot {
     private Long dentistId;
 
     @Column(name = "date_and_time")
+    @SerializedName("date_and_time") // Frontend requires this name.
     private Timestamp dateAndTime;
 
     /**

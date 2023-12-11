@@ -8,5 +8,6 @@
     "authentication_confirmButton": "Потвърди",
     "authentication_enterEmail": "Въведете имейл",
     "authentication_enterPassword": "Въведете парола",
-    "authentication_confirmPassword": "Потвърдете паролата"
+    "authentication_confirmPassword": "Потвърдете паролата",
+    "dentist_offices": "Зъболекарски кабинети: "
 }

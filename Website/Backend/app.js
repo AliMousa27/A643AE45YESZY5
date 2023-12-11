@@ -2,12 +2,10 @@ var express = require('express');
 var morgan = require('morgan');
 var path = require('path');
 var cors = require('cors');
-
-// template controller
-var template = require('./template.js');
-
 var port = process.env.PORT || 3000;
 
+var bookings = require('./routers/bookings.js');
+var timeslots = require('./routers/timeslots.js');
 // Create Express app
 var app = express();
 // Parse requests of content-type 'application/json'
@@ -20,9 +18,9 @@ app.use(morgan('dev'));
 app.options('*', cors());
 app.use(cors());
 
-
-app.use(template);
-
+ 
+app.use(timeslots);
+app.use(bookings);
 console.log(new Date().toString());
 // Import routes
 app.get('/api', function (req, res) {
