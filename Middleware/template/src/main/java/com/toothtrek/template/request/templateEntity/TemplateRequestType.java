@@ -40,4 +40,3 @@ public enum TemplateRequestType {
         return null;
     }
 }
-
