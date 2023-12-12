@@ -30,7 +30,7 @@ public class TemplateRequestAllocatorService {
      * This method is responsible for allocating the correct handler.
      * 
      * @param templateRequest TemplateRequestType - The type of request
-     * @param request        MqttMessage - The request message
+     * @param request         MqttMessage - The request message
      */
     public void handleRequest(TemplateRequestType templateRequest, MqttMessage request) {
         RequestHandlerInterface handler = getHandler(templateRequest);

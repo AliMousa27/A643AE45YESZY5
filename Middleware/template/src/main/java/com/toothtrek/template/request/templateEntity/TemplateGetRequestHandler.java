@@ -14,4 +14,3 @@ public class TemplateGetRequestHandler implements RequestHandlerInterface {
     }
 
 }
-
