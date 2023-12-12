@@ -1,6 +1,6 @@
 var mqtt = require('mqtt');
 const protocol = 'tcp'
-const host = 'broker.hivemq.com'
+const host = 'broker.emqx.io'
 const mqttPort = '1883'
 const clientId = `mqtt_${Math.random().toString(16).slice(3)}`
 const connectUrl = `${protocol}://${host}:${mqttPort}`
@@ -25,13 +25,14 @@ mqttClient.handleRequest = function(req, res, requestTopic, uid,body) {
         const responseTopic = `${requestTopic}/${uid}`;
         this.subscribe(responseTopic);
         var publishJson;
-        console.log("the response topic is: " + responseTopic);
         if(body){
             publishJson = JSON.stringify({ "responseTopic": responseTopic, ...body });        }
         else{
             publishJson = JSON.stringify({ "responseTopic": responseTopic });
         }
         this.publish(requestTopic, publishJson);
+        console.log("the publish json is: " + publishJson)
+        console.log("published to topic " + requestTopic)
         const timeout = setTimeout(() => {
             this.unsubscribe(responseTopic);
             return res.status(500).json({ error: 'Request timed out' });
