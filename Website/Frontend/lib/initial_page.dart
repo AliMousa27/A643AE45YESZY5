@@ -112,6 +112,7 @@ class InitialPage extends StatelessWidget {
     bool isSigningUp = buttonId == "Sign up BTN";
 
     if (buttonId == "Google BTN") {
+      await signInWithGoogle();
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const MapPage()));
     } else {
