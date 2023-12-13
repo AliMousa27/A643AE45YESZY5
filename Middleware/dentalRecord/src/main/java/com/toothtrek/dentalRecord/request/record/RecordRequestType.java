@@ -1,9 +1,10 @@
-package com.toothtrek.template.request.templateEntity;
+package com.toothtrek.dentalRecord.request.record;
 
-public enum TemplateRequestType {
+public enum RecordRequestType {
     // The enum values correspond to the topics
     CREATE,
-    GET;
+    GET,
+    UPDATE;
 
     // The corresponding topic for each enum, see fromTopic()
     // (e.g. CREATE -> "create")
@@ -12,7 +13,7 @@ public enum TemplateRequestType {
     /**
      * Template Request Enum Constructor
      */
-    TemplateRequestType() {
+    RecordRequestType() {
         this.topic = this.name().toLowerCase();
     }
 
@@ -31,8 +32,8 @@ public enum TemplateRequestType {
      * @param text the topic
      * @return TemplateRequest enum or null if not found
      */
-    public static TemplateRequestType fromString(String text) {
-        for (TemplateRequestType request : TemplateRequestType.values()) {
+    public static RecordRequestType fromString(String text) {
+        for (RecordRequestType request : RecordRequestType.values()) {
             if (request.getTopic().equalsIgnoreCase(text)) {
                 return request;
             }
@@ -40,4 +41,3 @@ public enum TemplateRequestType {
         return null;
     }
 }
-

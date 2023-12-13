@@ -1,4 +1,4 @@
-package com.toothtrek.template.response;
+package com.toothtrek.dentalRecord.response;
 
 /**
  * This enum is used to represent the status of a response.

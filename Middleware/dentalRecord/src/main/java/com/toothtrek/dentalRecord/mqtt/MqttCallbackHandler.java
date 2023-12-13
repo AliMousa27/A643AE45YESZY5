@@ -1,4 +1,4 @@
-package com.toothtrek.template.mqtt;
+package com.toothtrek.dentalRecord.mqtt;
 
 import java.util.concurrent.ExecutorService;
 
@@ -11,8 +11,8 @@ import org.eclipse.paho.mqttv5.common.packet.MqttProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.toothtrek.template.request.templateEntity.TemplateRequestAllocatorService;
-import com.toothtrek.template.request.templateEntity.TemplateRequestType;
+import com.toothtrek.dentalRecord.request.record.RecordRequestAllocatorService;
+import com.toothtrek.dentalRecord.request.record.RecordRequestType;
 
 /**
  * MqttCallbackHandler class.
@@ -26,7 +26,7 @@ import com.toothtrek.template.request.templateEntity.TemplateRequestType;
 public class MqttCallbackHandler implements MqttCallback {
 
     @Autowired
-    TemplateRequestAllocatorService templateRequestAllocatorService;
+    RecordRequestAllocatorService recordRequestAllocatorService;
 
     @Autowired
     ExecutorService executorService;
@@ -53,15 +53,14 @@ public class MqttCallbackHandler implements MqttCallback {
         System.out.println();
 
         // [0] = "toothtrek"
-        // [1] = "template_service"
-        // [2] = "template" -> the entity
-        // [3] = "create"
+        // [1] = "record"
+        // [2] = "create"
         String[] topicParts = topic.split("/");
 
-        switch (topicParts[2]) {
-            case "template":
-                executorService.submit(() -> templateRequestAllocatorService
-                        .handleRequest(TemplateRequestType.fromString(topicParts[3]), message));
+        switch (topicParts[1]) {
+            case "record":
+                executorService.submit(() -> recordRequestAllocatorService
+                        .handleRequest(RecordRequestType.fromString(topicParts[2]), message));
                 break;
 
             default:

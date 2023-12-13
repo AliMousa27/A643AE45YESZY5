@@ -1,4 +1,4 @@
-package com.toothtrek.template.mqtt;
+package com.toothtrek.dentalRecord.mqtt;
 
 import org.eclipse.paho.mqttv5.client.MqttAsyncClient;
 import org.eclipse.paho.mqttv5.client.MqttConnectionOptions;

@@ -1,4 +1,4 @@
-package com.toothtrek.template.response;
+package com.toothtrek.dentalRecord.response;
 
 import org.eclipse.paho.mqttv5.common.MqttMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.toothtrek.template.mqtt.MqttHandler;
+import com.toothtrek.dentalRecord.mqtt.MqttHandler;
 
 @Component
 /**

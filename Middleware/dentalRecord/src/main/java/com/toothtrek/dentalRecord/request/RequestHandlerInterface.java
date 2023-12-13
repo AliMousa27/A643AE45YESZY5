@@ -1,4 +1,4 @@
-package com.toothtrek.template.request;
+package com.toothtrek.dentalRecord.request;
 
 import org.eclipse.paho.mqttv5.common.MqttMessage;
 

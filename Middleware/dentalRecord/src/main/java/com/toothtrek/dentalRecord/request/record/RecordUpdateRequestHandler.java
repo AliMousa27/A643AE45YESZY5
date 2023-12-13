@@ -1,12 +1,12 @@
-package com.toothtrek.template.request.templateEntity;
+package com.toothtrek.dentalRecord.request.record;
 
 import org.eclipse.paho.mqttv5.common.MqttMessage;
 import org.springframework.context.annotation.Configuration;
 
-import com.toothtrek.template.request.RequestHandlerInterface;
+import com.toothtrek.dentalRecord.request.RequestHandlerInterface;
 
 @Configuration
-public class TemplateCreateRequestHandler implements RequestHandlerInterface {
+public class RecordUpdateRequestHandler implements RequestHandlerInterface {
 
     @Override
     public void handle(MqttMessage request) {

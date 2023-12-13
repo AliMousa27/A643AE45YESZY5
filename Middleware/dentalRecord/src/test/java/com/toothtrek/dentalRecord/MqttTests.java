@@ -1,4 +1,4 @@
-package com.toothtrek.template;
+package com.toothtrek.dentalRecord;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.toothtrek.template.mqtt.MqttCallbackHandler;
-import com.toothtrek.template.mqtt.MqttHandler;
+import com.toothtrek.dentalRecord.mqtt.MqttCallbackHandler;
+import com.toothtrek.dentalRecord.mqtt.MqttHandler;
 
 @SpringBootTest
 public class MqttTests {

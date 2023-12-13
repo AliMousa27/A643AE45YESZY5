@@ -5,6 +5,7 @@ const morgan = require('morgan');
 
 // Controllers
 const timeslotsController = require('./controllers/timeslots');
+const recordsController = require('./controllers/records');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -17,6 +18,7 @@ app.use(morgan('dev'));
 
 // Controllers usage
 app.use('/api/timeslots', timeslotsController);
+app.use('/api/records', recordsController);
 
 // Catch all non-error handler for api (i.e., 404 Not Found)
 app.use('/api/*', function (req, res) {
