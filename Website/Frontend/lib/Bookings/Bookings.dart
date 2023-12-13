@@ -53,24 +53,45 @@ class _MyBookingsState extends State<MyBookings> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          leading: Image.asset(
-            'assets/FullTooth.png',
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        leading: Image.asset(
+          'assets/FullTooth.png',
+        ),
+        title: SizedBox(
+          width: 200,
+          child: Image.asset(
+            'assets/ToothTrek.png',
+            fit: BoxFit.scaleDown,
           ),
-          title: SizedBox(
-            width: 200,
+        ),
+        actions: buildNavbarActions(
+            screenWidth,
+            Theme.of(context).colorScheme.onPrimary,
+            Theme.of(context).colorScheme.primaryContainer,
+            Theme.of(context).colorScheme.primary),
+      ),
+      body: Row(
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
             child: Image.asset(
-              'assets/ToothTrek.png',
-              fit: BoxFit.scaleDown,
+              'assets/FullTooth.png',
             ),
           ),
-          actions: buildNavbarActions(
-              screenWidth,
-              Theme.of(context).colorScheme.onPrimary,
-              Theme.of(context).colorScheme.primaryContainer,
-              Theme.of(context).colorScheme.primary),
-        ),
-        body: Container());
+          Expanded(
+            child: Container(
+              color: Colors.green,
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Image.asset(
+              'assets/FullTooth.png',
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
