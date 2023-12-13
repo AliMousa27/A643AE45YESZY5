@@ -21,6 +21,7 @@ import com.toothtrek.bookings.repository.OfficeRepository;
 import com.toothtrek.bookings.repository.PatientRepository;
 import com.toothtrek.bookings.repository.TimeslotRepository;
 import com.toothtrek.bookings.request.booking.BookingCreateRequestHandler;
+import com.toothtrek.bookings.request.booking.BookingStateRequestHandler;
 import com.toothtrek.bookings.request.timeslot.TimeslotGetRequestHandler;
 
 @SpringBootTest
@@ -51,6 +52,9 @@ public class RequestTests {
 
     @Autowired
     private BookingCreateRequestHandler bookingCreateRequestHandler;
+
+    @Autowired
+    private BookingStateRequestHandler bookingStateRequestHandler;
 
     // Timeslot request handlers
 
@@ -128,7 +132,83 @@ public class RequestTests {
         // Check if booking is created
         Booking booking = bookingRepository.findByTimeslotId(timeslotId).get(0);
         assert (booking != null);
-        assert (booking.getPatientId().equals("1234567890"));
+        assert (booking.getPatient().getId().equals("1234567890"));
+    }
+
+    @Test
+    public void bookingChangeState() {
+        // JSON message
+        String responseTopic = "test/response/" + System.currentTimeMillis();
+        JsonObject jsonMessage = new JsonObject();
+        jsonMessage.addProperty("id", bookingRepository.findAll().get(0).getId());
+        jsonMessage.addProperty("state", "confirmed");
+        jsonMessage.addProperty("responseTopic", responseTopic);
+
+        // MQTT message
+        MqttMessage message = new MqttMessage();
+        message.setPayload(jsonMessage.toString().getBytes());
+        MqttProperties properties = new MqttProperties();
+        properties.setResponseTopic(responseTopic);
+        message.setProperties(properties);
+
+        mqttHandler.subscribe(responseTopic);
+        bookingStateRequestHandler.handle(message);
+
+        for (int i = 0; i < 10; i++) {
+            if (!messageArrived) {
+                try {
+                    Thread.sleep(333);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                break;
+            }
+        }
+
+        // Check if reply is success
+        assert (response != null);
+        assert (new String(response.getPayload()).contains("success"));
+
+        // Check if booking state is changed
+        Booking booking = bookingRepository.findAll().get(0);
+        assert (booking.getState().toString().equals("confirmed"));
+    }
+
+    @Test
+    public void invalidBookingStateChange() {
+        // JSON message
+        String responseTopic = "test/response/" + System.currentTimeMillis();
+        JsonObject jsonMessage = new JsonObject();
+        jsonMessage.addProperty("id", bookingRepository.findAll().get(0).getId());
+        jsonMessage.addProperty("state", "confirmed"); // Invalid state: Cannot change from confirmed to confirmed
+        jsonMessage.addProperty("responseTopic", responseTopic);
+
+        // MQTT message
+        MqttMessage message = new MqttMessage();
+        message.setPayload(jsonMessage.toString().getBytes());
+        MqttProperties properties = new MqttProperties();
+        properties.setResponseTopic(responseTopic);
+        message.setProperties(properties);
+
+        mqttHandler.subscribe(responseTopic);
+        bookingStateRequestHandler.handle(message);
+
+        for (int i = 0; i < 10; i++) {
+            if (!messageArrived) {
+                try {
+                    Thread.sleep(333);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                break;
+            }
+        }
+
+        // Check if reply is success
+        assert (response != null);
+        assert (new String(response.getPayload()).contains("error"));
     }
 
     @Test
@@ -168,7 +248,6 @@ public class RequestTests {
         // response to JSON
         Gson gson = new Gson();
         JsonObject jsonResponse = gson.fromJson(new String(response.getPayload()), JsonObject.class);
-        System.out.println(jsonResponse.toString());
 
         // Check number of timeslots returned
         /*

@@ -28,8 +28,12 @@ CREATE TABLE timeslot (
     CONSTRAINT fk_office FOREIGN KEY(office_id) REFERENCES office(id),
     CONSTRAINT fk_dentist FOREIGN KEY(dentist_id) REFERENCES dentist(id)
 );
+
+CREATE TYPE booking_state AS ENUM ('confirmed', 'rejected', 'booked', 'cancelled', 'completed');
+
 CREATE TABLE booking (
     id SERIAL NOT NULL,
+    state booking_state NOT NULL DEFAULT 'booked',
     patient_id varchar(255) NOT NULL,
     timeslot_id bigint NOT NULL,
     PRIMARY KEY (id),

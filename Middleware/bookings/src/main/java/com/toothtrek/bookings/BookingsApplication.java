@@ -137,8 +137,8 @@ public class BookingsApplication implements CommandLineRunner {
 			Dentist dentist = dentistRepository.findAll().get(0);
 			Office office2 = officeRepository.findAll().get(1);
 			Dentist dentist2 = dentistRepository.findAll().get(1);
-			Timeslot timeslot = new Timeslot(office.getId(), dentist.getId(), ts);
-			Timeslot timeslot2 = new Timeslot(office2.getId(), dentist2.getId(), ts);
+			Timeslot timeslot = new Timeslot(office, dentist, ts);
+			Timeslot timeslot2 = new Timeslot(office2, dentist2, ts);
 			timeslotRepository.save(timeslot);
 			timeslotRepository.save(timeslot2);
 		}
