@@ -18,12 +18,19 @@ public interface TimeslotRepository extends JpaRepository<Timeslot, Long> {
 
     /**
      * Checks if a timeslot is booked. Returns true if it is, false if it isn't.
+     * <p>
+     * A timeslot is booked when a booking is in one of the following states:
+     * "booked", "confirmed" or "completed".
+     * <p>
+     * Actual query uses != for "rejected" and "cancelled" states.
+     * This is because it is more efficient to check for the NOT cases. 
+     * (There are less of them.)
      * 
      * @param timeslotId The timeslot ID to check.
      * @return boolean
      */
-    @Query("SELECT CASE WHEN (EXISTS (SELECT 1 FROM Booking b WHERE b.timeslotId = :timeslotId)) THEN true ELSE false END")
-    boolean isBooked(Long timeslotId);
+    @Query("SELECT CASE WHEN (EXISTS (SELECT 1 FROM Booking b WHERE b.timeslot.id = :timeslotId AND (b.state != 'rejected' AND b.state != 'cancelled'))) THEN true ELSE false END")
+    boolean isBooked(@Param("timeslotId") Long timeslotId);
 
     /**
      * Searches for timeslots based on the officeID.
@@ -36,6 +43,6 @@ public interface TimeslotRepository extends JpaRepository<Timeslot, Long> {
      * @return List of TimeslotDentist
      * @see com.toothtrek.bookings.repository.view.TimeslotDentist
      */
-    @Query("SELECT t as timeslot, d as dentist FROM Timeslot t JOIN Dentist d ON t.dentistId = d.id WHERE t.officeId = :officeId")
+    @Query("SELECT t as timeslot, d as dentist FROM Timeslot t JOIN Dentist d ON t.dentist.id = d.id WHERE t.office.id = :officeId")
     List<TimeslotDentist> findTimeslotsWithDentistsByOffice(@Param("officeId") Long officeId);
 }
