@@ -103,7 +103,7 @@ public class TimeslotCreateRequestHandler implements RequestHandlerInterface {
         }
 
         // Create timeslot
-        timeslot = new Timeslot(officeId, dentistId, dateAndTime);
+        timeslot = new Timeslot(officeRepo.findById(officeId).get(), dentistRepo.findById(dentistId).get(), dateAndTime);
         timeSlotRepo.save(timeslot);
 
         // Reply with success
