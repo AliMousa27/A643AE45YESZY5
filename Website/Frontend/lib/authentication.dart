@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_application/Map/map.dart';
 import 'initial_pages_background.dart';
 import 'widget_util.dart';
+import 'request.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -208,6 +209,7 @@ class _AuthenticationState extends State<Authentication> {
         await FirebaseAuth.instance.signOut();
       } else {
         if (context.mounted) {
+          Request.createPatient();
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => const MapPage()));
         }

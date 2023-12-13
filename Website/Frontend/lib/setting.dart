@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'setting_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'request.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({Key? key}) : super(key: key);
@@ -11,7 +12,17 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
-  bool notificationValue = true;
+  bool notificationValue = false;
+
+  @override
+  void initState() {
+    super.initState();
+    Request.getNotificationPreference().then((value) {
+      setState(() {
+        notificationValue = value;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +72,7 @@ class _SettingPageState extends State<SettingPage> {
                           setState(() {
                             notificationValue = value;
                           });
+                          Request.setNotificationPreference(value);
                         },
                       ),
                     ],

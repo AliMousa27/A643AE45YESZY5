@@ -1,8 +1,5 @@
 package com.toothtrek.bookings.request.booking;
 
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.NoSuchElementException;
 
 import org.eclipse.paho.mqttv5.common.MqttMessage;
@@ -37,7 +34,7 @@ public class BookingCreateRequestHandler implements RequestHandlerInterface {
     private ResponseHandler responseHandler;
 
     private final String[] MESSAGE_PROPERTIES = { "patient", "timeslotId" };
-    private final String[] MESSAGE_PROPERTIES_PATIENT = { "id", "name", "dateOfBirth" };
+    private final String[] MESSAGE_PROPERTIES_PATIENT = { "id", "name", "email" };
 
     @Override
     public void handle(MqttMessage request) {
@@ -87,17 +84,7 @@ public class BookingCreateRequestHandler implements RequestHandlerInterface {
             Patient patient = new Patient();
             patient.setId(patientJSON.get("id").getAsString());
             patient.setName(patientJSON.get("name").getAsString());
-
-            // Convert date to timestamp
-            try {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                long time = sdf.parse(patientJSON.get("dateOfBirth").getAsString()).getTime();
-                Timestamp ts = new Timestamp(time);
-                patient.setDateOfBirth(ts);
-            } catch (ParseException pe) {
-                responseHandler.reply(ResponseStatus.ERROR, "Wrongly formatted date", request);
-                return;
-            }
+            patient.setEmail(patientJSON.get("email").getAsString());
 
             patientRepo.save(patient);
         }
