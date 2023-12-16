@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application/authentication.dart';
+import 'package:flutter_application/request.dart';
 import 'initial_pages_background.dart';
 import 'widget_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -112,6 +113,8 @@ class InitialPage extends StatelessWidget {
     bool isSigningUp = buttonId == "Sign up BTN";
 
     if (buttonId == "Google BTN") {
+      await signInWithGoogle();
+      Request.createPatient();
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const MapPage()));
     } else {

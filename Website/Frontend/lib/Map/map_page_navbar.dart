@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application/Map/map_page_util.dart';
+import 'package:flutter_application/setting.dart';
 
 class NavBar extends StatefulWidget {
   final double screenHeight;
@@ -52,25 +53,32 @@ class NavBarState extends State<NavBar> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          //didnt use screen height because i only want the last container to resize not any other
-          width: 170,
-          height: 66,
-          color: Theme.of(context).colorScheme.secondary,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(width: widget.screenWidth * 0.01),
-              MapUtil.buildCircleAvatar("../assets/Fulltooth.png",
-                  widget.resizeProfilePic, widget.screenWidth),
-              const SizedBox(width: 20),
-              //TODO change to user profile picture
-              MapUtil.buildCircleAvatar("../assets/profile.png",
-                  widget.resizeProfilePic, widget.screenWidth),
-              const Spacer(),
-            ],
-          ),
-        ),
+            //didnt use screen height because i only want the last container to resize not any other
+            width: 140,
+            height: 66,
+            color: Theme.of(context).colorScheme.secondary,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.asset(
+                  "../assets/Fulltooth.png",
+                  alignment: Alignment.bottomCenter,
+                  width: 55,
+                  height: 55,
+                ),
+                IconButton(
+                  onPressed: () {
+                    showPopupMenu(context);
+                  },
+                  icon: Icon(
+                    Icons.account_circle,
+                    color: Theme.of(context).colorScheme.onSecondary,
+                  ),
+                  iconSize: 55,
+                ),
+              ],
+            )),
         Expanded(
           child: Container(
             height: 66,
@@ -123,5 +131,50 @@ class NavBarState extends State<NavBar> {
         ),
       ],
     );
+  }
+
+  void showPopupMenu(BuildContext context) {
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+    final RenderBox iconBox = context.findRenderObject() as RenderBox;
+    final Offset iconPosition =
+        iconBox.localToGlobal(Offset.zero, ancestor: overlay);
+    print(iconPosition.dx);
+
+    showMenu(
+      context: context,
+      // add position relative to the icon
+      position: RelativeRect.fromLTRB(
+        iconPosition.dx + 100,
+        iconPosition.dy + 75,
+        iconPosition.dx + 100,
+        iconPosition.dy,
+      ),
+      items: [
+        const PopupMenuItem<String>(
+          value: 'settings',
+          child: ListTile(
+            leading: Icon(Icons.settings),
+            title: Text('Settings'),
+          ),
+        ),
+        const PopupMenuItem<String>(
+          value: 'records',
+          child: ListTile(
+            leading: Icon(Icons.storage),
+            title: Text('Records'),
+          ),
+        ),
+      ],
+    ).then((value) {
+      if (value == 'settings') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const SettingPage()),
+        );
+      } else if (value == 'records') {
+        // Navigate to records page
+      }
+    });
   }
 }

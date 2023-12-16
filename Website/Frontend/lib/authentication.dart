@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_application/Map/map.dart';
 import 'initial_pages_background.dart';
 import 'widget_util.dart';
+import 'request.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -200,11 +201,18 @@ class _AuthenticationState extends State<Authentication> {
   Future<void> logIn(
       String email, String password, BuildContext context) async {
     try {
-      await FirebaseAuth.instance
+      final credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
-      if (context.mounted) {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const MapPage()));
+      if (!credential.user!.emailVerified) {
+        errorMsg = "Please verify your email before logging in";
+        setState(() {});
+        await FirebaseAuth.instance.signOut();
+      } else {
+        if (context.mounted) {
+          Request.createPatient();
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const MapPage()));
+        }
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {

@@ -57,9 +57,8 @@ class CustomExpansionTileState extends State<CustomExpansionTile> {
     if (user != null) {
       var patient = {
         "id": user.uid,
-        "name": "a name thats not null lmao",
-        "email": user.email,
-        "dateOfBirth": "2023-10-10"
+        "name": user.displayName,
+        "email": user.email
       };
       var payload = {"patient": patient, "timeslotId": selectedAppointmentId};
       String json = jsonEncode(payload);

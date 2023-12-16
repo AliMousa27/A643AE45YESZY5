@@ -95,7 +95,7 @@ public class RequestTests {
         JsonObject jsonPatient = new JsonObject();
         jsonPatient.addProperty("id", "1234567890");
         jsonPatient.addProperty("name", "Patient");
-        jsonPatient.addProperty("dateOfBirth", "2000-05-05");
+        jsonPatient.addProperty("email", "this@that.com");
 
         // Message
         JsonObject jsonMessage = new JsonObject();
