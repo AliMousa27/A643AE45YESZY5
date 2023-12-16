@@ -18,8 +18,7 @@ router.delete('/bookings/:patentId/:bookingId', (req, res) => {
     state: "cancelled"
   }
   
-  console.log("got reques twith user id: " + req.params.patentId + " and booking id: " + req.params.bookingId)
-  mqttClient.handleRequest(req, res, 'toothtrek/booking_service/booking/state', req.params.patentId, publishJson);
+  mqttClient.handleRequest(req, res, 'toothtrek/booking_service/booking/state/', req.params.patentId, publishJson);
 });
 
 module.exports = router;

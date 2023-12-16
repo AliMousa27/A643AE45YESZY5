@@ -9,8 +9,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'Map/map.dart';
-import 'package:provider/provider.dart';
-import 'setting_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,9 +18,9 @@ void main() async {
 
   FirebaseAuth.instance.authStateChanges().listen((User? user) {
     if (user == null) {
-      runApp(const MyApp(home: MyBookings()));
+      runApp(const MyApp(home: InitialPage()));
     } else {
-      runApp(const MyApp(home: MyBookings()));
+      runApp(const MyApp(home: MapPage()));
     }
   });
 }
@@ -34,28 +32,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => SettingProvider(),
-      child: Consumer<SettingProvider>(
-        builder: (context, settingProvider, child) {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'App',
-            theme: settingProvider.isDarkMode
-                ? ThemeData(useMaterial3: true, colorScheme: darkColorScheme)
-                : ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
-            supportedLocales: L10n.all,
-            locale: Locale(settingProvider.language),
-            localizationsDelegates: const [
-              AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            home: home,
-          );
-        },
-      ),
+    return MaterialApp(
+      title: 'App',
+      theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
+      darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
+      supportedLocales: L10n.all,
+      locale: const Locale('bg'),
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      home: home,
     );
   }
 }

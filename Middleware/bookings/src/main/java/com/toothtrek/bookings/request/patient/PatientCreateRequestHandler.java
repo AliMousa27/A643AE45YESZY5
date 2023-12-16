@@ -35,7 +35,9 @@ public class PatientCreateRequestHandler implements RequestHandlerInterface {
         }
 
         // Check if JSON contains all required properties
-        checkJSONProperties(json, MESSAGE_PROPERTIES, request);
+        if (checkMissingJSONProperties(json, MESSAGE_PROPERTIES, request)) {
+            return;
+        }
 
         // Create patient -> synchronized to prevent double patients
         createPatient(json, request);
@@ -69,12 +71,13 @@ public class PatientCreateRequestHandler implements RequestHandlerInterface {
      * @param properties Required String[] properties
      * @param request    MqttMessage request to reply to
      */
-    private void checkJSONProperties(JsonObject json, String[] properties, MqttMessage request) {
+    private boolean checkMissingJSONProperties(JsonObject json, String[] properties, MqttMessage request) {
         for (String property : properties) {
             if (!json.has(property)) {
                 responseHandler.reply(ResponseStatus.ERROR, "No " + property + " provided", request);
-                return;
+                return true;
             }
         }
+        return false;
     }
 }

@@ -44,7 +44,7 @@ public class PatientSetRequestHandler implements RequestHandlerInterface {
         }
     }
 
-    private void setPatient(JsonObject json, Patient patient, MqttMessage request) {
+    private synchronized void setPatient(JsonObject json, Patient patient, MqttMessage request) {
         // Set patient properties if they exist
         if (json.has("name")) {
             patient.setName(json.get("name").getAsString());
@@ -56,6 +56,10 @@ public class PatientSetRequestHandler implements RequestHandlerInterface {
             patient.setNotified(json.get("notified").getAsBoolean());
         }
 
+        // Save patient
         patientRepo.save(patient);
+
+        // Reply
+        responseHandler.reply(ResponseStatus.SUCCESS, "Patient updated", request);
     }
 }
