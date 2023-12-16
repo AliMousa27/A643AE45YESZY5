@@ -46,8 +46,8 @@ public class TestUtil {
         Timestamp ts = new Timestamp(time);
 
         if (createPatient) {
-            Patient patient = new Patient("id1", "Bob 1", ts);
-            Patient patient2 = new Patient("id2", "Bob 2", ts);
+            Patient patient = new Patient("id1", "Bob 1", "this@that.com");
+            Patient patient2 = new Patient("id2", "Bob 2", "that@this.com");
             patientRepository.save(patient);
             patientRepository.save(patient2);
         }

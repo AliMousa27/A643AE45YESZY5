@@ -96,7 +96,7 @@ public class BookingsRequestTests {
         Patient patient = patientRepository.findAll().get(0);
         jsonPatient.addProperty("id", patient.getId());
         jsonPatient.addProperty("name", patient.getName());
-        jsonPatient.addProperty("dateOfBirth", patient.getDateOfBirth().toString());
+        jsonPatient.addProperty("email", patient.getEmail());
 
         // Message
         JsonObject jsonMessage = new JsonObject();
