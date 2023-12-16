@@ -70,7 +70,7 @@ router.post('/', async (req, res) => {
 
         mqttClient.unsubscribe(responseTopic);
 
-        const parsedResponse = JSON.parse(message.toString());
+        const parsedResponse = JSON.parse(response.toString());
         if (response.status === 'success') {
             return res.status(201).send(parsedResponse);
         }
@@ -93,12 +93,17 @@ router.delete('/:timeslotId', async (req, res) => {
         return res.status(400).send('Bad request (invalid parameters)');
     }
 
-    const topic = 'toothtrek/booking_service/booking/cancel/';
+    const topic = 'toothtrek/booking_service/timeslot/cancel/';
     const responseTopic = topic + uuidv4();
+
+    var timeslot = {
+        timeslotId: timeslotId,
+        responseTopic: responseTopic
+    };
 
     try {
         mqttClient.subscribe(responseTopic);
-        mqttClient.publish(topic, timeslotId);
+        mqttClient.publish(topic, JSON.stringify(timeslot));
 
         // Create a new Promise for the request
         const response = await new Promise((resolve, reject) => {
@@ -115,7 +120,7 @@ router.delete('/:timeslotId', async (req, res) => {
 
         mqttClient.unsubscribe(responseTopic);
 
-        const parsedResponse = JSON.parse(message.toString());
+        const parsedResponse = JSON.parse(response.toString());
         if (response.status === 'success') {
             return res.status(200).send(parsedResponse);
         }
