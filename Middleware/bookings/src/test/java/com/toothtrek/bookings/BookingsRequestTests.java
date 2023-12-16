@@ -159,7 +159,7 @@ public class BookingsRequestTests {
         // JSON message
         String responseTopic = "test/response/" + System.currentTimeMillis();
         JsonObject jsonMessage = new JsonObject();
-        jsonMessage.addProperty("id", bookingRepository.findAll().get(0).getId());
+        jsonMessage.addProperty("bookingId", bookingRepository.findAll().get(0).getId());
         jsonMessage.addProperty("state", "confirmed");
         jsonMessage.addProperty("responseTopic", responseTopic);
 
