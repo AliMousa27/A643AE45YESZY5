@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:js_interop';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application/Map/dentist_apointment.dart';
 import 'package:flutter_application/request.dart';
@@ -172,14 +176,14 @@ class _MyBookingsState extends State<MyBookings> {
     for (int i = 0; i < future.length; i++) {
       DentistAppointment appointment = future[i];
       cards.add(createTimeSlot(appointment.eventName, appointment.from,
-          appointment.id.toString(), context));
+          appointment.id.toString(), context, appointment.id));
       cards.add(const SizedBox(height: 50));
     }
     return cards;
   }
 
-  Container createTimeSlot(
-      String address, DateTime date, String id, BuildContext context) {
+  Container createTimeSlot(String address, DateTime date, String bookingId,
+      BuildContext context, int apointmentId) {
     DateTime to = date.add(const Duration(minutes: 30));
     int monthIndex = date.month - 1;
 
@@ -210,7 +214,7 @@ class _MyBookingsState extends State<MyBookings> {
                   const SizedBox(height: 5),
                   WidgetUtil.createText(Colors.grey, 15, "Booking ID"),
                   const SizedBox(height: 5),
-                  WidgetUtil.createText(Colors.white, 18, id),
+                  WidgetUtil.createText(Colors.white, 18, bookingId),
                 ],
               ),
               Padding(
@@ -243,7 +247,8 @@ class _MyBookingsState extends State<MyBookings> {
                               fixedSize: MaterialStateProperty.all<Size>(
                                   const Size(85, 20)),
                             ),
-                            onPressed: () => {},
+                            onPressed: () =>
+                                {cancelApointment(apointmentId.toString())},
                             child: WidgetUtil.createText(
                                 Theme.of(context).colorScheme.onPrimary,
                                 10,
@@ -256,5 +261,24 @@ class _MyBookingsState extends State<MyBookings> {
             ],
           )),
     );
+  }
+
+  void cancelApointment(String bookingID) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+
+    if (user != null) {
+      var payload = {
+        "patientId": user.uid,
+        "bookingId": bookingID,
+      };
+      String json = jsonEncode(payload);
+      WidgetUtil.proccessARequest(
+          context,
+          "Cancelled apointment",
+          "Your booking was successfully cancelled",
+          (json) => Request.cancelBookingRequest(json),
+          json);
+    }
   }
 }

@@ -1,8 +1,8 @@
-package com.toothtrek.template.request.templateEntity;
+package com.toothtrek.bookings.request.patient;
 
-public enum TemplateRequestType {
-    // The enum values correspond to the topics
+public enum PatientRequestType {
     CREATE,
+    SET,
     GET;
 
     // The corresponding topic for each enum, see fromTopic()
@@ -10,9 +10,9 @@ public enum TemplateRequestType {
     private final String topic;
 
     /**
-     * Template Request Enum Constructor
+     * Patient Request Enum Constructor
      */
-    TemplateRequestType() {
+    PatientRequestType() {
         this.topic = this.name().toLowerCase();
     }
 
@@ -26,13 +26,13 @@ public enum TemplateRequestType {
     }
 
     /**
-     * Returns the TemplateRequest enum from the topic
+     * Returns the PatientRequest enum from the topic
      * 
      * @param text the topic
-     * @return TemplateRequest enum or null if not found
+     * @return PatientRequest enum or null if not found
      */
-    public static TemplateRequestType fromString(String text) {
-        for (TemplateRequestType request : TemplateRequestType.values()) {
+    public static PatientRequestType fromString(String text) {
+        for (PatientRequestType request : PatientRequestType.values()) {
             if (request.getTopic().equalsIgnoreCase(text)) {
                 return request;
             }

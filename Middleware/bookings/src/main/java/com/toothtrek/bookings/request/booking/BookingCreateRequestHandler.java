@@ -1,8 +1,5 @@
 package com.toothtrek.bookings.request.booking;
 
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.NoSuchElementException;
 
 import org.eclipse.paho.mqttv5.common.MqttMessage;
@@ -14,6 +11,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.toothtrek.bookings.entity.Booking;
 import com.toothtrek.bookings.entity.Patient;
+import com.toothtrek.bookings.entity.Timeslot;
 import com.toothtrek.bookings.repository.BookingRepository;
 import com.toothtrek.bookings.repository.PatientRepository;
 import com.toothtrek.bookings.repository.TimeslotRepository;
@@ -37,7 +35,7 @@ public class BookingCreateRequestHandler implements RequestHandlerInterface {
     private ResponseHandler responseHandler;
 
     private final String[] MESSAGE_PROPERTIES = { "patient", "timeslotId" };
-    private final String[] MESSAGE_PROPERTIES_PATIENT = { "id", "name", "dateOfBirth" };
+    private final String[] MESSAGE_PROPERTIES_PATIENT = { "id", "name", "email" };
 
     @Override
     public void handle(MqttMessage request) {
@@ -50,12 +48,16 @@ public class BookingCreateRequestHandler implements RequestHandlerInterface {
         }
 
         // Check if JSON contains all required properties
-        checkJSONProperties(json, MESSAGE_PROPERTIES, request);
+        if (checkMissingJSONProperties(json, MESSAGE_PROPERTIES, request)) {
+            return;
+        }
 
         JsonObject patientJSON = json.get("patient").getAsJsonObject();
 
         // Check if patient JSON contains all required properties
-        checkJSONProperties(patientJSON, MESSAGE_PROPERTIES_PATIENT, request);
+        if (checkMissingJSONProperties(patientJSON, MESSAGE_PROPERTIES_PATIENT, request)) {
+            return;
+        }
 
         // Check if timeslot exists
         try {
@@ -77,33 +79,28 @@ public class BookingCreateRequestHandler implements RequestHandlerInterface {
             return;
         }
 
+        long timeslotId = json.get("timeslotId").getAsLong();
+        Timeslot timeslot = timeSlotRepo.findById(timeslotId).get();
+
         // Create booking
         Booking booking = new Booking();
-        booking.setTimeslotId(json.get("timeslotId").getAsLong());
+        booking.setTimeslot(timeslot);
 
         // Find patient or create new patient
-        if (patientRepo.findById(patientJSON.get("id").getAsString()).isEmpty()) {
-            // Create patient
-            Patient patient = new Patient();
+        String patientId = patientJSON.get("id").getAsString();
+        Patient patient = new Patient();
+        try {
+            patient = patientRepo.findById(patientId).get();
+        } catch (NoSuchElementException e) {
             patient.setId(patientJSON.get("id").getAsString());
             patient.setName(patientJSON.get("name").getAsString());
-
-            // Convert date to timestamp
-            try {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                long time = sdf.parse(patientJSON.get("dateOfBirth").getAsString()).getTime();
-                Timestamp ts = new Timestamp(time);
-                patient.setDateOfBirth(ts);
-            } catch (ParseException pe) {
-                responseHandler.reply(ResponseStatus.ERROR, "Wrongly formatted date", request);
-                return;
-            }
+            patient.setEmail(patientJSON.get("email").getAsString());
 
             patientRepo.save(patient);
         }
+        booking.setPatient(patient);
 
         // Set patientId and save booking
-        booking.setPatientId(patientJSON.get("id").getAsString());
         bookingRepo.save(booking);
 
         // Reply with success
@@ -118,12 +115,13 @@ public class BookingCreateRequestHandler implements RequestHandlerInterface {
      * @param properties Required String[] properties
      * @param request    MqttMessage request to reply to
      */
-    private void checkJSONProperties(JsonObject json, String[] properties, MqttMessage request) {
+    private boolean checkMissingJSONProperties(JsonObject json, String[] properties, MqttMessage request) {
         for (String property : properties) {
             if (!json.has(property)) {
                 responseHandler.reply(ResponseStatus.ERROR, "No " + property + " provided", request);
-                return;
+                return true;
             }
         }
+        return false;
     }
 }

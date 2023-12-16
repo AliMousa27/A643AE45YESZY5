@@ -22,7 +22,7 @@ mqttClient.on('error', (err) => {
 })
 mqttClient.handleRequest = function(req, res, requestTopic, uid,body) {
     try {
-        const responseTopic = `${requestTopic}/${uid}`;
+        const responseTopic = `${requestTopic}${uid}`;
         this.subscribe(responseTopic);
         var publishJson;
         if(body){

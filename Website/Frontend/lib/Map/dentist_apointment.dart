@@ -69,10 +69,15 @@ class DentistAppointment {
     }
     DateTime to = from.add(const Duration(hours: 2));
     late String eventName;
-
-    if (json["timeslot"]["office"]["address"] != null) {
-      eventName = json["timeslot"]["office"]["address"];
-    } else {
+    //if the office is not null then we assign the event name to the office address
+    try {
+      if (json["timeslot"]["office"]["address"] != null) {
+        eventName = json["timeslot"]["office"]["address"];
+      } else {
+        eventName = "${from.hour} : ${from.minute}";
+      }
+    } catch (e) {
+      //otherwise we access a null field then the attribute doesnt exist and we just take it as the time
       eventName = "${from.hour} : ${from.minute}";
     }
 

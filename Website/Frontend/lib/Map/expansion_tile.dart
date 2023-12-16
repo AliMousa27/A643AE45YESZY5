@@ -57,91 +57,19 @@ class CustomExpansionTileState extends State<CustomExpansionTile> {
     if (user != null) {
       var patient = {
         "id": user.uid,
-        "name": "a name thats not null lmao",
+        "name": user.displayName,
         "email": user.email,
-        "dateOfBirth": "2023-10-10"
+        "dateOfBirth": "2000-12-12"
       };
       var payload = {"patient": patient, "timeslotId": selectedAppointmentId};
       String json = jsonEncode(payload);
-      late BuildContext dialogContext;
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          dialogContext = context;
-
-          return const Dialog(
-            child: Padding(
-              padding: EdgeInsets.all(20.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircularProgressIndicator(),
-                  SizedBox(width: 30),
-                  Text("Processing..."),
-                ],
-              ),
-            ),
-          );
-        },
-      );
-
-      bool success = await Request.sendBookingRequest(json);
-      if (context.mounted) Navigator.pop(dialogContext);
-
-      if (success && context.mounted) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return showSuccessOrFailure(
-                "Booking successful",
-                "Your booking was successfully completed",
-                const Icon(Icons.check, color: Colors.green),
-                success);
-          },
-        );
-      } else if (context.mounted) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return showSuccessOrFailure(
-                "Booking failed",
-                "Your booking was not completed, please try again later",
-                const Icon(Icons.error, color: Colors.red),
-                success);
-          },
-        );
-      }
+      WidgetUtil.proccessARequest(
+          context,
+          "Booking successful",
+          "Your booking was successfully completed",
+          (json) => Request.sendBookingRequest(json),
+          json);
     }
-  }
-
-  AlertDialog showSuccessOrFailure(
-      String titleMessage, String subtitleMessage, Icon icon, bool success) {
-    return AlertDialog(
-      title: Text(titleMessage),
-      content: Row(
-        children: [
-          icon,
-          Text(subtitleMessage),
-        ],
-      ),
-      actions: <Widget>[
-        Center(
-          child: TextButton(
-            child: const Text('OK'),
-            onPressed: () {
-              Navigator.of(context).pop();
-              //reload the page to reflect that the booking is not there
-              //logic: request back from server to get timeslots -> timeslot wont be shown since its booked
-              if (success) {
-                Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => const MapPage()));
-              }
-            },
-          ),
-        ),
-      ],
-    );
   }
 
   void expandTile() {
