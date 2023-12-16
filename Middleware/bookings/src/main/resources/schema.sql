@@ -18,8 +18,12 @@ CREATE TABLE dentist (
     date_of_birth date,
     PRIMARY KEY (id)
 );
+
+CREATE TYPE timeslot_state AS ENUM ('open', 'cancelled');
+
 CREATE TABLE timeslot (
     id SERIAL NOT NULL,
+    state timeslot_state NOT NULL DEFAULT 'open',
     date_and_time timestamp NOT NULL,
     office_id bigint NOT NULL,
     dentist_id bigint NOT NULL,
