@@ -13,7 +13,6 @@ class Request {
           .post(url, headers: {"Content-Type": "application/json"}, body: body)
           .then((response) {
         Map<String, dynamic> data = jsonDecode(response.body);
-        print("the data is $data");
         return data["status"] == "success";
       });
     } catch (error) {
@@ -40,6 +39,27 @@ class Request {
       });
     } catch (error) {
       print(error);
+      return [];
+    }
+  }
+
+  static Future<List<DentistAppointment>> getAppointmentsByUID() async {
+    try {
+      final FirebaseAuth auth = FirebaseAuth.instance;
+      final User? user = auth.currentUser;
+      var url = Uri.http('127.0.0.1:3000', 'bookings/${user!.uid}');
+
+      return http.get(url).then((response) {
+        var data = jsonDecode(response.body);
+        List<DentistAppointment> appointments = [];
+        for (var appointment in data) {
+          appointments.add(DentistAppointment.fromJson(appointment));
+        }
+        return appointments;
+      });
+    } catch (e) {
+      print("the error is");
+      print(e.toString());
       return [];
     }
   }

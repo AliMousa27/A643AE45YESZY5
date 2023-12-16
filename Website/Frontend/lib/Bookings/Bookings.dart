@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application/Map/dentist_apointment.dart';
+import 'package:flutter_application/request.dart';
 import 'package:flutter_application/widget_util.dart';
 
 class MyBookings extends StatefulWidget {
@@ -24,6 +26,13 @@ class _MyBookingsState extends State<MyBookings> {
     'Nov',
     'Dec'
   ];
+  late Future _appointmentsFuture;
+  @override
+  void initState() {
+    super.initState();
+    _appointmentsFuture = Request.getAppointmentsByUID();
+  }
+
   List<Widget> buildNavbarActions(double screenWidth, Color textColor,
       Color btnColor, Color btnHoverColor) {
     List<Widget> actions = [];
@@ -86,72 +95,92 @@ class _MyBookingsState extends State<MyBookings> {
             Theme.of(context).colorScheme.primaryContainer,
             Theme.of(context).colorScheme.primary),
       ),
-      body: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          if (!isMobile)
-            Expanded(
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: SizedBox(
-                  height: 550,
-                  child: Image.asset(
-                    'assets/LeftHalfTooth.png',
+      body: FutureBuilder(
+        future: _appointmentsFuture,
+        builder: (BuildContext context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text("Error: ${snapshot.error}"));
+          } else {
+            return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              if (!isMobile)
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: SizedBox(
+                      height: 550,
+                      child: Image.asset(
+                        'assets/LeftHalfTooth.png',
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-          Center(
-            child: Container(
-              height: screenHeight * 0.87,
-              width: !isMobile ? screenWidth * 0.4 : screenWidth * 0.9,
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    spreadRadius: 5,
-                    blurRadius: 7,
-                    offset: const Offset(0, 10),
+              Center(
+                child: Container(
+                  height: screenHeight * 0.87,
+                  width: !isMobile ? screenWidth * 0.4 : screenWidth * 0.9,
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: const Offset(0, 10),
+                      ),
+                    ],
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.white,
+                    border: Border.all(
+                      color: Colors.black,
+                      width: 0.3,
+                    ),
                   ),
-                ],
-                borderRadius: BorderRadius.circular(20),
-                color: Colors.white,
-                border: Border.all(
-                  color: Colors.black,
-                  width: 0.3,
+                  child: SingleChildScrollView(
+                      child: Column(
+                    children: buildAppointmentCards(snapshot.data)
+                    /*const SizedBox(height: 50),
+                      createTimeSlot(
+                          '1234 Main St', DateTime.now(), '1234', context),*/
+                    ,
+                  )),
                 ),
               ),
-              child: SingleChildScrollView(
-                  child: Column(
-                children: [
-                  const SizedBox(height: 100),
-                  createTimeSlot(
-                      '1234 Main St', DateTime.now(), '1234', context),
-                ],
-              )),
-            ),
-          ),
-          if (!isMobile)
-            Expanded(
-              child: SizedBox(
-                height: 550,
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Image.asset(
-                    'assets/RightHalfTooth.png',
+              if (!isMobile)
+                Expanded(
+                  child: SizedBox(
+                    height: 550,
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Image.asset(
+                        'assets/RightHalfTooth.png',
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            )
-        ],
+                )
+            ]);
+          }
+        },
       ),
     );
+  }
+
+  List<Widget> buildAppointmentCards(future) {
+    List<Widget> cards = [];
+    cards.add(const SizedBox(height: 50));
+
+    for (int i = 0; i < future.length; i++) {
+      DentistAppointment appointment = future[i];
+      cards.add(createTimeSlot(appointment.eventName, appointment.from,
+          appointment.id.toString(), context));
+      cards.add(const SizedBox(height: 50));
+    }
+    return cards;
   }
 
   Container createTimeSlot(
       String address, DateTime date, String id, BuildContext context) {
     DateTime to = date.add(const Duration(minutes: 30));
-    double screenWidth = MediaQuery.of(context).size.width;
     int monthIndex = date.month - 1;
 
     return Container(
@@ -215,12 +244,10 @@ class _MyBookingsState extends State<MyBookings> {
                                   const Size(85, 20)),
                             ),
                             onPressed: () => {},
-                            child: Flexible(
-                              child: WidgetUtil.createText(
-                                  Theme.of(context).colorScheme.onPrimary,
-                                  10,
-                                  "Cancel Booking"),
-                            )),
+                            child: WidgetUtil.createText(
+                                Theme.of(context).colorScheme.onPrimary,
+                                10,
+                                "Cancel")),
                       )
                     ],
                   ),

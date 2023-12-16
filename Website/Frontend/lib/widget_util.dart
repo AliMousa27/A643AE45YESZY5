@@ -30,6 +30,7 @@ class WidgetUtil {
     double scale = context == null ? 1 : textScaleFactor(context);
     return Text(
       text,
+      overflow: TextOverflow.ellipsis,
       textScaleFactor: scale,
       style: TextStyle(
         color: textColor,

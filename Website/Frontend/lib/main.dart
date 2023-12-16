@@ -8,7 +8,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'Map/map.dart';
-import 'Bookings/Bookings.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,9 +17,9 @@ void main() async {
 
   FirebaseAuth.instance.authStateChanges().listen((User? user) {
     if (user == null) {
-      runApp(const MyApp(home: MyBookings()));
+      runApp(const MyApp(home: InitialPage()));
     } else {
-      runApp(const MyApp(home: MyBookings()));
+      runApp(const MyApp(home: MapPage()));
     }
   });
 }
