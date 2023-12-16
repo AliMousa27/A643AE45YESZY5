@@ -1,5 +1,6 @@
 package com.toothtrek.bookings.request.booking;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.eclipse.paho.mqttv5.common.MqttMessage;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.toothtrek.bookings.entity.Booking;
@@ -16,6 +18,7 @@ import com.toothtrek.bookings.repository.PatientRepository;
 import com.toothtrek.bookings.request.RequestHandlerInterface;
 import com.toothtrek.bookings.response.ResponseHandler;
 import com.toothtrek.bookings.response.ResponseStatus;
+import com.toothtrek.bookings.serializer.json.TimestampSerializer;
 
 @Configuration
 public class BookingGetRequestHandler implements RequestHandlerInterface {
@@ -60,7 +63,9 @@ public class BookingGetRequestHandler implements RequestHandlerInterface {
         }
 
         // Create JSON response
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Timestamp.class, new TimestampSerializer())
+                .create();
         String jsonBookings = gson.toJson(bookings);
 
         responseHandler.reply(ResponseStatus.SUCCESS, jsonBookings, request);
