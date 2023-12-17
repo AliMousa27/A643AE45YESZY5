@@ -19,6 +19,7 @@ import com.toothtrek.bookings.mqtt.MqttHandler;
 import com.toothtrek.bookings.repository.DentistRepository;
 import com.toothtrek.bookings.repository.OfficeRepository;
 import com.toothtrek.bookings.repository.TimeslotRepository;
+import com.toothtrek.bookings.request.timeslot.TimeslotCancelRequestHandler;
 import com.toothtrek.bookings.request.timeslot.TimeslotCreateRequestHandler;
 import com.toothtrek.bookings.request.timeslot.TimeslotGetRequestHandler;
 import com.toothtrek.bookings.util.TestUtil;
@@ -48,6 +49,9 @@ public class TimeslotRequestTests {
 
     @Autowired
     private TimeslotGetRequestHandler timeslotGetRequestHandler;
+
+    @Autowired
+    private TimeslotCancelRequestHandler timeslotCancelRequestHandler;
 
     // Test Util
 
@@ -137,6 +141,35 @@ public class TimeslotRequestTests {
         // Check if reply is success
         assert (response != null);
         assert (new String(response.getPayload()).contains("success"));
+    }
+
+    @Test
+    private void cancelTimeslot() {
+        // Message
+        JsonObject jsonMessage = new JsonObject();
+        String responseTopic = "test/response/" + System.currentTimeMillis();
+        jsonMessage.addProperty("timeslotId", timeslotRepository.findAll().get(0).getId());
+        jsonMessage.addProperty("responseTopic", responseTopic);
+
+        // Set payload
+        MqttMessage message = new MqttMessage();
+        message.setPayload(jsonMessage.toString().getBytes());
+        MqttProperties properties = new MqttProperties();
+        properties.setResponseTopic(responseTopic);
+        message.setProperties(properties);
+
+        mqttHandler.subscribe(responseTopic);
+        timeslotCancelRequestHandler.handle(message);
+
+        waitUntilMessageArrived();
+
+        // Check if reply is success
+        assert (response != null);
+        assert (new String(response.getPayload()).contains("success"));
+
+        // Check if timeslot is cancelled
+        Timeslot timeslot = timeslotRepository.findAll().get(0);
+        assert (timeslot.getState() == Timeslot.State.cancelled);
     }
 
     @AfterEach
