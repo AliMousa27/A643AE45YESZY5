@@ -1,7 +1,8 @@
 CREATE TABLE patient (
     id varchar(255) NOT NULL,
-    Name varchar(255) NOT NULL,
-    date_of_birth date,
+    name varchar(255),
+    email varchar(255) NOT NULL,
+    notified boolean,
     PRIMARY KEY (id)
 );
 CREATE TABLE office (

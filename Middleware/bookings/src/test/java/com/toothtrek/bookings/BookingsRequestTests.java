@@ -10,23 +10,22 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.toothtrek.bookings.entity.Booking;
+import com.toothtrek.bookings.entity.Patient;
 import com.toothtrek.bookings.mqtt.MqttCallbackHandler;
 import com.toothtrek.bookings.mqtt.MqttHandler;
 import com.toothtrek.bookings.repository.BookingRepository;
-import com.toothtrek.bookings.repository.DentistRepository;
-import com.toothtrek.bookings.repository.OfficeRepository;
 import com.toothtrek.bookings.repository.PatientRepository;
 import com.toothtrek.bookings.repository.TimeslotRepository;
 import com.toothtrek.bookings.request.booking.BookingCreateRequestHandler;
+import com.toothtrek.bookings.request.booking.BookingGetRequestHandler;
 import com.toothtrek.bookings.request.booking.BookingStateRequestHandler;
-import com.toothtrek.bookings.request.timeslot.TimeslotGetRequestHandler;
+import com.toothtrek.bookings.util.TestUtil;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class RequestTests {
+public class BookingsRequestTests {
 
     @Autowired
     private MqttHandler mqttHandler;
@@ -35,12 +34,6 @@ public class RequestTests {
 
     @Autowired
     private BookingRepository bookingRepository;
-
-    @Autowired
-    private DentistRepository dentistRepository;
-
-    @Autowired
-    private OfficeRepository officeRepository;
 
     @Autowired
     private PatientRepository patientRepository;
@@ -56,10 +49,13 @@ public class RequestTests {
     @Autowired
     private BookingStateRequestHandler bookingStateRequestHandler;
 
-    // Timeslot request handlers
+    @Autowired
+    private BookingGetRequestHandler bookingGetRequestHandler;
+
+    // Test Util
 
     @Autowired
-    private TimeslotGetRequestHandler timeslotGetRequestHandler;
+    private TestUtil testUtil;
 
     // MQTT callback variables
 
@@ -77,13 +73,17 @@ public class RequestTests {
     };
 
     @BeforeAll
-    public void setup() {
+    public void setup() throws Exception {
         mqttHandler.initialize(mqttCallbackHandler);
         mqttHandler.connect(false, false);
 
-        // Create test data
-        // #TODO: Currently created in the main application til all functionality is
-        // implemented.
+        testUtil.createDummyData(
+                true, // Create patient
+                true, // Create dentist
+                true, // Create office
+                true, // Create timeslot
+                false // Create booking
+        );
     }
 
     @Test
@@ -93,9 +93,10 @@ public class RequestTests {
 
         // Patient
         JsonObject jsonPatient = new JsonObject();
-        jsonPatient.addProperty("id", "1234567890");
-        jsonPatient.addProperty("name", "Patient");
-        jsonPatient.addProperty("dateOfBirth", "2000-05-05");
+        Patient patient = patientRepository.findAll().get(0);
+        jsonPatient.addProperty("id", patient.getId());
+        jsonPatient.addProperty("name", patient.getName());
+        jsonPatient.addProperty("email", patient.getEmail());
 
         // Message
         JsonObject jsonMessage = new JsonObject();
@@ -113,17 +114,7 @@ public class RequestTests {
         mqttHandler.subscribe(responseTopic);
         bookingCreateRequestHandler.handle(message);
 
-        for (int i = 0; i < 10; i++) {
-            if (!messageArrived) {
-                try {
-                    Thread.sleep(333);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                break;
-            }
-        }
+        waitUntilMessageArrived();
 
         // Check if reply is success
         assert (response != null);
@@ -132,7 +123,35 @@ public class RequestTests {
         // Check if booking is created
         Booking booking = bookingRepository.findByTimeslotId(timeslotId).get(0);
         assert (booking != null);
-        assert (booking.getPatient().getId().equals("1234567890"));
+        assert (booking.getPatient().getId().equals(patient.getId()));
+    }
+
+    @Test
+    public void bookingGetRequest() {
+        // JSON
+        JsonObject jsonMessage = new JsonObject();
+        String patientId = patientRepository.findAll().get(0).getId();
+        jsonMessage.addProperty("patientId", patientId);
+
+        // Create MQTT message
+        MqttMessage message = new MqttMessage();
+        message.setPayload(jsonMessage.toString().getBytes());
+        MqttProperties properties = new MqttProperties();
+        String responseTopic = "test/response/" + System.currentTimeMillis();
+        properties.setResponseTopic(responseTopic);
+        message.setProperties(properties);
+
+        mqttHandler.subscribe(responseTopic);
+        bookingGetRequestHandler.handle(message);
+
+        waitUntilMessageArrived();
+
+        // Check if reply is success
+        assert (response != null);
+        assert (new String(response.getPayload()).contains("success"));
+
+        // Check if id is correct
+        assert (new String(response.getPayload()).contains(patientId));
     }
 
     @Test
@@ -140,7 +159,7 @@ public class RequestTests {
         // JSON message
         String responseTopic = "test/response/" + System.currentTimeMillis();
         JsonObject jsonMessage = new JsonObject();
-        jsonMessage.addProperty("id", bookingRepository.findAll().get(0).getId());
+        jsonMessage.addProperty("bookingId", bookingRepository.findAll().get(0).getId());
         jsonMessage.addProperty("state", "confirmed");
         jsonMessage.addProperty("responseTopic", responseTopic);
 
@@ -154,17 +173,7 @@ public class RequestTests {
         mqttHandler.subscribe(responseTopic);
         bookingStateRequestHandler.handle(message);
 
-        for (int i = 0; i < 10; i++) {
-            if (!messageArrived) {
-                try {
-                    Thread.sleep(333);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                break;
-            }
-        }
+        waitUntilMessageArrived();
 
         // Check if reply is success
         assert (response != null);
@@ -194,91 +203,11 @@ public class RequestTests {
         mqttHandler.subscribe(responseTopic);
         bookingStateRequestHandler.handle(message);
 
-        for (int i = 0; i < 10; i++) {
-            if (!messageArrived) {
-                try {
-                    Thread.sleep(333);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                break;
-            }
-        }
+        waitUntilMessageArrived();
 
         // Check if reply is success
         assert (response != null);
         assert (new String(response.getPayload()).contains("error"));
-    }
-
-    @Test
-    public void timeslotGetRequest() {
-        long timeslotCount = timeslotRepository.count();
-
-        // Message
-        JsonObject jsonMessage = new JsonObject();
-        String responseTopic = "test/response/" + System.currentTimeMillis();
-        jsonMessage.addProperty("responseTopic", responseTopic);
-
-        // Set payload
-        MqttMessage message = new MqttMessage();
-        message.setPayload(jsonMessage.toString().getBytes());
-        MqttProperties properties = new MqttProperties();
-        properties.setResponseTopic(responseTopic);
-        message.setProperties(properties);
-
-        mqttHandler.subscribe(responseTopic);
-        timeslotGetRequestHandler.handle(message);
-
-        for (int i = 0; i < 10; i++) {
-            if (!messageArrived) {
-                try {
-                    Thread.sleep(333);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                break;
-            }
-        }
-
-        // Check if reply is success
-        assert (response != null);
-
-        // response to JSON
-        Gson gson = new Gson();
-        JsonObject jsonResponse = gson.fromJson(new String(response.getPayload()), JsonObject.class);
-
-        // Check number of timeslots returned
-        /*
-         * Example object
-         * {"status":"success","content":
-         * 
-         * [{"office":{"id":3,"name":"Design ofis","address":"Lindholmen",
-         * "latitude":57.706615,"longitude":11.934085},
-         * 
-         * "timeslots":[]},
-         * 
-         * {"office":{"id":4,"name":"Grapix ofis","address":"Johanneberg",
-         * "latitude":57.690086,"longitude":11.976014},
-         * 
-         * "timeslots":[{
-         * 
-         * "timeslot":{"id":4,"officeId":4,"dentistId":4,
-         * "date_and_time":"2023-12-06 18:40:00"},
-         * "dentist":{"id":4,"name":"John Doe 2","dateOfBirth":"2023-12-06 00:00:00"}}]}
-         * 
-         * ]}
-         */
-        // For each content entry -> check timeslots length
-        int timeslotsLength = 0;
-        for (int i = 0; i < jsonResponse.get("content").getAsJsonArray().size(); i++) {
-            timeslotsLength += jsonResponse.get("content").getAsJsonArray().get(i).getAsJsonObject().get("timeslots")
-                    .getAsJsonArray().size();
-        }
-
-        // Should not return all timeslots, some are booked
-        assert (timeslotsLength != timeslotCount);
     }
 
     @AfterEach
@@ -290,12 +219,21 @@ public class RequestTests {
     @AfterAll
     public void cleanUp() {
         mqttHandler.disconnect();
-
-        // Order matters
-        bookingRepository.deleteAll();
-        timeslotRepository.deleteAll();
-        dentistRepository.deleteAll();
-        officeRepository.deleteAll();
-        patientRepository.deleteAll();
+        testUtil.deleteAll();
     }
+
+    private void waitUntilMessageArrived() {
+        for (int i = 0; i < 10; i++) {
+            if (!messageArrived) {
+                try {
+                    Thread.sleep(333);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                break;
+            }
+        }
+    }
+
 }

@@ -35,5 +35,23 @@
     "dentist_offices": "Dentist Offices: ",
     "@dentist_offices": {
         "description": "amount of dentist offices;"
+    },
+
+
+    "setting_title": "Settings",
+    "@setting_title": {
+        "description": "The setting title on the setting page"
+    },
+    "setting_notification": "Notifications",
+    "@setting_notification": {
+        "description": "The notifications label on the setting page"
+    },
+    "setting_darkMode": "Dark Mode",
+    "@setting_darkMode": {
+        "description": "The dark mode label on the setting page"
+    },
+    "setting_language": "Language",
+    "@setting_language": {
+        "description": "The language label on the setting page"
     }
 }
