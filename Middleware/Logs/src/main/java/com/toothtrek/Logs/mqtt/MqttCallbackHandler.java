@@ -1,7 +1,6 @@
-package com.middleware.Logs.mqtt;
+package com.toothtrek.Logs.mqtt;
 
-import java.sql.Timestamp;
-import java.util.Date;
+import java.util.concurrent.ExecutorService;
 
 import org.eclipse.paho.mqttv5.client.IMqttToken;
 import org.eclipse.paho.mqttv5.client.MqttCallback;
@@ -10,19 +9,27 @@ import org.eclipse.paho.mqttv5.common.MqttException;
 import org.eclipse.paho.mqttv5.common.MqttMessage;
 import org.eclipse.paho.mqttv5.common.packet.MqttProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import org.json.JSONObject;
+import com.toothtrek.Logs.entity.Log;
+import com.toothtrek.Logs.repository.LogRepository;
 
-import com.middleware.Logs.Logs;
-import com.middleware.Logs.LogsService;
-
+/**
+ * MqttCallbackHandler class.
+ * 
+ * This class implements the MqttCallback interface and overrides all of its
+ * methods. This class is used to handle callbacks from the Paho Java Client.
+ * 
+ * @see org.eclipse.paho.mqttv5.client.MqttCallback
+ */
+@Component
 public class MqttCallbackHandler implements MqttCallback {
-    private final LogsService logService;
 
     @Autowired
-    public MqttCallbackHandler(LogsService logService) {
-        this.logService = logService;
-    }
+    private LogRepository logRepository;
+
+    @Autowired
+    ExecutorService executorService;
 
     @Override
     public void disconnected(MqttDisconnectResponse disconnectResponse) {
@@ -44,21 +51,11 @@ public class MqttCallbackHandler implements MqttCallback {
         System.out.println("   Topic: " + topic);
         System.out.println("   Message: " + message.toString());
         System.out.println();
-        String jsonString = message.toString();
-        JSONObject jsonObject = new JSONObject(jsonString);
-        String email = jsonObject.getString("email");
-        Object sqlStatement;
-        try {
-            // have to wrap with object since sometimes we send null
-            sqlStatement = jsonObject.get("sql_statement");
-        } catch (Exception e) {
-            sqlStatement = "null";
-            System.out.println("Error: " + e.getMessage());
-        }
-        String messageString = jsonObject.getString("message");
-        Timestamp time = new Timestamp(new Date().getTime());
-        Logs log = new Logs(email, sqlStatement.toString(), time, messageString, topic);
-        logService.saveLog(log);
+
+        executorService.submit(() -> {
+            Log log = new Log(topic, message.toString());
+            logRepository.save(log);
+        });
     }
 
     @Override
