@@ -15,5 +15,8 @@
     "setting_title": "Einstellungen",
     "setting_notification": "Benachrichtigungen",
     "setting_darkMode": "Dunkelmodus",
-    "setting_language": "Sprache"
+    "setting_language": "Sprache",
+
+    "dental_records_title": "Vorherige Termine",
+    "dental_records_notes": "Anmerkungen: "
 }
