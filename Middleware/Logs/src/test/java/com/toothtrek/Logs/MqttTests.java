@@ -23,7 +23,7 @@ public class MqttTests {
     private static boolean messageDelivered = false;
 
     // MQTT topic and payload content for testing.
-    private static String topic = "toothtrek/test/" + UUID.randomUUID().toString();
+    private static String topic = "test/toothtrek/" + UUID.randomUUID().toString();
     private static String content = "lorem ipsum";
 
     // Customized MQTT callback handler for testing.
