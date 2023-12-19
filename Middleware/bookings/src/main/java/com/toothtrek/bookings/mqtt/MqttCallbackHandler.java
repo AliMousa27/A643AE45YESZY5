@@ -87,14 +87,17 @@ public class MqttCallbackHandler implements MqttCallback {
             case "patient":
                 executorService.submit(() -> patientRequestAllocatorService
                         .handleRequest(PatientRequestType.fromString(topicParts[3]), message));
+                break;
 
             case "office":
                 executorService.submit(() -> officeRequestAllocatorService
                         .handleRequest(OfficeRequestType.fromString(topicParts[3]), message));
+                break;
 
             case "dentist":
                 executorService.submit(() -> dentistRequestAllocatorService
                         .handleRequest(DentistRequestType.fromString(topicParts[3]), message));
+                break;
 
             default:
                 // TODO: Implement unknown request type
