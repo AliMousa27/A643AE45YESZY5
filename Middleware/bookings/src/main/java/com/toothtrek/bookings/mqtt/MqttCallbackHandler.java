@@ -19,6 +19,8 @@ import com.toothtrek.bookings.request.patient.PatientRequestAllocatorService;
 import com.toothtrek.bookings.request.patient.PatientRequestType;
 import com.toothtrek.bookings.request.office.OfficeRequestAllocatorService;
 import com.toothtrek.bookings.request.office.OfficeRequestType;
+import com.toothtrek.bookings.request.dentist.DentistRequestAllocatorService;
+import com.toothtrek.bookings.request.dentist.DentistRequestType;
 
 /**
  * MqttCallbackHandler class.
@@ -42,6 +44,9 @@ public class MqttCallbackHandler implements MqttCallback {
 
     @Autowired
     OfficeRequestAllocatorService officeRequestAllocatorService;
+
+    @Autowired
+    DentistRequestAllocatorService dentistRequestAllocatorService;
 
     @Autowired
     private ExecutorService executorService;
@@ -86,6 +91,10 @@ public class MqttCallbackHandler implements MqttCallback {
             case "office":
                 executorService.submit(() -> officeRequestAllocatorService
                         .handleRequest(OfficeRequestType.fromString(topicParts[3]), message));
+
+            case "dentist":
+                executorService.submit(() -> dentistRequestAllocatorService
+                        .handleRequest(DentistRequestType.fromString(topicParts[3]), message));
 
             default:
                 // TODO: Implement unknown request type
