@@ -41,23 +41,20 @@ public class OfficeGetRequestHandler implements RequestHandlerInterface {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Timestamp.class, new TimestampSerializer())
                 .create();
-        String jsonOffice = null;
 
         if (json.has("id")) {
-            // Get office by id
-            Long officeId = json.get("id").getAsLong();
-            Office office = officeRepository.findById(officeId).get();
-            if (office == null) {
+            try {
+                // Get office by id
+                Long officeId = json.get("id").getAsLong();
+                Office office = officeRepository.findById(officeId).get();
+                responseHandler.reply(ResponseStatus.SUCCESS, gson.toJson(office), request);
+            } catch (Exception e) {
                 responseHandler.reply(ResponseStatus.ERROR, "Office not found", request);
-                return;
             }
-            jsonOffice = gson.toJson(office);
         } else {
             // Get all offices
             List<Office> offices = officeRepository.findAll();
-            jsonOffice = gson.toJson(offices);
+            responseHandler.reply(ResponseStatus.SUCCESS, gson.toJson(offices), request);
         }
-
-        responseHandler.reply(ResponseStatus.SUCCESS, jsonOffice, request);
     }
 }

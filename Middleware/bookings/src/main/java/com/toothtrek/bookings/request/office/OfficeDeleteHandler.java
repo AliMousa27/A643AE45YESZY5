@@ -23,7 +23,7 @@ public class OfficeDeleteHandler implements RequestHandlerInterface {
     private ResponseHandler responseHandler;
 
     private final String[] MESSAGE_PROPERTIES = { "id" };
-    
+
     @Override
     public void handle(MqttMessage request) {
         // Check if payload is JSON
@@ -39,19 +39,19 @@ public class OfficeDeleteHandler implements RequestHandlerInterface {
             return;
         }
 
-        // Get office by id
-        Long officeId = json.get("id").getAsLong();
-        Office office = officeRepository.findById(officeId).get();
-        if (office == null) {
+        try {
+            // Get office by id
+            Long officeId = json.get("id").getAsLong();
+            Office office = officeRepository.findById(officeId).get();
+
+            // Delete office
+            officeRepository.delete(office);
+
+            // Reply with success
+            responseHandler.reply(ResponseStatus.SUCCESS, request);
+        } catch (Exception e) {
             responseHandler.reply(ResponseStatus.ERROR, "Office not found", request);
-            return;
         }
-
-        // Delete office
-        officeRepository.delete(office);
-
-        // Reply with success
-        responseHandler.reply(ResponseStatus.SUCCESS, request);
 
     }
 
