@@ -210,6 +210,37 @@ public class BookingsRequestTests {
         assert (new String(response.getPayload()).contains("error"));
     }
 
+    @Test
+    private void cancelBooking() {
+        // JSON message
+        String responseTopic = "test/response/" + System.currentTimeMillis();
+        JsonObject jsonMessage = new JsonObject();
+        jsonMessage.addProperty("id", bookingRepository.findAll().get(0).getId());
+        jsonMessage.addProperty("patientId", patientRepository.findAll().get(0).getId());
+        jsonMessage.addProperty("state", "cancelled");
+        jsonMessage.addProperty("responseTopic", responseTopic);
+
+        // MQTT message
+        MqttMessage message = new MqttMessage();
+        message.setPayload(jsonMessage.toString().getBytes());
+        MqttProperties properties = new MqttProperties();
+        properties.setResponseTopic(responseTopic);
+        message.setProperties(properties);
+
+        mqttHandler.subscribe(responseTopic);
+        bookingStateRequestHandler.handle(message);
+
+        waitUntilMessageArrived();
+
+        // Check if reply is success
+        assert (response != null);
+        assert (new String(response.getPayload()).contains("success"));
+
+        // Check if booking state is changed
+        Booking booking = bookingRepository.findAll().get(0);
+        assert (booking.getState().toString().equals("cancelled"));
+    }
+
     @AfterEach
     public void reset() {
         messageArrived = false;
