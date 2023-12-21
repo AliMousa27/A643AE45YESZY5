@@ -18,9 +18,9 @@ void main() async {
 
   FirebaseAuth.instance.authStateChanges().listen((User? user) {
     if (user == null) {
-      runApp(const MyApp(home: MyBookings()));
+      runApp(const MyApp(home: InitialPage()));
     } else {
-      runApp(const MyApp(home: MyBookings()));
+      runApp(const MyApp(home: MapPage()));
     }
   });
 }
