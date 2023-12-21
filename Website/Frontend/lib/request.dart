@@ -142,4 +142,44 @@ class Request {
       return [];
     }
   }
+
+    static Future<List<Records>> getRecords() async {
+    try {
+      final FirebaseAuth auth = FirebaseAuth.instance;
+      final User? user = auth.currentUser;
+      var url = Uri.http('127.0.0.1:3000', 'records/${user!.uid}');
+
+      return http
+          .get(url, headers: {"Accept": "application/json"}).then((response) {
+        var data = jsonDecode(response.body);
+        data = data["content"];
+        List<Records> records = [];
+        for (var record in data) {
+          records.add(Records.fromJson(record));
+        }
+        return records;
+      });
+    } catch (error) {
+      print(error);
+      return [];
+    }
+  }
+
+  // get patient name
+  static Future<String> getPatientName() async {
+    try {
+      final FirebaseAuth auth = FirebaseAuth.instance;
+      final User? user = auth.currentUser;
+      var url = Uri.http('127.0.0.1:3000', '/patients/${user!.uid}');
+      return http.get(url).then((response) {
+        var data = jsonDecode(response.body);
+        print("the data is $data");
+        return data["content"]["name"];
+      });
+    } catch (error) {
+      print(error);
+      return "";
+    }
+  }
+
 }
