@@ -10,5 +10,5 @@ import com.toothtrek.bookings.entity.Patient;
 public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findByTimeslotId(Long timeslotId);
 
-    List<Patient> findByPatientId(String patientId);
+    List<Booking> findByPatient(Patient patient);
 }

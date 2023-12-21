@@ -1,38 +1,28 @@
-package com.toothtrek.bookings.request.booking;
-
-import java.sql.Timestamp;
-import java.util.List;
+package com.toothtrek.bookings.request.office;
 
 import org.eclipse.paho.mqttv5.common.MqttMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import com.toothtrek.bookings.entity.Booking;
-import com.toothtrek.bookings.entity.Patient;
-import com.toothtrek.bookings.repository.BookingRepository;
-import com.toothtrek.bookings.repository.PatientRepository;
+import com.toothtrek.bookings.entity.Office;
+import com.toothtrek.bookings.repository.OfficeRepository;
 import com.toothtrek.bookings.request.RequestHandlerInterface;
 import com.toothtrek.bookings.response.ResponseHandler;
 import com.toothtrek.bookings.response.ResponseStatus;
-import com.toothtrek.bookings.serializer.json.TimestampSerializer;
 
 @Configuration
-public class BookingGetRequestHandler implements RequestHandlerInterface {
+public class OfficeDeleteHandler implements RequestHandlerInterface {
 
     @Autowired
-    private BookingRepository bookingRepository;
-
-    @Autowired
-    private PatientRepository patientRepository;
+    private OfficeRepository officeRepository;
 
     @Autowired
     private ResponseHandler responseHandler;
 
-    private final String[] MESSAGE_PROPERTIES = { "patientId" };
+    private final String[] MESSAGE_PROPERTIES = { "id" };
 
     @Override
     public void handle(MqttMessage request) {
@@ -49,26 +39,20 @@ public class BookingGetRequestHandler implements RequestHandlerInterface {
             return;
         }
 
-        String patientId = json.get("patientId").getAsString();
-        Patient patient = patientRepository.findById(patientId).get();
-        if (patient == null) {
-            responseHandler.reply(ResponseStatus.ERROR, "Patient not found", request);
-            return;
+        try {
+            // Get office by id
+            Long officeId = json.get("id").getAsLong();
+            Office office = officeRepository.findById(officeId).get();
+
+            // Delete office
+            officeRepository.delete(office);
+
+            // Reply with success
+            responseHandler.reply(ResponseStatus.SUCCESS, request);
+        } catch (Exception e) {
+            responseHandler.reply(ResponseStatus.ERROR, "Office not found", request);
         }
 
-        List<Booking> bookings = bookingRepository.findByPatient(patient);
-        if (bookings == null) {
-            responseHandler.reply(ResponseStatus.EMPTY, "No bookings found", request);
-            return;
-        }
-
-        // Create JSON response
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(Timestamp.class, new TimestampSerializer())
-                .create();
-        String jsonBookings = gson.toJson(bookings);
-
-        responseHandler.reply(ResponseStatus.SUCCESS, jsonBookings, request);
     }
 
     /**
@@ -88,5 +72,4 @@ public class BookingGetRequestHandler implements RequestHandlerInterface {
         }
         return false;
     }
-
 }

@@ -21,12 +21,12 @@ import com.toothtrek.bookings.response.ResponseStatus;
 public class BookingStateRequestHandler implements RequestHandlerInterface {
 
     @Autowired
-    BookingRepository bookingRepo;
+    BookingRepository bookingRepository;
 
     @Autowired
     private ResponseHandler responseHandler;
 
-    private final String[] MESSAGE_PROPERTIES = { "id", "state" };
+    private final String[] MESSAGE_PROPERTIES = { "bookingId", "state" };
     private final List<String> ALLOWED_STATES = List.of("booked", "confirmed", "rejected", "cancelled", "completed");
 
     private final HashMap<String, List<String>> ALLOWED_STATE_CHANGES_MAP = new HashMap<String, List<String>>() {
@@ -73,10 +73,10 @@ public class BookingStateRequestHandler implements RequestHandlerInterface {
             return;
         }
 
-        long bookingId = json.get("id").getAsLong();
+        long bookingId = json.get("bookingId").getAsLong();
         Booking booking;
         try {
-            booking = bookingRepo.findById(bookingId).get();
+            booking = bookingRepository.findById(bookingId).get();
         } catch (NoSuchElementException e) {
             responseHandler.reply(ResponseStatus.ERROR, "No booking with id " + bookingId + " found", request);
             return;
@@ -115,7 +115,7 @@ public class BookingStateRequestHandler implements RequestHandlerInterface {
         booking.setState(Booking.State.valueOf(state));
 
         // Save booking
-        bookingRepo.save(booking);
+        bookingRepository.save(booking);
 
         // Reply with success
         responseHandler.reply(ResponseStatus.SUCCESS, request);

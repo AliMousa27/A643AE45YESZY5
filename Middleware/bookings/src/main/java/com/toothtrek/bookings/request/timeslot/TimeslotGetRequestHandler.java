@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.toothtrek.bookings.entity.Office;
+import com.toothtrek.bookings.entity.Timeslot;
 import com.toothtrek.bookings.repository.OfficeRepository;
 import com.toothtrek.bookings.repository.TimeslotRepository;
 import com.toothtrek.bookings.request.RequestHandlerInterface;
@@ -45,6 +46,11 @@ public class TimeslotGetRequestHandler implements RequestHandlerInterface {
             List<TimeslotDentistDto> timeslotDentistDtoList = new ArrayList<>();
 
             for (TimeslotDentist timeslotDentist : timeslotDentistList) {
+
+                if (timeslotDentist.getTimeslot().getState() == Timeslot.State.cancelled) {
+                    continue;
+                }
+
                 // If the timeslot is booked, skip it.
                 if (timeslotRepository.isBooked(timeslotDentist.getTimeslot().getId())) {
                     continue;
