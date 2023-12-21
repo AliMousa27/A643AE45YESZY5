@@ -53,5 +53,15 @@
     "setting_language": "Language",
     "@setting_language": {
         "description": "The language label on the setting page"
+    },
+
+
+    "dental_records_title": "Dental Record",
+    "@dental_records_title": {
+        "description": "The dental record title on the dental records page"
+    },
+    "dental_records_notes": "Notes: ",
+    "@dental_records_notes": {
+        "description": "The notes label on the dental records page"
     }
 }

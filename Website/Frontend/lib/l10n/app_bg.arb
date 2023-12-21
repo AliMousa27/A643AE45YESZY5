@@ -14,5 +14,8 @@
     "setting_title": "Настройки",
     "setting_notification": "Известия",
     "setting_darkMode": "Тъмен режим",
-    "setting_language": "Език"
+    "setting_language": "Език",
+
+    "dental_records_title": "зъболекарско досие",
+    "dental_records_notes": "Бележки: "
 }
