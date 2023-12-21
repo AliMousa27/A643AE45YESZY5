@@ -2,10 +2,15 @@ package com.toothtrek.bookings.entity;
 
 import java.sql.Timestamp;
 
+import org.hibernate.annotations.Type;
+
 import com.google.gson.annotations.SerializedName;
 
+import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import lombok.Data;
@@ -36,6 +41,11 @@ public class Timeslot {
     @SerializedName("date_and_time") // Frontend requires this name.
     private Timestamp dateAndTime;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "state", nullable = false)
+    @Type(PostgreSQLEnumType.class)
+    private State state = State.open;
+
     /**
      * Timeslot constructor
      * 
@@ -50,5 +60,10 @@ public class Timeslot {
     }
 
     public Timeslot() {
+    }
+
+    public static enum State {
+        open,
+        cancelled;
     }
 }
