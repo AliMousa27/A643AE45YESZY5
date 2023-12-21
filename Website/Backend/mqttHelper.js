@@ -1,8 +1,10 @@
+require('dotenv').config();
+
 var mqtt = require('mqtt');
 const protocol = 'tcp'
-const host = 'broker.hivemq.com'
-const mqttPort = '1883'
-const clientId = `mqtt_${Math.random().toString(16).slice(3)}`
+const host = process.env.MQTT_HOST || 'localhost'
+const mqttPort = process.env.MQTT_PORT || '1883'
+const clientId = process.env.MQTT_CLIENT_ID || `mqtt_${Math.random().toString(16).slice(3)}`
 const connectUrl = `${protocol}://${host}:${mqttPort}`
 
 const QOS = 1
@@ -18,7 +20,7 @@ mqttClient.on('connect', () => {
     console.log(`Connected to mqtt server with url ${connectUrl}`)
 })
 mqttClient.on('error', (err) => {
-    print(err)
+    console.log(err)
 })
 mqttClient.handleRequest = function(req, res, requestTopic, uid,body) {
     try {
