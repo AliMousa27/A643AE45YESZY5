@@ -49,8 +49,8 @@ class DentalRecordsPageState extends State<DentalRecordsPage> {
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage(settingProvider.isDarkMode
-                      ? 'assets/setting-background-dark.jpg'
-                      : 'assets/setting-background.jpg'),
+                      ? 'assets/background-dark.jpg'
+                      : 'assets/background.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),
