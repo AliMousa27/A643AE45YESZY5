@@ -141,6 +141,49 @@ router.get('/:officeId', async (req, res) => {
     }
 });
 
+router.get('/', async (req, res) => {
+
+    const responseTopic = 'toothtrek/booking_service/office/get/' + uuidv4();
+
+    var office = {
+        responseTopic: responseTopic
+    };
+
+    try {
+        let topic = 'toothtrek/booking_service/office/get/';
+
+        mqttClient.subscribe(responseTopic);
+        mqttClient.publish(topic, JSON.stringify(office));
+
+        // Create a new Promise for the request
+        const response = await new Promise((resolve, reject) => {
+            // Store the resolver in the map
+            resolvers.set(responseTopic, resolve);
+
+            // Set a timeout for the response
+            const timeout = setTimeout(() => {
+                mqttClient.unsubscribe(responseTopic);
+                resolvers.delete(responseTopic);
+                reject(new Error('Request timed out'));
+            }, 15000);
+        });
+
+        mqttClient.unsubscribe(responseTopic);
+
+        // Handle the response from the broker
+        const parsedResponse = JSON.parse(response);
+        if (parsedResponse.status === 'success') {
+            return res.status(200).send(parsedResponse);
+        }
+        else {
+            return res.status(400).send(parsedResponse);
+        }
+
+    } catch (error) {
+        return res.status(500).send(error.message);
+    }
+});
+
 router.post('/', async (req, res) => {
 
     if (!req.body.name || !req.body.address || !req.body.longitude || !req.body.latitude) {
