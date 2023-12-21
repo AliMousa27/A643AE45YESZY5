@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application/records.dart';
 import 'package:provider/provider.dart';
 import 'setting_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'request.dart';
 
 class DentalRecordsPage extends StatefulWidget {
   const DentalRecordsPage({Key? key}) : super(key: key);
@@ -11,24 +13,34 @@ class DentalRecordsPage extends StatefulWidget {
 }
 
 class DentalRecordsPageState extends State<DentalRecordsPage> {
-  //Dummy Data. Remove Later
-  List<String> recordDates = [
-    "2023-12-11",
-    "2023-05-23",
-    "2022-12-11",
-    "2022-05-15",
-    "2022-01-11",
-    "2021-12-11",
-    "2021-05-23",
-    "2021-01-11",
-    "2020-12-11",
-    "2020-05-23",
-    "2020-01-11",
-    "2019-12-11",
-  ];
+  String patientName = "Patient Name";
+
+  @override
+  void initState() {
+    super.initState();
+    Request.getPatientName().then((value) {
+      setState(() {
+        patientName = value;
+      });
+    });
+    /*
+    Request.getRecords().then((value) {
+      setState(() {
+        records = value;
+      });
+    });
+    */
+  }
 
   @override
   Widget build(BuildContext context) {
+    List<Records> records = [];
+
+    // TODO: Replace with actual data
+    for (int i = 0; i < 10; i++) {
+      records.add(Records("Notes $i", "2023-12-$i", "Doctor $i"));
+    }
+
     return Consumer<SettingProvider>(
         builder: (context, settingProvider, child) {
       return Scaffold(
@@ -56,7 +68,7 @@ class DentalRecordsPageState extends State<DentalRecordsPage> {
                           backgroundColor:
                               Theme.of(context).colorScheme.background,
                         )),
-                    Text("*Patient Name*",
+                    Text(patientName,
                         style: TextStyle(
                           fontSize: 20,
                           fontFamily: "suezone",
@@ -73,7 +85,7 @@ class DentalRecordsPageState extends State<DentalRecordsPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          ...generateExpansionTiles(),
+                          ...getRecordsTiles(records),
                         ],
                       ),
                     ))
@@ -81,8 +93,8 @@ class DentalRecordsPageState extends State<DentalRecordsPage> {
     });
   }
 
-  List<Widget> generateExpansionTiles() {
-    return recordDates.map((date) {
+  List<Widget> getRecordsTiles(List<Records> records) {
+    return records.map((record) {
       return Container(
         width: 600,
         alignment: Alignment.center,
@@ -93,7 +105,8 @@ class DentalRecordsPageState extends State<DentalRecordsPage> {
           collapsedTextColor: Theme.of(context).colorScheme.onPrimaryContainer,
           backgroundColor: Theme.of(context).colorScheme.primary,
           textColor: Theme.of(context).colorScheme.onPrimary,
-          title: Text(date, style: const TextStyle(fontFamily: "suezone")),
+          title:
+              Text(record.date, style: const TextStyle(fontFamily: "suezone")),
           children: [
             ListTile(
               title: Text(
@@ -105,7 +118,7 @@ class DentalRecordsPageState extends State<DentalRecordsPage> {
                 ),
               ),
               subtitle: Text(
-                "Random Scribbles",
+                record.notes,
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onPrimary,
                   fontFamily: "suezone",
@@ -114,7 +127,7 @@ class DentalRecordsPageState extends State<DentalRecordsPage> {
             ),
             ListTile(
               title: Text(
-                "- Doctor",
+                "- ${record.doctorName}",
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onPrimary,
                   fontFamily: "suezone",

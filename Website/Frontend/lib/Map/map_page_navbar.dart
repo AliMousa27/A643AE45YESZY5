@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application/Map/map_page_util.dart';
-import 'package:flutter_application/dental_records.dart';
+import 'package:flutter_application/dental_records_page.dart';
 import 'package:flutter_application/setting.dart';
 
 class NavBar extends StatefulWidget {
