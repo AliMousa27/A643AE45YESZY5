@@ -62,6 +62,7 @@ class DentistAppointment {
   String eventName;
   factory DentistAppointment.fromJson(Map<String, dynamic> json) {
     DateTime from;
+
     if (json["date_and_time"] != null) {
       from = DateTime.parse(json["date_and_time"]);
     } else {

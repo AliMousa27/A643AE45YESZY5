@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_application/Map/bottom_sheet.dart';
 import 'package:flutter_application/Map/dentist_apointment.dart';
 import 'package:flutter_application/Map/side_drawer.dart';
+import 'package:flutter_application/widget_util.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import '../request.dart';
 import 'map_page_navbar.dart';
@@ -56,42 +57,12 @@ class MapPageState extends State<MapPage> {
             return Text("Error: ${snapshot.error}");
           } else {
             return Scaffold(
-              appBar: AppBar(
-                actions: [
-                  Row(
-                    //TODO define path in a dropdown menu for user navigation
-                    children: [
-                      Container(
-                        width: screenWidth * 0.5,
-                        height: double.infinity,
-                        color: Theme.of(context).colorScheme.secondary,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            MapUtil.buildCircleAvatar(
-                                "../assets/Fulltooth.png", false, screenWidth),
-                            SizedBox(width: screenWidth * 0.05),
-                            //TODO change to user profile picture
-                            MapUtil.buildCircleAvatar(
-                                "../assets/profile.png", false, screenWidth),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(left: screenWidth * 0.07),
-                    height: double.infinity,
-                    width: screenWidth * 0.5,
-                    color: Theme.of(context).colorScheme.primary,
-                    child: MapUtil.createDentistOfficesText(
-                      context,
-                      screenWidth,
-                      snapshot.data!.length,
-                    ),
-                  )
-                ],
-              ),
+              appBar: WidgetUtil.buildNavBar(
+                  context,
+                  screenWidth,
+                  Theme.of(context).colorScheme.onPrimary,
+                  Theme.of(context).colorScheme.primaryContainer,
+                  Theme.of(context).colorScheme.primary),
               body: Stack(children: [
                 createMap(
                   "mapbox://styles/bigman360/clpa24zoi004g01p95rqx61hw",
@@ -140,12 +111,18 @@ class MapPageState extends State<MapPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    NavBar(
+                    WidgetUtil.buildNavBar(
+                        context,
+                        screenWidth,
+                        Theme.of(context).colorScheme.onPrimary,
+                        Theme.of(context).colorScheme.primaryContainer,
+                        Theme.of(context).colorScheme.primary),
+                    /*NavBar(
                       dentistOfficesCount: snapshot.data!.length,
                       screenHeight: screenHeight,
                       screenWidth: screenWidth,
                       resizeProfilePic: resizeProfilePic,
-                    ),
+                    ),*/
                     Expanded(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -161,8 +138,9 @@ class MapPageState extends State<MapPage> {
                     ),
                   ],
                 ),
-                Align(
-                  alignment: Alignment.topRight,
+                Positioned(
+                  top: 0,
+                  right: 0,
                   child: SizedBox(
                     //controls how much it "slides" in and out
                     width: screenWidth * 0.35,

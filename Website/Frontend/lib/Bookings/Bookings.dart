@@ -4,6 +4,7 @@ import 'dart:js_interop';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application/Map/dentist_apointment.dart';
+import 'package:flutter_application/Map/map.dart';
 import 'package:flutter_application/request.dart';
 import 'package:flutter_application/widget_util.dart';
 
@@ -37,68 +38,18 @@ class _MyBookingsState extends State<MyBookings> {
     _appointmentsFuture = Request.getAppointmentsByUID();
   }
 
-  List<Widget> buildNavbarActions(double screenWidth, Color textColor,
-      Color btnColor, Color btnHoverColor) {
-    List<Widget> actions = [];
-    int numActions = 3;
-    List<String> actionPrompts = ['My Bookings', 'Map', 'Settings'];
-    for (int i = 0; i < numActions; i++) {
-      actions.add(
-        ElevatedButton(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.resolveWith<Color>(
-              (Set<MaterialState> states) {
-                if (states.contains(MaterialState.hovered)) {
-                  return Colors.white.withOpacity(0.8);
-                }
-                return hovering[i] ? btnHoverColor : btnColor;
-              },
-            ),
-            elevation: MaterialStateProperty.resolveWith<double>(
-              (Set<MaterialState> states) {
-                if (states.contains(MaterialState.hovered)) return 10;
-                return 2;
-              },
-            ),
-          ),
-          onPressed: () {
-            // TODO
-          },
-          child: Text(
-            actionPrompts[i],
-            style: TextStyle(color: textColor, fontSize: 14),
-          ),
-        ),
-      );
-      actions.add(SizedBox(width: screenWidth * 0.03));
-    }
-    return actions;
-  }
-
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     bool isMobile = screenWidth < 800;
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        leading: Image.asset(
-          'assets/FullTooth.png',
-        ),
-        title: SizedBox(
-          width: 200,
-          child: Image.asset(
-            'assets/ToothTrek.png',
-            fit: BoxFit.scaleDown,
-          ),
-        ),
-        actions: buildNavbarActions(
-            screenWidth,
-            Theme.of(context).colorScheme.onPrimary,
-            Theme.of(context).colorScheme.primaryContainer,
-            Theme.of(context).colorScheme.primary),
-      ),
+      appBar: WidgetUtil.buildNavBar(
+          context,
+          screenWidth,
+          Theme.of(context).colorScheme.onPrimary,
+          Theme.of(context).colorScheme.primaryContainer,
+          Theme.of(context).colorScheme.primary),
       body: FutureBuilder(
         future: _appointmentsFuture,
         builder: (BuildContext context, snapshot) {
@@ -171,7 +122,6 @@ class _MyBookingsState extends State<MyBookings> {
 
   List<Widget> buildAppointmentCards(future) {
     List<Widget> cards = [];
-    print("BUDAKJNFWJSED");
     cards.add(const SizedBox(height: 50));
 
     for (int i = 0; i < future.length; i++) {
@@ -268,11 +218,12 @@ class _MyBookingsState extends State<MyBookings> {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user = auth.currentUser;
 
-    if (user != null) {
+    if (true) {
       var payload = {
-        "patientId": user.uid,
+        "patientId": user!.uid,
         "bookingId": bookingID,
       };
+      print("the payload is $payload");
       String json = jsonEncode(payload);
       WidgetUtil.proccessARequest(
           context,

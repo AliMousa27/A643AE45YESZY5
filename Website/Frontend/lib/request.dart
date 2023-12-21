@@ -35,7 +35,6 @@ class Request {
         return data["status"] == "success";
       });
     } catch (error) {
-      print(error);
       return false;
     }
   }
@@ -130,6 +129,7 @@ class Request {
 
       return http.get(url).then((response) {
         var data = jsonDecode(response.body);
+        data = data["content"];
         List<DentistAppointment> appointments = [];
         for (var appointment in data) {
           appointments.add(DentistAppointment.fromJson(appointment));

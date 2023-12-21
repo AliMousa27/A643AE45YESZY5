@@ -18,9 +18,9 @@ void main() async {
 
   FirebaseAuth.instance.authStateChanges().listen((User? user) {
     if (user == null) {
-      runApp(const MyApp(home: InitialPage()));
+      runApp(const MyApp(home: MyBookings()));
     } else {
-      runApp(const MyApp(home: MapPage()));
+      runApp(const MyApp(home: MyBookings()));
     }
   });
 }
@@ -38,6 +38,7 @@ class MyApp extends StatelessWidget {
       darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
       supportedLocales: L10n.all,
       locale: const Locale('bg'),
+      debugShowCheckedModeBanner: false,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,

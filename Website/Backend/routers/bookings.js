@@ -8,13 +8,16 @@ router.post('/bookings/:id', (req, res) => {
 });
 //get bookings for patient by id
 router.get('/bookings/:id', (req, res) => {
-  mqttClient.handleRequest(req, res, 'toothtrek/booking_service/booking/get/', req.params.id, req.body);
+  var body = {
+    "patientId": req.params.id
+  }
+  mqttClient.handleRequest(req, res, 'toothtrek/booking_service/booking/get/', req.params.id,body);
 });
 
 router.delete('/bookings/:patentId/:bookingId', (req, res) => {
   var publishJson = {
     "patientId": req.params.patentId,
-    "id": req.params.bookingId,
+    "bookingId": req.params.bookingId,
     state: "cancelled"
   }
   
