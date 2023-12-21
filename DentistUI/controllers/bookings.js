@@ -37,7 +37,8 @@ router.patch('/:timeslotId', async (req, res) => {
         return res.status(400).send('invalid parameters: state should be one of: ' + STATES.join(', ') + ')');
     }
 
-    const responseTopic = 'toothtrek/booking_service/booking/state/' + uuidv4();
+    const topic = 'toothtrek/booking_service/booking/state/';
+    const responseTopic = topic + uuidv4();
 
     var timeslot = {
         id: req.params.timeslotId,
@@ -46,7 +47,6 @@ router.patch('/:timeslotId', async (req, res) => {
     };
 
     try {
-        let topic = 'toothtrek/booking_service/booking/state/';
 
         mqttClient.subscribe(responseTopic);
         mqttClient.publish(topic, JSON.stringify(timeslot));

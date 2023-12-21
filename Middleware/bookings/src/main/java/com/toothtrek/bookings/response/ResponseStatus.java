@@ -5,7 +5,8 @@ package com.toothtrek.bookings.response;
  */
 public enum ResponseStatus {
     SUCCESS("success"),
-    ERROR("error");
+    ERROR("error"),
+    EMPTY("empty"); // Whenever a get request returns no results
 
     private final String status;
 

@@ -1,7 +1,5 @@
 package com.toothtrek.bookings;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -14,29 +12,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import com.toothtrek.bookings.entity.Dentist;
-import com.toothtrek.bookings.entity.Office;
-import com.toothtrek.bookings.entity.Timeslot;
 import com.toothtrek.bookings.mqtt.MqttCallbackHandler;
 import com.toothtrek.bookings.mqtt.MqttHandler;
-import com.toothtrek.bookings.repository.DentistRepository;
-import com.toothtrek.bookings.repository.OfficeRepository;
-import com.toothtrek.bookings.repository.TimeslotRepository;
 import io.github.cdimascio.dotenv.Dotenv;
 import io.github.cdimascio.dotenv.DotenvException;
 
 @SpringBootApplication
 @EntityScan("com.toothtrek.bookings.entity")
 public class BookingsApplication implements CommandLineRunner {
-
-	@Autowired
-	private TimeslotRepository timeslotRepository;
-
-	@Autowired
-	private OfficeRepository officeRepository;
-
-	@Autowired
-	private DentistRepository dentistRepository;
 
 	// Necessary to decouple the MQTT handler from the MQTT callback handler.
 	// To avoid circular dependencies.
@@ -110,38 +93,6 @@ public class BookingsApplication implements CommandLineRunner {
 		mqttHandler.initialize(mqttCallbackHandler);
 		mqttHandler.connect(true, true);
 		mqttHandler.subscribe("toothtrek/booking_service/+/+/");
-
-		// Dummy data for testing purposes
-		// TODO: Remove this when no longer needed
-		// Update RequestTests.java accordingly when removing
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		long time = sdf.parse("2023-12-06 18:40").getTime();
-		Timestamp ts = new Timestamp(time);
-
-		if (dentistRepository.findAll().isEmpty()) {
-			Dentist dentist = new Dentist("John Doe 1", ts);
-			Dentist dentist2 = new Dentist("John Doe 2", ts);
-			dentistRepository.save(dentist);
-			dentistRepository.save(dentist2);
-		}
-
-		if (officeRepository.findAll().isEmpty()) {
-			Office office = new Office("Design ofis", "Lindholmen", 57.7066159f, 11.934085f);
-			Office office2 = new Office("Grapix ofis", "Johanneberg", 57.690085f, 11.9760141f);
-			officeRepository.save(office);
-			officeRepository.save(office2);
-		}
-
-		if (timeslotRepository.findAll().isEmpty()) {
-			Office office = officeRepository.findAll().get(0);
-			Dentist dentist = dentistRepository.findAll().get(0);
-			Office office2 = officeRepository.findAll().get(1);
-			Dentist dentist2 = dentistRepository.findAll().get(1);
-			Timeslot timeslot = new Timeslot(office, dentist, ts);
-			Timeslot timeslot2 = new Timeslot(office2, dentist2, ts);
-			timeslotRepository.save(timeslot);
-			timeslotRepository.save(timeslot2);
-		}
 
 	}
 
