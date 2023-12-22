@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dental Appointment Reminder</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      margin: 20px;
+      color: #333;
+    }
+    .header, .footer {
+      padding: 20px;
+      text-align: center;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .card {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .card img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+    strong {
+      color: #28A745;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li::before {
+      content: "•";
+      color: #28A745;
+      display: inline-block;
+      width: 1em;
+      margin-left: -1em;
+    }
+    footer {
+      margin-top: 20px;
+      border-top: 1px solid #ccc;
+      padding-top: 10px;
+      font-size: 0.8em;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <div class="header"><h1>Dental Appointment Reminder</h1></div>
+  <div class="container">
+    <div class="card">
+      <img src="https://cdn.pixabay.com/photo/2016/06/13/13/46/shark-1454245_1280.png" alt="Dental Office" />
+      <h2>Gentle Reminder: Your Dental Appointment Tomorrow!</h2>
+      <p>Hello [[${patientName}]],</p>
+      <p>We hope this message finds you well. This is a gentle reminder that you have an upcoming dental appointment scheduled with <strong>[[${dentistName}]]</strong> at <strong>[[${officeName}]]</strong> tomorrow.</p>
+      <p><strong>Appointment Details:</strong></p>
+      <ul>
+        <li>Date and Time: [[${dateAndTime}]]</li>
+        <li>Dentist: [[${dentistName}]]</li>
+        <li>Location: [[${officeAddress}]]</li>
+      </ul>
+      <p>Please ensure to arrive a few minutes early to complete any necessary paperwork.</p>
+      <p>We look forward to seeing you and ensuring your dental health is in excellent condition. Thank you for choosing <strong>[[${officeName}]]</strong> for your dental care.</p>
+    </div>
+    <footer>
+      <p><strong>ToothTrek</strong></p>
+      <p>ToothTrek</p>
+    </footer>
+  </div>
+</body>
+</html>
