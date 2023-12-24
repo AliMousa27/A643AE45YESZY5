@@ -1,10 +1,8 @@
 import 'dart:convert';
-import 'dart:js_interop';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application/Map/dentist_apointment.dart';
-import 'package:flutter_application/Map/map.dart';
 import 'package:flutter_application/request.dart';
 import 'package:flutter_application/widget_util.dart';
 
