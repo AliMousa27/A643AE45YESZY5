@@ -11,6 +11,9 @@ import org.eclipse.paho.mqttv5.common.packet.MqttProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.toothtrek.notifications.request.notification.NotificationRequestAllocatorService;
+import com.toothtrek.notifications.request.notification.NotificationRequestType;
+
 /**
  * MqttCallbackHandler class.
  * 
@@ -22,6 +25,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class MqttCallbackHandler implements MqttCallback {
 
+    @Autowired
+    NotificationRequestAllocatorService notificationRequestAllocatorService;
 
     @Autowired
     ExecutorService executorService;
@@ -46,6 +51,13 @@ public class MqttCallbackHandler implements MqttCallback {
         System.out.println("   Topic: " + topic);
         System.out.println("   Message: " + message.toString());
         System.out.println();
+
+        // [0] = "toothtrek"
+        // [1] = "notification"
+        // [2] = "send"
+        String[] topicParts = topic.split("/");
+        executorService.submit(() -> notificationRequestAllocatorService
+                .handleRequest(NotificationRequestType.fromString(topicParts[2]), message));
     }
 
     @Override

@@ -16,6 +16,7 @@ import com.toothtrek.bookings.repository.BookingRepository;
 import com.toothtrek.bookings.request.RequestHandlerInterface;
 import com.toothtrek.bookings.response.ResponseHandler;
 import com.toothtrek.bookings.response.ResponseStatus;
+import com.toothtrek.bookings.notification.NotificationHandler;
 
 @Configuration
 public class BookingStateRequestHandler implements RequestHandlerInterface {
@@ -25,6 +26,9 @@ public class BookingStateRequestHandler implements RequestHandlerInterface {
 
     @Autowired
     private ResponseHandler responseHandler;
+
+    @Autowired
+    private NotificationHandler notificationHandler;
 
     private final String[] MESSAGE_PROPERTIES = { "bookingId", "state" };
     private final List<String> ALLOWED_STATES = List.of("booked", "confirmed", "rejected", "cancelled", "completed");
@@ -116,6 +120,11 @@ public class BookingStateRequestHandler implements RequestHandlerInterface {
 
         // Save booking
         bookingRepository.save(booking);
+
+        // Send notification
+        if (!state.equals("completed")) {
+            notificationHandler.sendNotification(booking.getId(), state);
+        }
 
         // Reply with success
         responseHandler.reply(ResponseStatus.SUCCESS, request);

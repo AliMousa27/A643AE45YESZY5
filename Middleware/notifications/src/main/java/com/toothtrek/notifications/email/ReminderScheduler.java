@@ -43,7 +43,7 @@ public class ReminderScheduler {
             context.setVariable("officeAddress", booking.getTimeslot().getOffice().getAddress());
             context.setVariable("dateAndTime", booking.getTimeslot().getDateAndTime().toString());
 
-            String processedTemplate = templateEngine.process("bookingReminderTemplate", context);
+            String processedTemplate = templateEngine.process("reminderTemplate", context);
             emailService.sendNotificationEmail(booking.getPatient().getEmail(), "Dental Appointment Reminder",
                     processedTemplate);
         }
