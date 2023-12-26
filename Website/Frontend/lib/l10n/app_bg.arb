@@ -9,6 +9,8 @@
     "authentication_enterEmail": "Въведете имейл",
     "authentication_enterPassword": "Въведете парола",
     "authentication_confirmPassword": "Потвърдете паролата",
+    "authentication_enterName": "Въведи име",
+
     "dentist_offices": "Зъболекарски кабинети: ",
 
     "setting_title": "Настройки",

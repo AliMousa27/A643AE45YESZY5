@@ -32,6 +32,12 @@
     "@authentication_confirmPassword": {
         "description": "The confirm password label on the authentication page"
     },
+    "authentication_enterName": "Enter name",
+    "@authentication_enterName":{
+        "description": "The enter name label on the authentication page"
+    },
+
+
     "dentist_offices": "Dentist Offices: ",
     "@dentist_offices": {
         "description": "amount of dentist offices;"

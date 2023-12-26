@@ -19,6 +19,7 @@ class _AuthenticationState extends State<Authentication> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+  final nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String? errorMsg;
 
@@ -94,6 +95,17 @@ class _AuthenticationState extends State<Authentication> {
                       SizedBox(
                         height: screenSize.height * 0.04,
                       ),
+                      createTextField(
+                          screenSize.width * textFieldWidthFactor,
+                          screenSize.height * 0.07,
+                          AppLocalizations.of(context)!
+                              .authentication_enterName,
+                          nameController,
+                          context,
+                          false),
+                      SizedBox(
+                        height: screenSize.height * 0.04,
+                      ),
                       Material(
                         elevation: 7,
                         borderRadius: BorderRadius.circular(30.0),
@@ -162,7 +174,7 @@ class _AuthenticationState extends State<Authentication> {
   onPressed(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       if (widget.isSigningUp) {
-        await signUp(emailController.text, passwordController.text, context);
+        await signUp(emailController.text, passwordController.text, nameController.text, context);
       } else {
         await logIn(emailController.text, passwordController.text, context);
       }
@@ -170,7 +182,7 @@ class _AuthenticationState extends State<Authentication> {
   }
 
   Future<void> signUp(
-      String email, String password, BuildContext context) async {
+      String email, String password, String name, BuildContext context) async {
     try {
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
@@ -178,6 +190,7 @@ class _AuthenticationState extends State<Authentication> {
 
       FirebaseAuth.instance.currentUser?.sendEmailVerification();
       errorMsg = "Please verify your email and log in";
+      await FirebaseAuth.instance.currentUser?.updateDisplayName(name);
       setState(() {});
       await FirebaseAuth.instance.signOut();
     } on FirebaseAuthException catch (e) {
