@@ -42,14 +42,17 @@ class Request {
 
   static Future<List<DentistOffice>> getOffices() async {
     try {
+      print("here");
       final FirebaseAuth auth = FirebaseAuth.instance;
       final User? user = auth.currentUser;
+      print("user is $user");
       var url = Uri.http('127.0.0.1:3000', 'offices/${user!.uid}');
 
       return http
           .get(url, headers: {"Accept": "application/json"}).then((response) {
         var data = jsonDecode(response.body);
         data = data["content"];
+        print("the date is $data");
         List<DentistOffice> offices = [];
         for (var office in data) {
           offices.add(DentistOffice.fromJson(office));
@@ -57,7 +60,8 @@ class Request {
         return offices;
       });
     } catch (error) {
-      print(error);
+      print("caught error which is $error");
+
       return [];
     }
   }
@@ -144,7 +148,7 @@ class Request {
     }
   }
 
-    static Future<List<Records>> getRecords() async {
+  static Future<List<Records>> getRecords() async {
     try {
       final FirebaseAuth auth = FirebaseAuth.instance;
       final User? user = auth.currentUser;
@@ -182,5 +186,4 @@ class Request {
       return "";
     }
   }
-
 }

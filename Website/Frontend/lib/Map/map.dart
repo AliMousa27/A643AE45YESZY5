@@ -108,50 +108,42 @@ class MapPageState extends State<MapPage> {
             return Stack(
               children: [
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    WidgetUtil.buildNavBar(
+                        context,
+                        screenWidth,
+                        Theme.of(context).colorScheme.onPrimary,
+                        Theme.of(context).colorScheme.primaryContainer,
+                        Theme.of(context).colorScheme.primary),
                     /*NavBar(
                       dentistOfficesCount: snapshot.data!.length,
                       screenHeight: screenHeight,
                       screenWidth: screenWidth,
                       resizeProfilePic: resizeProfilePic,
                     ),*/
-
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            createMap(
-                              "mapbox://styles/bigman360/clpa24zoi004g01p95rqx61hw",
-                              "pk.eyJ1IjoiYmlnbWFuMzYwIiwiYSI6ImNscDl5dmM5MzAyMHAyanBkYmw1a24yd2EifQ.L1FfrH4Als9i33KTf0wStw",
-                              screenWidth,
-                              screenHeight,
-                            )
-                          ],
-                        ),
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          createMap(
+                            "mapbox://styles/bigman360/clpa24zoi004g01p95rqx61hw",
+                            "pk.eyJ1IjoiYmlnbWFuMzYwIiwiYSI6ImNscDl5dmM5MzAyMHAyanBkYmw1a24yd2EifQ.L1FfrH4Als9i33KTf0wStw",
+                            screenWidth,
+                            screenHeight,
+                          )
+                        ],
                       ),
                     ),
                   ],
-                ),
-                SizedBox(
-                  width: screenWidth,
-                  height: screenHeight * 0.06,
-                  child: WidgetUtil.buildNavBar(
-                      context,
-                      screenWidth,
-                      Theme.of(context).colorScheme.onPrimary,
-                      Theme.of(context).colorScheme.primaryContainer,
-                      Theme.of(context).colorScheme.primary),
                 ),
                 Positioned(
                   top: 0,
                   right: 0,
                   child: SizedBox(
                     //controls how much it "slides" in and out
-                    width: screenWidth * 0.04,
+                    width: screenWidth * 0.35,
                     height: screenHeight,
                     child:
                         SideDrawer(offices: snapshot.data!, key: sideDrawerKey),
@@ -167,15 +159,11 @@ class MapPageState extends State<MapPage> {
 
   Widget createMap(
       String styleURL, String apiKey, double screenWidth, double screenHeight) {
-    double appBarHeight = screenHeight * 0.06;
-
     return AnimatedContainer(
       duration: const Duration(milliseconds: 100),
       width: sideBarIsCollapsed ? screenWidth : screenWidth * 0.65,
-      height:
-          screenWidth < 668 ? screenHeight * 0.5 : screenHeight - appBarHeight,
+      height: screenWidth < 668 ? screenHeight * 0.5 : screenHeight,
       child: MapboxMap(
-          compassEnabled: false,
           onStyleLoadedCallback: addMarkers,
           onMapCreated: onMapCreated,
           //styleString: styleURL,
