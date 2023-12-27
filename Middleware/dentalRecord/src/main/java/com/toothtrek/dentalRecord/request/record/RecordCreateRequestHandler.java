@@ -35,7 +35,10 @@ public class RecordCreateRequestHandler implements RequestHandlerInterface {
     @Autowired
     private ResponseHandler responseHandler;
 
-    private final String[] MESSAGE_PROPERTIES = { "timeslotId", "notes" };
+    private final String TIMESLOT_ID = "timeslotId";
+    private final String NOTES = "notes";
+
+    private final String[] MESSAGE_PROPERTIES = { TIMESLOT_ID, NOTES };
 
     @Override
     public void handle(MqttMessage request) {
@@ -63,14 +66,14 @@ public class RecordCreateRequestHandler implements RequestHandlerInterface {
         // Check if timeslotId exists
         Timeslot timeslot = null;
         try {
-            Long timeslotId = json.get("timeslotId").getAsLong();
+            Long timeslotId = json.get(TIMESLOT_ID).getAsLong();
             timeslot = timeslotRepository.findById(timeslotId).orElseThrow();
         } catch (NoSuchElementException e) {
             responseHandler.reply(ResponseStatus.ERROR, request);
             return;
         }
 
-        String notes = json.get("notes").getAsString();
+        String notes = json.get(NOTES).getAsString();
         if (notes == null) {
             notes = "";
         }

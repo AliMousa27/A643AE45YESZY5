@@ -28,7 +28,10 @@ public class RecordUpdateRequestHandler implements RequestHandlerInterface {
     @Autowired
     private ResponseHandler responseHandler;
 
-    private final String[] MESSAGE_PROPERTIES = { "id", "notes" };
+    private final String ID = "id";
+    private final String NOTES = "notes";
+
+    private final String[] MESSAGE_PROPERTIES = { ID, NOTES };
 
     @Override
     public void handle(MqttMessage request) {
@@ -42,8 +45,6 @@ public class RecordUpdateRequestHandler implements RequestHandlerInterface {
                 return;
             }
 
-            System.out.println(json);
-
             // Check if all required properties are present
             if (checkMissingJSONProperties(json, MESSAGE_PROPERTIES, request)) {
                 return;
@@ -53,8 +54,8 @@ public class RecordUpdateRequestHandler implements RequestHandlerInterface {
             Long id = 0L;
             String newNotes = "";
             try {
-                id = json.get("id").getAsLong();
-                newNotes = json.get("notes").getAsString();
+                id = json.get(ID).getAsLong();
+                newNotes = json.get(NOTES).getAsString();
             } catch (Exception e) {
                 responseHandler.reply(ResponseStatus.ERROR, "Invalid JSON", request);
             }

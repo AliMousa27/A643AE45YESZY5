@@ -1,15 +1,16 @@
 CREATE TABLE patient (
     id varchar(255) NOT NULL,
-    Name varchar(255) NOT NULL,
-    date_of_birth date,
+    name varchar(255),
+    email varchar(255) NOT NULL,
+    notified boolean,
     PRIMARY KEY (id)
 );
 CREATE TABLE office (
     id SERIAL NOT NULL,
     name varchar(255) NOT NULL,
     address varchar(255) NOT NULL,
-    longitude float NOT NULL,
     latitude float NOT NULL,
+    longitude float NOT NULL,
     PRIMARY KEY (id)
 );
 CREATE TABLE dentist (
@@ -18,17 +19,10 @@ CREATE TABLE dentist (
     date_of_birth date,
     PRIMARY KEY (id)
 );
-CREATE TABLE record (
-    id SERIAL NOT NULL,
-    patient_id varchar(255) NOT NULL,
-    timeslot_id INTEGER NOT NULL,
-    notes VARCHAR(255),
-    PRIMARY KEY (id),
-    CONSTRAINT fk_patient FOREIGN KEY(patient_id) REFERENCES patient(id),
-    CONSTRAINT fk_time_slot FOREIGN KEY(timeslot_id) REFERENCES timeslot(id)
-);
+CREATE TYPE timeslot_state AS ENUM ('open', 'cancelled');
 CREATE TABLE timeslot (
     id SERIAL NOT NULL,
+    state timeslot_state NOT NULL DEFAULT 'open',
     date_and_time timestamp NOT NULL,
     office_id bigint NOT NULL,
     dentist_id bigint NOT NULL,
@@ -48,6 +42,15 @@ CREATE TABLE booking (
     state booking_state NOT NULL DEFAULT 'booked',
     patient_id varchar(255) NOT NULL,
     timeslot_id bigint NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT fk_patient FOREIGN KEY(patient_id) REFERENCES patient(id),
+    CONSTRAINT fk_time_slot FOREIGN KEY(timeslot_id) REFERENCES timeslot(id)
+);
+CREATE TABLE record (
+    id SERIAL NOT NULL,
+    patient_id varchar(255) NOT NULL,
+    timeslot_id INTEGER NOT NULL,
+    notes VARCHAR(255),
     PRIMARY KEY (id),
     CONSTRAINT fk_patient FOREIGN KEY(patient_id) REFERENCES patient(id),
     CONSTRAINT fk_time_slot FOREIGN KEY(timeslot_id) REFERENCES timeslot(id)
