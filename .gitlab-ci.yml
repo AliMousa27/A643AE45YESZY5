@@ -203,3 +203,35 @@ test-bookings-middleware:
     - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -d test_booking_db -f schema.sql
     - cd ../../../
     - mvn --show-version test
+
+# Java Middleware - Record
+
+build-record-middleware:
+  stage: build
+
+  image: maven:3.9.5-eclipse-temurin-17-alpine
+  tags:
+    - docker
+
+  script:
+    - cd Middleware/dentalRecord
+    - mvn --show-version install -DskipTests
+
+test-record-middleware:
+  stage: test
+  needs: ["build-record-middleware"]
+
+  image: maven:3.9.5-eclipse-temurin-17-alpine
+  tags:
+    - docker
+
+  variables:
+    POSTGRES_DB: test_record_db
+
+  script:
+    - apk update && apk add postgresql-client
+    - cd Middleware/dentalRecord/src/main/resources
+    - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -tc "SELECT 1 FROM pg_database WHERE datname = 'test_record_db'" | grep -q 1 || PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -c "CREATE DATABASE test_record_db"
+    - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -d test_record_db -f schema.sql
+    - cd ../../../
+    - mvn --show-version test
