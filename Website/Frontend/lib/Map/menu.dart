@@ -62,7 +62,7 @@ class MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const SizedBox(height: 65),
+        const SizedBox(height: 55),
         Expanded(
           child: ListView(
             controller: widget.scrollController,
