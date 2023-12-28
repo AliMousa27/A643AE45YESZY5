@@ -35,6 +35,9 @@ public class ReminderScheduler {
         Timestamp end = Timestamp.valueOf(endOfNextDay);
         List<Booking> bookings = bookingRepository.findBookingsByTimePeriod(start, end);
         for (Booking booking : bookings) {
+            if (!booking.getPatient().isNotified()) {
+                continue;
+            }
             
             Context context = new Context();
             context.setVariable("patientName", booking.getPatient().getName());

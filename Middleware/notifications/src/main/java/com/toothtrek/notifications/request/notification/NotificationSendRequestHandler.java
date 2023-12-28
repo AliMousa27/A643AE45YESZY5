@@ -47,19 +47,25 @@ public class NotificationSendRequestHandler implements RequestHandlerInterface {
         try {
             json = new Gson().fromJson(new String(request.getPayload()), JsonObject.class);
         } catch (JsonSyntaxException e) {
-            responseHandler.reply(ResponseStatus.ERROR, "Wrongly formatted JSON", request);
+                        responseHandler.reply(ResponseStatus.ERROR, "Wrongly formatted JSON", request);
         }
 
         // Check if JSON contains all required properties
         if (checkMissingJSONProperties(json, MESSAGE_PROPERTIES, request)) {
-            return;
+                        return;
         }
 
         // Check if booking exists
         Booking booking = bookingRepo.findById(json.get("booking_id").getAsLong()).orElse(null);
         if (booking == null) {
             responseHandler.reply(ResponseStatus.ERROR, "Booking does not exist", request);
-            return;
+                        return;
+        }
+
+        // Check if patient wants to be notified
+        if (!booking.getPatient().isNotified()) {
+            responseHandler.reply(ResponseStatus.ERROR, "Patient does not want to be notified", request);
+                        return;
         }
         
         Context context = new Context();
@@ -69,7 +75,7 @@ public class NotificationSendRequestHandler implements RequestHandlerInterface {
         context.setVariable("officeAddress", booking.getTimeslot().getOffice().getAddress());
         context.setVariable("dateAndTime", booking.getTimeslot().getDateAndTime().toString());
 
-        String processedTemplate = templateEngine.process(json.get("type") + "Template", context);
+        String processedTemplate = templateEngine.process(json.get("type").getAsString() + "Template", context);
 
         emailService.sendNotificationEmail(booking.getPatient().getEmail() , 
             "Dental Appointment: " + json.get("type").getAsString(), processedTemplate);
