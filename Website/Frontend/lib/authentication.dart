@@ -95,14 +95,15 @@ class _AuthenticationState extends State<Authentication> {
                       SizedBox(
                         height: screenSize.height * 0.04,
                       ),
-                      createTextField(
-                          screenSize.width * textFieldWidthFactor,
-                          screenSize.height * 0.07,
-                          AppLocalizations.of(context)!
-                              .authentication_enterName,
-                          nameController,
-                          context,
-                          false),
+                      if (widget.isSigningUp)
+                        createTextField(
+                            screenSize.width * textFieldWidthFactor,
+                            screenSize.height * 0.07,
+                            AppLocalizations.of(context)!
+                                .authentication_enterName,
+                            nameController,
+                            context,
+                            false),
                       SizedBox(
                         height: screenSize.height * 0.04,
                       ),
@@ -174,7 +175,8 @@ class _AuthenticationState extends State<Authentication> {
   onPressed(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       if (widget.isSigningUp) {
-        await signUp(emailController.text, passwordController.text, nameController.text, context);
+        await signUp(emailController.text, passwordController.text,
+            nameController.text, context);
       } else {
         await logIn(emailController.text, passwordController.text, context);
       }
