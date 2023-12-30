@@ -72,12 +72,6 @@ class MapPageState extends State<MapPage> {
                 ),
                 Column(
                   children: [
-                    SizedBox(height: screenHeight * 0.04),
-                    Center(
-                      child: SizedBox(
-                          width: screenWidth * 0.8,
-                          child: MapUtil.buildSearchWidget()),
-                    ),
                     const Spacer(),
                     BottomSheetMenu(
                       key: bottomSheetKey,
@@ -117,12 +111,6 @@ class MapPageState extends State<MapPage> {
                         Theme.of(context).colorScheme.onPrimary,
                         Theme.of(context).colorScheme.primaryContainer,
                         Theme.of(context).colorScheme.primary),
-                    /*NavBar(
-                      dentistOfficesCount: snapshot.data!.length,
-                      screenHeight: screenHeight,
-                      screenWidth: screenWidth,
-                      resizeProfilePic: resizeProfilePic,
-                    ),*/
                     Expanded(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -162,7 +150,9 @@ class MapPageState extends State<MapPage> {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 100),
       width: sideBarIsCollapsed ? screenWidth : screenWidth * 0.65,
-      height: screenWidth < 668 ? screenHeight * 0.5 : screenHeight,
+      height: screenWidth < 668
+          ? screenHeight * (0.52 * (screenHeight * 0.0001 + 1))
+          : screenHeight,
       child: MapboxMap(
           onStyleLoadedCallback: addMarkers,
           onMapCreated: onMapCreated,
