@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application/Map/map.dart';
 import 'package:flutter_application/request.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import '../widget_util.dart';

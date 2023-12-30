@@ -1,13 +1,10 @@
-import 'dart:convert';
 import 'dart:math';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application/Bookings/Bookings.dart';
+import 'package:flutter_application/Bookings/bookings.dart';
 import 'package:flutter_application/Map/map.dart';
 
 class WidgetUtil {
-  static List<bool> hovering = List<bool>.filled(3, false);
+  static List<bool> hovering = List<bool>.filled(4, false);
 
   static ElevatedButton createBTN(BuildContext context, Color textColor,
       Size btnSize, Color btnColor, VoidCallback onPressed, String text) {
@@ -33,11 +30,9 @@ class WidgetUtil {
 
   static Text createText(Color textColor, double fontSize, String text,
       [BuildContext? context]) {
-    double scale = context == null ? 1 : textScaleFactor(context);
     return Text(
       text,
       overflow: TextOverflow.ellipsis,
-      textScaleFactor: scale,
       style: TextStyle(
         color: textColor,
         fontSize: fontSize,
@@ -142,6 +137,7 @@ class WidgetUtil {
 
   static AppBar buildNavBar(BuildContext context, double screenWidth,
       Color textColor, Color btnColor, Color btnHoverColor) {
+    bool isDesktop = screenWidth > 668;
     return AppBar(
       backgroundColor: Theme.of(context).colorScheme.primary,
       leading: Image.asset(
@@ -154,12 +150,50 @@ class WidgetUtil {
           fit: BoxFit.scaleDown,
         ),
       ),
-      actions: buildNavbarActions(
-          screenWidth,
-          Theme.of(context).colorScheme.onPrimary,
-          Theme.of(context).colorScheme.primaryContainer,
-          Theme.of(context).colorScheme.primary,
-          context),
+      actions: isDesktop
+          ? buildNavbarActions(
+              screenWidth,
+              Theme.of(context).colorScheme.onPrimary,
+              Theme.of(context).colorScheme.primaryContainer,
+              Theme.of(context).colorScheme.primary,
+              context)
+          : [
+              buildMobileNavBar(
+                  screenWidth, textColor, btnColor, btnHoverColor, context),
+            ],
+    );
+  }
+
+  static Widget buildMobileNavBar(
+    double screenWidth,
+    Color textColor,
+    Color btnColor,
+    Color btnHoverColor,
+    BuildContext context,
+  ) {
+    return PopupMenuButton<int>(
+      icon: Icon(Icons.menu, color: textColor),
+      onSelected: (int index) {
+        navigateBasedOnIndex(index, context);
+      },
+      itemBuilder: (BuildContext context) {
+        List<PopupMenuEntry<int>> items = [];
+        List<String> actionPrompts = [
+          'My Bookings',
+          'Map',
+          'Settings',
+          'Logout'
+        ];
+        for (int i = 0; i < actionPrompts.length; i++) {
+          items.add(
+            PopupMenuItem<int>(
+              value: i,
+              child: Text(actionPrompts[i]),
+            ),
+          );
+        }
+        return items;
+      },
     );
   }
 
@@ -172,9 +206,8 @@ class WidgetUtil {
   ) {
     List<Widget> actions = [];
 
-    int numActions = 3;
-    List<String> actionPrompts = ['My Bookings', 'Map', 'Settings'];
-    for (int i = 0; i < numActions; i++) {
+    List<String> actionPrompts = ['My Bookings', 'Map', 'Settings', 'Logout'];
+    for (int i = 0; i < actionPrompts.length; i++) {
       actions.add(
         ElevatedButton(
           style: ButtonStyle(
@@ -194,19 +227,7 @@ class WidgetUtil {
             ),
           ),
           onPressed: () {
-            switch (i) {
-              case 0:
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const MyBookings()));
-                break;
-              case 1:
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const MapPage()));
-                break;
-              case 2:
-                //Navigator.pushNamed(context, '/settings');
-                break;
-            }
+            navigateBasedOnIndex(i, context);
           },
           child: Text(
             actionPrompts[i],
@@ -214,10 +235,29 @@ class WidgetUtil {
           ),
         ),
       );
-      actions.add(SizedBox(width: screenWidth * 0.03));
+      actions.add(SizedBox(width: screenWidth * 0.02));
     }
-    actions.add(SizedBox(width: screenWidth * 0.03));
+    actions.add(SizedBox(width: screenWidth * 0.02));
 
     return actions;
+  }
+
+  static void navigateBasedOnIndex(int i, BuildContext context) {
+    switch (i) {
+      case 0:
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => const MyBookings()));
+        break;
+      case 1:
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => const MapPage()));
+        break;
+      case 2:
+        //Navigator.pushNamed(context, '/settings');
+        break;
+      case 3:
+        //Navigator.pushNamed(context, '/logout');
+        break;
+    }
   }
 }

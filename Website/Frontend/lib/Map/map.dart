@@ -8,8 +8,6 @@ import 'package:flutter_application/Map/side_drawer.dart';
 import 'package:flutter_application/widget_util.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import '../request.dart';
-import 'map_page_navbar.dart';
-import 'map_page_util.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -148,10 +146,18 @@ class MapPageState extends State<MapPage> {
   Widget createMap(
       String styleURL, String apiKey, double screenWidth, double screenHeight) {
     return AnimatedContainer(
+      //Note the container resizes nomrally and the red borders show it but the library is broken.
+      // https://github.com/flutter-mapbox-gl/maps/issues/795 claimed to have fixed it in patch 2.7  but they didnt
+      /*decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.red, // Border color
+          width: 3.0, // Border width
+        ),
+      ),*/
       duration: const Duration(milliseconds: 100),
       width: sideBarIsCollapsed ? screenWidth : screenWidth * 0.65,
       height: screenWidth < 668
-          ? screenHeight * (0.52 * (screenHeight * 0.0001 + 1))
+          ? screenHeight * (0.52 * (screenHeight * 0.00001 + 1))
           : screenHeight,
       child: MapboxMap(
           onStyleLoadedCallback: addMarkers,

@@ -4,7 +4,11 @@ import 'package:flutter_application/records.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:logging/logging.dart';
+
 class Request {
+  static final Logger _logger = Logger('Requests');
+
   static Future<bool> sendBookingRequest(String body) async {
     try {
       final FirebaseAuth auth = FirebaseAuth.instance;
@@ -17,7 +21,7 @@ class Request {
         return data["status"] == "success";
       });
     } catch (error) {
-      print(error);
+      _logger.warning("caught error which is $error");
       return false;
     }
   }
@@ -28,7 +32,6 @@ class Request {
     try {
       String userId = jsonDecode(json)["patientId"];
       String bookingId = jsonDecode(json)["bookingId"];
-      print("the user id is $userId and the booking id is $bookingId");
       var url = Uri.http('127.0.0.1:3000', 'bookings/$userId/$bookingId');
       return http.delete(url,
           headers: {"Content-Type": "application/json"}).then((response) {
@@ -42,17 +45,14 @@ class Request {
 
   static Future<List<DentistOffice>> getOffices() async {
     try {
-      print("here");
       final FirebaseAuth auth = FirebaseAuth.instance;
       final User? user = auth.currentUser;
-      print("user is $user");
       var url = Uri.http('127.0.0.1:3000', 'offices/${user!.uid}');
 
       return http
           .get(url, headers: {"Accept": "application/json"}).then((response) {
         var data = jsonDecode(response.body);
         data = data["content"];
-        print("the date is $data");
         List<DentistOffice> offices = [];
         for (var office in data) {
           offices.add(DentistOffice.fromJson(office));
@@ -60,7 +60,7 @@ class Request {
         return offices;
       });
     } catch (error) {
-      print("caught error which is $error");
+      _logger.warning("caught error which is $error");
 
       return [];
     }
@@ -77,11 +77,10 @@ class Request {
               body: jsonEncode({"id": user.uid, "notified": value.toString()}))
           .then((response) {
         var data = jsonDecode(response.body);
-        print("the data is $data");
         return data["status"] == "success";
       });
     } catch (error) {
-      print(error);
+      _logger.warning("caught error which is $error");
       return false;
     }
   }
@@ -93,11 +92,10 @@ class Request {
       var url = Uri.http('127.0.0.1:3000', '/patients/${user!.uid}');
       return http.get(url).then((response) {
         var data = jsonDecode(response.body);
-        print("the data is $data");
         return data["content"]["notified"];
       });
     } catch (error) {
-      print(error);
+      _logger.warning("caught error which is $error");
       return false;
     }
   }
@@ -117,11 +115,10 @@ class Request {
               }))
           .then((response) {
         var data = jsonDecode(response.body);
-        print("the data is $data");
         return data["status"] == "success";
       });
     } catch (error) {
-      print(error);
+      _logger.warning("caught error which is $error");
       return false;
     }
   }
@@ -141,9 +138,8 @@ class Request {
         }
         return appointments;
       });
-    } catch (e) {
-      print("the error is");
-      print(e.toString());
+    } catch (error) {
+      _logger.warning("caught error which is $error");
       return [];
     }
   }
@@ -165,7 +161,7 @@ class Request {
         return records;
       });
     } catch (error) {
-      print(error);
+      _logger.warning("caught error which is $error");
       return [];
     }
   }
@@ -178,11 +174,10 @@ class Request {
       var url = Uri.http('127.0.0.1:3000', '/patients/${user!.uid}');
       return http.get(url).then((response) {
         var data = jsonDecode(response.body);
-        print("the data is $data");
         return data["content"]["name"];
       });
     } catch (error) {
-      print(error);
+      _logger.warning("caught error which is $error");
       return "";
     }
   }

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application/Map/dentist_apointment.dart';
@@ -221,7 +220,6 @@ class _MyBookingsState extends State<MyBookings> {
         "patientId": user!.uid,
         "bookingId": bookingID,
       };
-      print("the payload is $payload");
       String json = jsonEncode(payload);
       WidgetUtil.proccessARequest(
           context,
