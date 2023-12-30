@@ -1,4 +1,4 @@
-package com.middleware.Logs;
+package com.toothtrek.Logs;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
