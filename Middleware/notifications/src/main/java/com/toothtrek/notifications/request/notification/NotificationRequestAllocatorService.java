@@ -20,10 +20,8 @@ public class NotificationRequestAllocatorService {
     private final Map<NotificationRequestType, RequestHandlerInterface> handlers = new HashMap<>();
 
     @Autowired
-    public NotificationRequestAllocatorService(NotificationCreateRequestHandler createHandler,
-        NotificationDeleteRequestHandler deleteHandler) {
-        handlers.put(NotificationRequestType.CREATE, createHandler);
-        handlers.put(NotificationRequestType.DELETE, deleteHandler);
+    public NotificationRequestAllocatorService(NotificationSendRequestHandler sendHandler) {
+        handlers.put(NotificationRequestType.SEND, sendHandler);
     }
 
     /**

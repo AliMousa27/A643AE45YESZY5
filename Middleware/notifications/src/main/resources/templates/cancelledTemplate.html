@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dental Appointment Cancellation Confirmation</title>
+    <style>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        margin: 20px;
+        color: #333;
+      }
+      .header, .footer {
+        padding: 20px;
+        text-align: center;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      .card {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+      .card img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin-bottom: 15px;
+      }
+      strong {
+        color: #B0DAF3;
+      }
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      li::before {
+        content: "•";
+        color: #B0DAF3;
+        display: inline-block;
+        width: 1em;
+        margin-left: -1em;
+      }
+      footer {
+        margin-top: 20px;
+        border-top: 1px solid #ccc;
+        padding-top: 10px;
+        font-size: 0.8em;
+        color: #777;
+      }
+    </style>
+</head>
+<body>
+  <div class="header"><h1>Dental Appointment Cancellation Confirmation</h1></div>
+  <div class="container">
+    <div class="card">
+        <img src="https://cdn.pixabay.com/photo/2016/06/13/13/46/shark-1454245_1280.png" alt="Smiling shark" />
+      <h2>Your Dental Appointment has been Cancelled</h2>
+      <p>Hello [[${patientName}]],</p>
+      <p>We confirm that your request to cancel the dental appointment with <strong>[[${dentistName}]]</strong> at <strong>[[${officeName}]]</strong> has been processed.</p>
+      <p><strong>Appointment Details:</strong></p>
+      <ul>
+        <li>Date and Time: [[${dateAndTime}]]</li>
+        <li>Dentist: [[${dentistName}]]</li>
+        <li>Location: [[${officeAddress}]]</li>
+      </ul>
+      <p>If you have any questions or need further assistance, please contact us as soon as possible. We appreciate your understanding and apologize for any inconvenience this may have caused.</p>
+    </div>
+    <footer>
+      <p><strong>ToothTrek</strong></p>
+    </footer>
+  </div>
+</body>
+</html>

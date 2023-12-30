@@ -53,21 +53,11 @@ public class MqttCallbackHandler implements MqttCallback {
         System.out.println();
 
         // [0] = "toothtrek"
-        // [1] = "notification_service"
-        // [2] = "notification" -> the entity
-        // [3] = "create"
+        // [1] = "notification"
+        // [2] = "send"
         String[] topicParts = topic.split("/");
-
-        switch (topicParts[2]) {
-            case "notification":
-                executorService.submit(() -> notificationRequestAllocatorService
-                        .handleRequest(NotificationRequestType.fromString(topicParts[3]), message));
-                break;
-
-            default:
-                System.out.println("Unknown topic: " + topic);
-                break;
-        }
+        executorService.submit(() -> notificationRequestAllocatorService
+                .handleRequest(NotificationRequestType.fromString(topicParts[2]), message));
     }
 
     @Override

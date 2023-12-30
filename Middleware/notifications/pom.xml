@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.2.0</version>
+		<version>3.1.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.toothtrek</groupId>
@@ -25,7 +25,7 @@
 	</repositories>
 
 	<dependencies>
-
+	
 		<!-- Paho Java Client -->
 		<dependency>
 			<groupId>org.eclipse.paho</groupId>
@@ -83,6 +83,19 @@
 		<dependency>
     		<groupId>org.springframework.boot</groupId>
     		<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+
+		<!-- Hibernate Utils -->
+		<dependency>
+			<groupId>io.hypersistence</groupId>
+			<artifactId>hypersistence-utils-hibernate-62</artifactId>
+			<version>3.6.1</version>
+		</dependency>
+
+		<!-- Thymeleaf for processing HTML -->
+		<dependency>
+    		<groupId>org.springframework.boot</groupId>
+    		<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 
 	</dependencies>

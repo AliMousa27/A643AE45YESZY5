@@ -96,7 +96,7 @@ public class NotificationsApplication implements CommandLineRunner {
 		// Initialize MQTT
 		mqttHandler.initialize(mqttCallbackHandler);
 		mqttHandler.connect(true, true);
-		mqttHandler.subscribe("toothtrek/notification_service/#", 1);
+		mqttHandler.subscribe("toothtrek/notification/#", 1);
 	}
 
 }

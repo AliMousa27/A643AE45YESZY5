@@ -2,8 +2,7 @@ package com.toothtrek.notifications.request.notification;
 
 public enum NotificationRequestType {
     // The enum values correspond to the topics
-    CREATE,
-    DELETE;
+    SEND;
 
     // The corresponding topic for each enum, see fromTopic()
     // (e.g. CREATE -> "create")

@@ -18,6 +18,7 @@ import com.toothtrek.bookings.repository.TimeslotRepository;
 import com.toothtrek.bookings.request.RequestHandlerInterface;
 import com.toothtrek.bookings.response.ResponseHandler;
 import com.toothtrek.bookings.response.ResponseStatus;
+import com.toothtrek.bookings.notification.NotificationHandler;
 
 @Configuration
 public class BookingCreateRequestHandler implements RequestHandlerInterface {
@@ -33,6 +34,9 @@ public class BookingCreateRequestHandler implements RequestHandlerInterface {
 
     @Autowired
     private ResponseHandler responseHandler;
+
+    @Autowired
+    private NotificationHandler notificationHandler;
 
     private final String[] MESSAGE_PROPERTIES = { "patient", "timeslotId" };
     private final String[] MESSAGE_PROPERTIES_PATIENT = { "id", "name", "email" };
@@ -102,6 +106,9 @@ public class BookingCreateRequestHandler implements RequestHandlerInterface {
 
         // Set patientId and save booking
         bookingRepo.save(booking);
+
+        // Send notification
+        notificationHandler.sendNotification(booking.getId(), "booked");
 
         // Reply with success
         responseHandler.reply(ResponseStatus.SUCCESS, request);
