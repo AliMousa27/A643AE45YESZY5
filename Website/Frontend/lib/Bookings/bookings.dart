@@ -54,6 +54,8 @@ class _MyBookingsState extends State<MyBookings> {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text("Error: ${snapshot.error}"));
+          } else if (snapshot.data.length == 0) {
+            return const Center(child: Text("You have no appointments"));
           } else {
             return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               if (!isMobile)

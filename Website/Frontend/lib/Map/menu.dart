@@ -79,9 +79,11 @@ class MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   }
 
   Widget _buildContent() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: _buildListItems(),
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: _buildListItems(),
+      ),
     );
   }
 
