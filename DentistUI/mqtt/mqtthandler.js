@@ -2,7 +2,7 @@ require('dotenv').config();
 const mqtt = require('mqtt');
 const { v4: uuidv4 } = require('uuid');
 const protocol = 'tcp'
-const host = process.env.MQTT_HOST || 'localhost'
+const host = process.env.MQTT_HOST || 'broker.hivemq.com'
 const mqttPort = process.env.MQTT_PORT || 1883
 const clientId = process.env.MQTT_CLIENT_ID || uuidv4();
 const connectUrl = `${protocol}://${host}:${mqttPort}`

@@ -5,6 +5,7 @@ const morgan = require('morgan');
 
 // Controllers
 const timeslotsController = require('./controllers/timeslots');
+const recordsController = require('./controllers/records');
 const bookingsController = require('./controllers/bookings');
 const officesController = require('./controllers/offices');
 const dentistsController = require('./controllers/dentists');
@@ -20,6 +21,7 @@ app.use(morgan('dev'));
 
 // Controllers usage
 app.use('/api/timeslots', timeslotsController);
+app.use('/api/records', recordsController);
 app.use('/api/bookings', bookingsController);
 app.use('/api/offices', officesController);
 app.use('/api/dentists', dentistsController);
