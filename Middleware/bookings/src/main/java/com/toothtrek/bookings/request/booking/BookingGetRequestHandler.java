@@ -56,11 +56,9 @@ public class BookingGetRequestHandler implements RequestHandlerInterface {
             return;
         }
 
-        List<Booking> bookings = bookingRepository.findByPatient(patient);
-        if (bookings == null) {
-            responseHandler.reply(ResponseStatus.EMPTY, "No bookings found", request);
-            return;
-        }
+        List<Booking> bookings = bookingRepository.findByPatientAndState(patient, Booking.State.booked);
+
+        
 
         // Create JSON response
         Gson gson = new GsonBuilder()

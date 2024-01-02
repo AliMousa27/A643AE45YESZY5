@@ -5,10 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_application/Map/bottom_sheet.dart';
 import 'package:flutter_application/Map/dentist_apointment.dart';
 import 'package:flutter_application/Map/side_drawer.dart';
+import 'package:flutter_application/widget_util.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import '../request.dart';
-import 'map_page_navbar.dart';
-import 'map_page_util.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -56,42 +55,12 @@ class MapPageState extends State<MapPage> {
             return Text("Error: ${snapshot.error}");
           } else {
             return Scaffold(
-              appBar: AppBar(
-                actions: [
-                  Row(
-                    //TODO define path in a dropdown menu for user navigation
-                    children: [
-                      Container(
-                        width: screenWidth * 0.5,
-                        height: double.infinity,
-                        color: Theme.of(context).colorScheme.secondary,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            MapUtil.buildCircleAvatar(
-                                "../assets/Fulltooth.png", false, screenWidth),
-                            SizedBox(width: screenWidth * 0.05),
-                            //TODO change to user profile picture
-                            MapUtil.buildCircleAvatar(
-                                "../assets/profile.png", false, screenWidth),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(left: screenWidth * 0.07),
-                    height: double.infinity,
-                    width: screenWidth * 0.5,
-                    color: Theme.of(context).colorScheme.primary,
-                    child: MapUtil.createDentistOfficesText(
-                      context,
-                      screenWidth,
-                      snapshot.data!.length,
-                    ),
-                  )
-                ],
-              ),
+              appBar: WidgetUtil.buildNavBar(
+                  context,
+                  screenWidth,
+                  Theme.of(context).colorScheme.onPrimary,
+                  Theme.of(context).colorScheme.primaryContainer,
+                  Theme.of(context).colorScheme.primary),
               body: Stack(children: [
                 createMap(
                   "mapbox://styles/bigman360/clpa24zoi004g01p95rqx61hw",
@@ -101,12 +70,6 @@ class MapPageState extends State<MapPage> {
                 ),
                 Column(
                   children: [
-                    SizedBox(height: screenHeight * 0.04),
-                    Center(
-                      child: SizedBox(
-                          width: screenWidth * 0.8,
-                          child: MapUtil.buildSearchWidget()),
-                    ),
                     const Spacer(),
                     BottomSheetMenu(
                       key: bottomSheetKey,
@@ -140,12 +103,12 @@ class MapPageState extends State<MapPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    NavBar(
-                      dentistOfficesCount: snapshot.data!.length,
-                      screenHeight: screenHeight,
-                      screenWidth: screenWidth,
-                      resizeProfilePic: resizeProfilePic,
-                    ),
+                    WidgetUtil.buildNavBar(
+                        context,
+                        screenWidth,
+                        Theme.of(context).colorScheme.onPrimary,
+                        Theme.of(context).colorScheme.primaryContainer,
+                        Theme.of(context).colorScheme.primary),
                     Expanded(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -161,8 +124,9 @@ class MapPageState extends State<MapPage> {
                     ),
                   ],
                 ),
-                Align(
-                  alignment: Alignment.topRight,
+                Positioned(
+                  top: 0,
+                  right: 0,
                   child: SizedBox(
                     //controls how much it "slides" in and out
                     width: screenWidth * 0.35,
@@ -182,9 +146,19 @@ class MapPageState extends State<MapPage> {
   Widget createMap(
       String styleURL, String apiKey, double screenWidth, double screenHeight) {
     return AnimatedContainer(
+      //Note the container resizes nomrally and the red borders show it but the library is broken.
+      // https://github.com/flutter-mapbox-gl/maps/issues/795 claimed to have fixed it in patch 2.7  but they didnt
+      /*decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.red, // Border color
+          width: 3.0, // Border width
+        ),
+      ),*/
       duration: const Duration(milliseconds: 100),
       width: sideBarIsCollapsed ? screenWidth : screenWidth * 0.65,
-      height: screenWidth < 668 ? screenHeight * 0.5 : screenHeight,
+      height: screenWidth < 668
+          ? screenHeight * (0.52 * (screenHeight * 0.00001 + 1))
+          : screenHeight,
       child: MapboxMap(
           onStyleLoadedCallback: addMarkers,
           onMapCreated: onMapCreated,

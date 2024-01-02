@@ -61,9 +61,27 @@ class DentistAppointment {
 
   String eventName;
   factory DentistAppointment.fromJson(Map<String, dynamic> json) {
-    DateTime from = DateTime.parse(json["date_and_time"]);
+    DateTime from;
+
+    if (json["date_and_time"] != null) {
+      from = DateTime.parse(json["date_and_time"]);
+    } else {
+      from = DateTime.parse(json["timeslot"]["date_and_time"]);
+    }
     DateTime to = from.add(const Duration(hours: 2));
-    String eventName = "${from.hour} : ${from.minute}";
+    late String eventName;
+    //if the office is not null then we assign the event name to the office address
+    try {
+      if (json["timeslot"]["office"]["address"] != null) {
+        eventName = json["timeslot"]["office"]["address"];
+      } else {
+        eventName = "${from.hour} : ${from.minute}";
+      }
+    } catch (e) {
+      //otherwise we access a null field then the attribute doesnt exist and we just take it as the time
+      eventName = "${from.hour} : ${from.minute}";
+    }
+
     int id = json["id"];
     return DentistAppointment(from, to, const Color(0xFFEEC4B8), eventName, id);
   }
@@ -77,6 +95,8 @@ class DentistAppointment {
   }
 }
 
+//class to parse json. Used to get dentist office data to display appointments at an office
+//wheter they are booked or not
 class DentistOffice {
   String address;
   String name;

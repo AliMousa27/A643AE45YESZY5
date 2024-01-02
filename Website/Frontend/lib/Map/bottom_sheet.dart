@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'dentist_apointment.dart';
 import 'expansion_tile.dart';
-import 'map.dart';
 
 class BottomSheetMenu extends StatefulWidget {
   final List<DentistOffice> offices;
@@ -113,10 +112,5 @@ class BottomSheetMenuState extends State<BottomSheetMenu> {
       curve: Curves.easeInOut,
     );
     key.currentState?.expandTile();
-  }
-
-  void bookApoinment() {
-    //TODO: implement bookApoinment
-    print("selected date is $selectedDate");
   }
 }

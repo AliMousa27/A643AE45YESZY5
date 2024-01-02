@@ -4,7 +4,11 @@ import 'package:flutter_application/records.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:logging/logging.dart';
+
 class Request {
+  static final Logger _logger = Logger('Requests');
+
   static Future<bool> sendBookingRequest(String body) async {
     try {
       final FirebaseAuth auth = FirebaseAuth.instance;
@@ -14,11 +18,27 @@ class Request {
           .post(url, headers: {"Content-Type": "application/json"}, body: body)
           .then((response) {
         Map<String, dynamic> data = jsonDecode(response.body);
-        print("the data is $data");
         return data["status"] == "success";
       });
     } catch (error) {
-      print(error);
+      _logger.warning("caught error which is $error");
+      return false;
+    }
+  }
+
+  //json contains the booking id and patient id
+  //so endpoint will be delete/bookings/patientID/bookingID
+  static Future<bool> cancelBookingRequest(String json) async {
+    try {
+      String userId = jsonDecode(json)["patientId"];
+      String bookingId = jsonDecode(json)["bookingId"];
+      var url = Uri.http('127.0.0.1:3000', 'bookings/$userId/$bookingId');
+      return http.delete(url,
+          headers: {"Content-Type": "application/json"}).then((response) {
+        Map<String, dynamic> data = jsonDecode(response.body);
+        return data["status"] == "success";
+      });
+    } catch (error) {
       return false;
     }
   }
@@ -40,7 +60,8 @@ class Request {
         return offices;
       });
     } catch (error) {
-      print(error);
+      _logger.warning("caught error which is $error");
+
       return [];
     }
   }
@@ -56,11 +77,10 @@ class Request {
               body: jsonEncode({"id": user.uid, "notified": value.toString()}))
           .then((response) {
         var data = jsonDecode(response.body);
-        print("the data is $data");
         return data["status"] == "success";
       });
     } catch (error) {
-      print(error);
+      _logger.warning("caught error which is $error");
       return false;
     }
   }
@@ -72,11 +92,10 @@ class Request {
       var url = Uri.http('127.0.0.1:3000', '/patients/${user!.uid}');
       return http.get(url).then((response) {
         var data = jsonDecode(response.body);
-        print("the data is $data");
         return data["content"]["notified"];
       });
     } catch (error) {
-      print(error);
+      _logger.warning("caught error which is $error");
       return false;
     }
   }
@@ -96,12 +115,32 @@ class Request {
               }))
           .then((response) {
         var data = jsonDecode(response.body);
-        print("the data is $data");
         return data["status"] == "success";
       });
     } catch (error) {
-      print(error);
+      _logger.warning("caught error which is $error");
       return false;
+    }
+  }
+
+  static Future<List<DentistAppointment>> getAppointmentsByUID() async {
+    try {
+      final FirebaseAuth auth = FirebaseAuth.instance;
+      final User? user = auth.currentUser;
+      var url = Uri.http('127.0.0.1:3000', 'bookings/${user!.uid}');
+
+      return http.get(url).then((response) {
+        var data = jsonDecode(response.body);
+        data = data["content"];
+        List<DentistAppointment> appointments = [];
+        for (var appointment in data) {
+          appointments.add(DentistAppointment.fromJson(appointment));
+        }
+        return appointments;
+      });
+    } catch (error) {
+      _logger.warning("caught error which is $error");
+      return [];
     }
   }
 
@@ -122,7 +161,7 @@ class Request {
         return records;
       });
     } catch (error) {
-      print(error);
+      _logger.warning("caught error which is $error");
       return [];
     }
   }
@@ -135,11 +174,10 @@ class Request {
       var url = Uri.http('127.0.0.1:3000', '/patients/${user!.uid}');
       return http.get(url).then((response) {
         var data = jsonDecode(response.body);
-        print("the data is $data");
         return data["content"]["name"];
       });
     } catch (error) {
-      print(error);
+      _logger.warning("caught error which is $error");
       return "";
     }
   }

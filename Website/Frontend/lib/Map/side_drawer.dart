@@ -57,14 +57,11 @@ class SideDrawerState extends State<SideDrawer>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Stack(
-        children: [
-          buildDrawer(),
-          buildButton(context),
-        ],
-      ),
+    return Stack(
+      children: [
+        buildDrawer(),
+        buildButton(context),
+      ],
     );
   }
 
@@ -101,11 +98,14 @@ class SideDrawerState extends State<SideDrawer>
         final isDrawerOpen = _isDrawerOpen();
         final translation =
             isDrawerOpen ? 0.0 : 1.0 - drawerSlideController.value;
-
+        bool isMobile = MediaQuery.of(context).size.width < 668;
         return FractionalTranslation(
           translation: Offset(translation, 0.0),
           child: Container(
-            color: Colors.transparent,
+            margin: EdgeInsets.only(
+              top: !isMobile ? 54 : 100,
+            ),
+            color: Colors.black,
             width: MediaQuery.of(context).size.width * 0.35,
             child: Stack(
               children: [
@@ -115,11 +115,6 @@ class SideDrawerState extends State<SideDrawer>
                     offices: widget.offices,
                     scrollController: widget.s,
                   ),
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: buildButton(context),
-                ),
               ],
             ),
           ),
