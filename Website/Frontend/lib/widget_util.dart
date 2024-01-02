@@ -140,8 +140,11 @@ class WidgetUtil {
     bool isDesktop = screenWidth > 668;
     return AppBar(
       backgroundColor: Theme.of(context).colorScheme.primary,
-      leading: Image.asset(
-        'assets/FullTooth.png',
+      leading: Padding(
+        padding: const EdgeInsets.only(left: 8.0),
+        child: Image.asset(
+          'assets/FullTooth.png',
+        ),
       ),
       title: SizedBox(
         width: 200,
