@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_application/home.dart';
+import 'package:flutter_application/Map/map.dart';
 import 'initial_pages_background.dart';
 import 'widget_util.dart';
 import 'request.dart';
@@ -19,6 +19,7 @@ class _AuthenticationState extends State<Authentication> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+  final nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String? errorMsg;
 
@@ -94,6 +95,18 @@ class _AuthenticationState extends State<Authentication> {
                       SizedBox(
                         height: screenSize.height * 0.04,
                       ),
+                      if (widget.isSigningUp)
+                        createTextField(
+                            screenSize.width * textFieldWidthFactor,
+                            screenSize.height * 0.07,
+                            AppLocalizations.of(context)!
+                                .authentication_enterName,
+                            nameController,
+                            context,
+                            false),
+                      SizedBox(
+                        height: screenSize.height * 0.04,
+                      ),
                       Material(
                         elevation: 7,
                         borderRadius: BorderRadius.circular(30.0),
@@ -162,7 +175,8 @@ class _AuthenticationState extends State<Authentication> {
   onPressed(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       if (widget.isSigningUp) {
-        await signUp(emailController.text, passwordController.text, context);
+        await signUp(emailController.text, passwordController.text,
+            nameController.text, context);
       } else {
         await logIn(emailController.text, passwordController.text, context);
       }
@@ -170,13 +184,15 @@ class _AuthenticationState extends State<Authentication> {
   }
 
   Future<void> signUp(
-      String email, String password, BuildContext context) async {
+      String email, String password, String name, BuildContext context) async {
     try {
-      final credential = await FirebaseAuth.instance
+      await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
+      FirebaseAuth.instance.currentUser!;
+
       FirebaseAuth.instance.currentUser?.sendEmailVerification();
-      Request.sendSignupRequest(credential.user!.uid, credential.user!.email!);
       errorMsg = "Please verify your email and log in";
+      await FirebaseAuth.instance.currentUser?.updateDisplayName(name);
       setState(() {});
       await FirebaseAuth.instance.signOut();
     } on FirebaseAuthException catch (e) {
@@ -207,9 +223,11 @@ class _AuthenticationState extends State<Authentication> {
         setState(() {});
         await FirebaseAuth.instance.signOut();
       } else {
-        Request.sendLoginRequest(credential.user!.uid, credential.user!.email!);
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const HomePage()));
+        if (context.mounted) {
+          Request.createPatient();
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const MapPage()));
+        }
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {

@@ -2,10 +2,8 @@ package com.toothtrek.bookings.request.booking;
 
 public enum BookingRequestType {
     CREATE,
-    CANCEL,
     GET,
-    CONFIRM,
-    REJECT;
+    STATE; // State change: confirmed, rejected, cancelled, completed
 
     // The corresponding topic for each enum, see fromTopic()
     // (e.g. CREATE -> "create")

@@ -18,8 +18,8 @@ public class Office {
     private Long id;
     private String name;
     private String address;
-    private float longitude;
     private float latitude;
+    private float longitude;
 
     /**
      * Office constructor
@@ -29,11 +29,11 @@ public class Office {
      * @param longitude longitude of office
      * @param latitude  latitude of office
      */
-    public Office(String name, String address, float longitude, float latitude) {
+    public Office(String name, String address, float latitude, float longitude) {
         this.name = name;
         this.address = address;
-        this.longitude = longitude;
         this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public Office() {

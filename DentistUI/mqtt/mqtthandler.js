@@ -1,3 +1,4 @@
+require('dotenv').config();
 const mqtt = require('mqtt');
 const { v4: uuidv4 } = require('uuid');
 const protocol = 'tcp'
@@ -23,7 +24,7 @@ mqttClient.on('connect', () => {
 })
 
 mqttClient.on('error', (err) => {
-    return next(err)
+    console.error('MQTT error:', err);
 })
 
 module.exports = mqttClient;

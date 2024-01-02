@@ -21,15 +21,11 @@ public class BookingRequestAllocatorService {
 
     @Autowired
     public BookingRequestAllocatorService(BookingCreateRequestHandler createHandler,
-            BookingCancelRequestHandler cancelHandler,
             BookingGetRequestHandler getHandler,
-            BookingConfirmRequestHandler confirmHandler,
-            BookingRejectRequestHandler rejectHandler) {
+            BookingStateRequestHandler stateHandler) {
         handlers.put(BookingRequestType.CREATE, createHandler);
-        handlers.put(BookingRequestType.CANCEL, cancelHandler);
         handlers.put(BookingRequestType.GET, getHandler);
-        handlers.put(BookingRequestType.CONFIRM, confirmHandler);
-        handlers.put(BookingRequestType.REJECT, rejectHandler);
+        handlers.put(BookingRequestType.STATE, stateHandler);
     }
 
     /**

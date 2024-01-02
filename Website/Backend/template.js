@@ -4,9 +4,10 @@ var mqttClient = require('./mqttHelper.js');
 
 router.get('/:id', async function (req, res, next) {
     try {
+        console.log('Requesting timeslots for office:', req.params.id);
         // set request and response topics
-        const requestTopic = 'toothtrek/something';
-        const responseTopic = `toothtrek/something/${req.params.id}`;
+        const requestTopic = 'toothtrek/timeslots/get';
+        const responseTopic = `toothtrek/timeslots/get/${req.params.id}`;
 
         mqttClient.subscribe(responseTopic);
         mqttClient.publish(requestTopic, JSON.stringify({ id: req.params.id }));
@@ -18,7 +19,7 @@ router.get('/:id', async function (req, res, next) {
         }, 5000);
 
         // Handle the response from the broker
-        mqttClient.on('message', (topic, message) => {
+        mqttClient.once('message', (topic, message) => {
             if (topic === responseTopic) {
                 clearTimeout(timeout);
                 res.json(JSON.parse(message.toString()));

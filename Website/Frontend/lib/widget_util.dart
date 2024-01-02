@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class WidgetUtil {
@@ -16,9 +18,20 @@ class WidgetUtil {
         child: createText(textColor, 23, text));
   }
 
-  static Text createText(Color textColor, double fontSize, String text) {
+  static double textScaleFactor(BuildContext context,
+      {double maxTextScaleFactor = 1}) {
+    final width = MediaQuery.of(context).size.width;
+    double val = (width / 1400) * maxTextScaleFactor;
+    return max(0.7, min(val, maxTextScaleFactor));
+  }
+
+  static Text createText(Color textColor, double fontSize, String text,
+      [BuildContext? context]) {
+    double scale = context == null ? 1 : textScaleFactor(context);
     return Text(
       text,
+      overflow: TextOverflow.ellipsis,
+      textScaleFactor: scale,
       style: TextStyle(
         color: textColor,
         fontSize: fontSize,

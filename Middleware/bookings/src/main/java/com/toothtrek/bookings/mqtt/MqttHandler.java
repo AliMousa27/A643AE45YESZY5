@@ -3,6 +3,8 @@ package com.toothtrek.bookings.mqtt;
 import org.eclipse.paho.mqttv5.client.MqttAsyncClient;
 import org.eclipse.paho.mqttv5.client.MqttConnectionOptions;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import org.eclipse.paho.mqttv5.client.IMqttToken;
@@ -30,13 +32,16 @@ public class MqttHandler {
     private MemoryPersistence persistence;
 
     /**
-     * MqttHandler constructor.
+     * Empty MqttHandler constructor, required by Spring Boot.
      */
     public MqttHandler() {
     }
 
     /**
      * Initialize MqttHandler by setting up attributes and creating a client.
+     * Requires a MqttCallbackHandler object.
+     * <p>
+     * Hint: Use Autowired to inject MqttCallbackHandler object.
      * 
      * @param mqttCallbackHandler MqttCallbackHandler object.
      */
@@ -44,9 +49,10 @@ public class MqttHandler {
         try {
             // Setup options
             this.clientId = env.getProperty("mqtt.clientId");
-            if (this.clientId.toLowerCase().equalsIgnoreCase("random") || this.clientId.toLowerCase().equalsIgnoreCase("r")) {
+            List<String> validIds = Arrays.asList("random", "r", "uuid");
+            if (validIds.contains(this.clientId.toLowerCase())) {
                 // random client id
-                this.clientId = (UUID.randomUUID().toString());
+                this.clientId = UUID.randomUUID().toString();
             }
             this.brokerAddress = env.getProperty("mqtt.broker");
             this.qos = Integer.parseInt(env.getProperty("mqtt.qos"));
@@ -61,7 +67,7 @@ public class MqttHandler {
     }
 
     /**
-     * Connect to broker.
+     * Connect to broker using set attributes. Use initialize() before calling this.
      * 
      * @param cleanStart         - Sets whether the client and server should
      *                           remember state across restarts and reconnects.
@@ -95,7 +101,7 @@ public class MqttHandler {
     }
 
     /**
-     * Subscribe to topic.
+     * Subscribe to topic using set QoS.
      * 
      * @param topic Topic (e.g. a/b/c)
      */
@@ -104,7 +110,7 @@ public class MqttHandler {
     }
 
     /**
-     * Subscribe to topic.
+     * Subscribe to topic with specified QoS.
      * 
      * @param topic Topic (e.g. a/b/c)
      * @param qos   Quality of Service (0, 1, 2)
@@ -133,7 +139,7 @@ public class MqttHandler {
     }
 
     /**
-     * Publish a payload to specified topic.
+     * Publish a payload to specified topic using set QoS.
      * 
      * @param topic   Topic (e.g. a/b/c)
      * @param content Payload (e.g. lorem ipsum)
@@ -143,7 +149,7 @@ public class MqttHandler {
     }
 
     /**
-     * Publish a payload to specified topic.
+     * Publish a payload to specified topic with specified QoS.
      * 
      * @param topic   Topic (e.g. a/b/c)
      * @param content Payload (e.g. lorem ipsum)
@@ -218,6 +224,24 @@ public class MqttHandler {
      */
     public String getClientId() {
         return this.clientId;
+    }
+
+    /**
+     * Get broker address.
+     * 
+     * @return String
+     */
+    public String getBrokerAddress() {
+        return this.brokerAddress;
+    }
+
+    /**
+     * Get QoS.
+     * 
+     * @return int
+     */
+    public int getQos() {
+        return this.qos;
     }
 
     /**

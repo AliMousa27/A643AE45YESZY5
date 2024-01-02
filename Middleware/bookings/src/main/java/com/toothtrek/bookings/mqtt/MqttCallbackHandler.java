@@ -1,5 +1,7 @@
 package com.toothtrek.bookings.mqtt;
 
+import java.util.concurrent.ExecutorService;
+
 import org.eclipse.paho.mqttv5.client.IMqttToken;
 import org.eclipse.paho.mqttv5.client.MqttCallback;
 import org.eclipse.paho.mqttv5.client.MqttDisconnectResponse;
@@ -13,6 +15,12 @@ import com.toothtrek.bookings.request.booking.BookingRequestAllocatorService;
 import com.toothtrek.bookings.request.booking.BookingRequestType;
 import com.toothtrek.bookings.request.timeslot.TimeslotRequestAllocatorService;
 import com.toothtrek.bookings.request.timeslot.TimeslotRequestType;
+import com.toothtrek.bookings.request.patient.PatientRequestAllocatorService;
+import com.toothtrek.bookings.request.patient.PatientRequestType;
+import com.toothtrek.bookings.request.office.OfficeRequestAllocatorService;
+import com.toothtrek.bookings.request.office.OfficeRequestType;
+import com.toothtrek.bookings.request.dentist.DentistRequestAllocatorService;
+import com.toothtrek.bookings.request.dentist.DentistRequestType;
 
 /**
  * MqttCallbackHandler class.
@@ -30,6 +38,18 @@ public class MqttCallbackHandler implements MqttCallback {
 
     @Autowired
     TimeslotRequestAllocatorService timeslotRequestAllocatorService;
+
+    @Autowired
+    PatientRequestAllocatorService patientRequestAllocatorService;
+
+    @Autowired
+    OfficeRequestAllocatorService officeRequestAllocatorService;
+
+    @Autowired
+    DentistRequestAllocatorService dentistRequestAllocatorService;
+
+    @Autowired
+    private ExecutorService executorService;
 
     @Override
     public void disconnected(MqttDisconnectResponse disconnectResponse) {
@@ -55,11 +75,28 @@ public class MqttCallbackHandler implements MqttCallback {
 
         switch (topicParts[2]) {
             case "booking":
-                bookingRequestAllocatorService.handleRequest(BookingRequestType.fromString(topicParts[3]), message);
+                executorService.submit(() -> bookingRequestAllocatorService
+                        .handleRequest(BookingRequestType.fromString(topicParts[3]), message));
                 break;
 
             case "timeslot":
-                timeslotRequestAllocatorService.handleRequest(TimeslotRequestType.fromString(topicParts[3]), message);
+                executorService.submit(() -> timeslotRequestAllocatorService
+                        .handleRequest(TimeslotRequestType.fromString(topicParts[3]), message));
+                break;
+
+            case "patient":
+                executorService.submit(() -> patientRequestAllocatorService
+                        .handleRequest(PatientRequestType.fromString(topicParts[3]), message));
+                break;
+
+            case "office":
+                executorService.submit(() -> officeRequestAllocatorService
+                        .handleRequest(OfficeRequestType.fromString(topicParts[3]), message));
+                break;
+
+            case "dentist":
+                executorService.submit(() -> dentistRequestAllocatorService
+                        .handleRequest(DentistRequestType.fromString(topicParts[3]), message));
                 break;
 
             default:

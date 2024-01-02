@@ -30,7 +30,7 @@ stages:
 
 # Flutter Frontend
 build-frontend:
-  image: "ghcr.io/cirruslabs/flutter:3.13.9"
+  image: "ghcr.io/cirruslabs/flutter:3.16.2"
   stage: build
 
   script:
@@ -49,7 +49,7 @@ test-frontend:
   stage: test
   needs: ["build-frontend"]
 
-  image: "ghcr.io/cirruslabs/flutter:3.13.9"
+  image: "ghcr.io/cirruslabs/flutter:3.16.2"
   tags:
     - docker
 
@@ -168,9 +168,16 @@ test-logs-middleware:
   image: maven:3.9.5-eclipse-temurin-17-alpine
   tags:
     - docker
+  
+  variables:
+    POSTGRES_DB: test_logs_db
 
   script:
-    - cd Middleware/Logs
+    - apk update && apk add postgresql-client
+    - cd Middleware/Logs/src/main/resources
+    - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -tc "SELECT 1 FROM pg_database WHERE datname = 'test_logs_db'" | grep -q 1 || PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -c "CREATE DATABASE test_logs_db"
+    - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -d test_logs_db -f schema.sql
+    - cd ../../../
     - mvn --show-version test
 
 # Java Middleware - Bookings
@@ -233,5 +240,36 @@ test-record-middleware:
     - cd Middleware/dentalRecord/src/main/resources
     - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -tc "SELECT 1 FROM pg_database WHERE datname = 'test_record_db'" | grep -q 1 || PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -c "CREATE DATABASE test_record_db"
     - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -d test_record_db -f schema.sql
+    - cd ../../../
+    - mvn --show-version test
+
+# Java Middleware - Notifications
+build-notifications-middleware:
+  stage: build
+
+  image: maven:3.9.5-eclipse-temurin-17-alpine
+  tags:
+    - docker
+
+  script:
+    - cd Middleware/notifications
+    - mvn --show-version install -DskipTests
+
+test-notifications-middleware:
+  stage: test
+  needs: ["build-notifications-middleware"]
+
+  image: maven:3.9.5-eclipse-temurin-17-alpine
+  tags:
+    - docker
+
+  variables:
+    POSTGRES_DB: test_notification_db
+
+  script:
+    - apk update && apk add postgresql-client
+    - cd Middleware/notifications/src/main/resources
+    - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -tc "SELECT 1 FROM pg_database WHERE datname = 'test_notification_db'" | grep -q 1 || PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -c "CREATE DATABASE test_notification_db"
+    - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -d test_notification_db -f schema.sql
     - cd ../../../
     - mvn --show-version test

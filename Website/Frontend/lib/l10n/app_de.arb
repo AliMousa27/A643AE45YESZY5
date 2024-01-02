@@ -8,5 +8,16 @@
     "authentication_confirmButton": "Bestätigen",
     "authentication_enterEmail": "E-Mail-Adresse eingeben",
     "authentication_enterPassword": "Passwort eingeben",
-    "authentication_confirmPassword": "Passwort bestätigen"
+    "authentication_confirmPassword": "Passwort bestätigen",
+    "authentication_enterName": "Name eingeben",
+
+    "dentist_offices" : "Zahnarztpraxen:",
+
+    "setting_title": "Einstellungen",
+    "setting_notification": "Benachrichtigungen",
+    "setting_darkMode": "Dunkelmodus",
+    "setting_language": "Sprache",
+
+    "dental_records_title": "Vorherige Termine",
+    "dental_records_notes": "Anmerkungen: "
 }

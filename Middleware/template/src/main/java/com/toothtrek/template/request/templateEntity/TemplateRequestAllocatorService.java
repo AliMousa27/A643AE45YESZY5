@@ -12,11 +12,11 @@ import com.toothtrek.template.request.RequestHandlerInterface;
 @Service
 /**
  * This class is responsible for allocating the
- * correct handler for each booking request.
+ * correct handler for each request.
  */
 public class TemplateRequestAllocatorService {
 
-    // Hashmap of all the booking request types and their handlers.
+    // Hashmap of all the request types and their handlers.
     private final Map<TemplateRequestType, RequestHandlerInterface> handlers = new HashMap<>();
 
     @Autowired
@@ -29,11 +29,11 @@ public class TemplateRequestAllocatorService {
     /**
      * This method is responsible for allocating the correct handler.
      * 
-     * @param bookingRequest BookingRequestType - The type of booking request
-     * @param request        MqttMessage - The request message
+     * @param templateRequest TemplateRequestType - The type of request
+     * @param request         MqttMessage - The request message
      */
-    public void handleRequest(TemplateRequestType bookingRequest, MqttMessage request) {
-        RequestHandlerInterface handler = getHandler(bookingRequest);
+    public void handleRequest(TemplateRequestType templateRequest, MqttMessage request) {
+        RequestHandlerInterface handler = getHandler(templateRequest);
         handler.handle(request);
     }
 

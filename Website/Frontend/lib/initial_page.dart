@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application/authentication.dart';
+import 'package:flutter_application/request.dart';
 import 'initial_pages_background.dart';
 import 'widget_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'home.dart';
+import 'Map/map.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'request.dart';
 
 class InitialPage extends StatelessWidget {
   const InitialPage({super.key});
@@ -113,11 +113,10 @@ class InitialPage extends StatelessWidget {
     bool isSigningUp = buttonId == "Sign up BTN";
 
     if (buttonId == "Google BTN") {
-      UserCredential? userCredential = await signInWithGoogle();
-      Request.sendLoginRequest(
-          userCredential.user!.uid, userCredential.user!.email!);
+      await signInWithGoogle();
+      Request.createPatient();
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const HomePage()));
+          context, MaterialPageRoute(builder: (context) => const MapPage()));
     } else {
       Navigator.push(
         context,
