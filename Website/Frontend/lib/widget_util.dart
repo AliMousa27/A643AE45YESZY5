@@ -244,7 +244,7 @@ class WidgetUtil {
       );
       actions.add(SizedBox(width: screenWidth * 0.02));
     }
-    actions.add(SizedBox(width: screenWidth * 0.02));
+    actions.add(SizedBox(width: screenWidth * 0.04));
 
     return actions;
   }
