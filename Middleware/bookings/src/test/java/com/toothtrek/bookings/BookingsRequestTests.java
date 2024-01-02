@@ -5,8 +5,12 @@ import org.eclipse.paho.mqttv5.common.packet.MqttProperties;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -24,6 +28,7 @@ import com.toothtrek.bookings.request.booking.BookingStateRequestHandler;
 import com.toothtrek.bookings.util.TestUtil;
 
 @SpringBootTest
+@TestMethodOrder(OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class BookingsRequestTests {
 
@@ -87,6 +92,7 @@ public class BookingsRequestTests {
     }
 
     @Test
+    @Order(1)
     public void bookingCreateRequest() {
         // Timeslot ID
         Long timeslotId = timeslotRepository.findAll().get(0).getId();
@@ -127,6 +133,7 @@ public class BookingsRequestTests {
     }
 
     @Test
+    @Order(2)
     public void bookingGetRequest() {
         // JSON
         JsonObject jsonMessage = new JsonObject();
@@ -146,6 +153,8 @@ public class BookingsRequestTests {
 
         waitUntilMessageArrived();
 
+        System.out.println(new String(response.getPayload()));
+
         // Check if reply is success
         assert (response != null);
         assert (new String(response.getPayload()).contains("success"));
@@ -155,6 +164,7 @@ public class BookingsRequestTests {
     }
 
     @Test
+    @Order(3)
     public void bookingChangeState() {
         // JSON message
         String responseTopic = "test/response/" + System.currentTimeMillis();
@@ -185,6 +195,7 @@ public class BookingsRequestTests {
     }
 
     @Test
+    @Order(4)
     public void invalidBookingStateChange() {
         // JSON message
         String responseTopic = "test/response/" + System.currentTimeMillis();
@@ -211,6 +222,7 @@ public class BookingsRequestTests {
     }
 
     @Test
+    @Order(5)
     private void cancelBooking() {
         // JSON message
         String responseTopic = "test/response/" + System.currentTimeMillis();
