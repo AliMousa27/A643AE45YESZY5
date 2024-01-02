@@ -2,6 +2,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_application/Bookings/bookings.dart';
 import 'package:flutter_application/Map/map.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_application/initial_page.dart';
+import 'package:flutter_application/setting.dart';
+
 
 class WidgetUtil {
   static List<bool> hovering = List<bool>.filled(4, false);
@@ -240,7 +244,7 @@ class WidgetUtil {
       );
       actions.add(SizedBox(width: screenWidth * 0.02));
     }
-    actions.add(SizedBox(width: screenWidth * 0.02));
+    actions.add(SizedBox(width: screenWidth * 0.04));
 
     return actions;
   }
@@ -256,10 +260,13 @@ class WidgetUtil {
             .push(MaterialPageRoute(builder: (context) => const MapPage()));
         break;
       case 2:
-        //Navigator.pushNamed(context, '/settings');
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => const SettingPage()));
         break;
       case 3:
-        //Navigator.pushNamed(context, '/logout');
+          FirebaseAuth.instance.signOut();
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const InitialPage()));
         break;
     }
   }
