@@ -143,6 +143,7 @@ public class RecordTests {
         // Handle message
         mqttHandler.subscribe(responseTopic);
         recordCreateRequestHandler.handle(message);
+        
         waitUntilMessageArrived();
 
         // Check if reply is success

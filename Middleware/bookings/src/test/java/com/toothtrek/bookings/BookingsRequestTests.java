@@ -115,6 +115,7 @@ public class BookingsRequestTests {
         MqttMessage message = new MqttMessage();
         message.setPayload(jsonMessage.toString().getBytes());
 
+        // Handle message
         mqttHandler.subscribe(responseTopic);
         bookingCreateRequestHandler.handle(message);
 
@@ -145,12 +146,11 @@ public class BookingsRequestTests {
         MqttMessage message = new MqttMessage();
         message.setPayload(jsonMessage.toString().getBytes());
 
+        // Handle message
         mqttHandler.subscribe(responseTopic);
         bookingGetRequestHandler.handle(message);
 
         waitUntilMessageArrived();
-
-        System.out.println(new String(response.getPayload()));
 
         // Check if reply is success
         assert (response != null);
@@ -163,7 +163,7 @@ public class BookingsRequestTests {
     @Test
     @Order(3)
     public void bookingChangeState() {
-        // JSON message
+        // Message
         JsonObject jsonMessage = new JsonObject();
         jsonMessage.addProperty("bookingId", bookingRepository.findAll().get(0).getId());
         jsonMessage.addProperty("state", "confirmed");
@@ -171,10 +171,11 @@ public class BookingsRequestTests {
         String responseTopic = "test/response/" + System.currentTimeMillis();
         jsonMessage.addProperty("responseTopic", responseTopic);
 
-        // MQTT message
+        // Set payload
         MqttMessage message = new MqttMessage();
         message.setPayload(jsonMessage.toString().getBytes());
 
+        // Handle message
         mqttHandler.subscribe(responseTopic);
         bookingStateRequestHandler.handle(message);
 
@@ -192,7 +193,7 @@ public class BookingsRequestTests {
     @Test
     @Order(4)
     public void invalidBookingStateChange() {
-        // JSON message
+        // Message
         JsonObject jsonMessage = new JsonObject();
         jsonMessage.addProperty("id", bookingRepository.findAll().get(0).getId());
         jsonMessage.addProperty("state", "confirmed"); // Invalid state: Cannot change from confirmed to confirmed
@@ -200,10 +201,11 @@ public class BookingsRequestTests {
         String responseTopic = "test/response/" + System.currentTimeMillis();
         jsonMessage.addProperty("responseTopic", responseTopic);
 
-        // MQTT message
+        // Set payload
         MqttMessage message = new MqttMessage();
         message.setPayload(jsonMessage.toString().getBytes());
 
+        // Handle message
         mqttHandler.subscribe(responseTopic);
         bookingStateRequestHandler.handle(message);
 
@@ -217,7 +219,7 @@ public class BookingsRequestTests {
     @Test
     @Order(5)
     private void cancelBooking() {
-        // JSON message
+        // Message
         JsonObject jsonMessage = new JsonObject();
         jsonMessage.addProperty("id", bookingRepository.findAll().get(0).getId());
         jsonMessage.addProperty("patientId", patientRepository.findAll().get(0).getId());
@@ -226,10 +228,11 @@ public class BookingsRequestTests {
         String responseTopic = "test/response/" + System.currentTimeMillis();
         jsonMessage.addProperty("responseTopic", responseTopic);
 
-        // MQTT message
+        // Set payload
         MqttMessage message = new MqttMessage();
         message.setPayload(jsonMessage.toString().getBytes());
 
+        // Handle message
         mqttHandler.subscribe(responseTopic);
         bookingStateRequestHandler.handle(message);
 

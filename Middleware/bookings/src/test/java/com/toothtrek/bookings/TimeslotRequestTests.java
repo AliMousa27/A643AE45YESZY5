@@ -106,6 +106,7 @@ public class TimeslotRequestTests {
         MqttMessage message = new MqttMessage();
         message.setPayload(jsonMessage.toString().getBytes());
 
+        // Handle message
         mqttHandler.subscribe(responseTopic);
         timeslotCreateRequestHandler.handle(message);
 
@@ -135,6 +136,7 @@ public class TimeslotRequestTests {
         MqttMessage message = new MqttMessage();
         message.setPayload(jsonMessage.toString().getBytes());
 
+        // Handle message
         mqttHandler.subscribe(responseTopic);
         timeslotGetRequestHandler.handle(message);
 
@@ -159,6 +161,7 @@ public class TimeslotRequestTests {
         MqttMessage message = new MqttMessage();
         message.setPayload(jsonMessage.toString().getBytes());
 
+        // Handle message
         mqttHandler.subscribe(responseTopic);
         timeslotCancelRequestHandler.handle(message);
 
