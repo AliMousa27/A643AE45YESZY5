@@ -1,16 +1,15 @@
 package com.toothtrek.notifications.mqtt;
 
-import org.eclipse.paho.mqttv5.client.MqttAsyncClient;
-import org.eclipse.paho.mqttv5.client.MqttConnectionOptions;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import org.eclipse.paho.mqttv5.client.IMqttToken;
-import org.eclipse.paho.mqttv5.client.persist.MemoryPersistence;
-import org.eclipse.paho.mqttv5.common.MqttException;
-import org.eclipse.paho.mqttv5.common.MqttMessage;
+import org.eclipse.paho.client.mqttv3.IMqttToken;
+import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -20,7 +19,6 @@ public class MqttHandler {
 
     // Paho Java Client
     private MqttAsyncClient client;
-    private IMqttToken token;
 
     @Autowired
     private Environment env;
@@ -88,12 +86,12 @@ public class MqttHandler {
             System.out.println();
 
             // Connection Options
-            MqttConnectionOptions connectionOptions = new MqttConnectionOptions();
-            connectionOptions.setCleanStart(cleanStart);
+            MqttConnectOptions connectionOptions = new MqttConnectOptions();
+            connectionOptions.setCleanSession(cleanStart);
             connectionOptions.setAutomaticReconnect(automaticReconnect);
 
             // Connection
-            this.token = this.client.connect(connectionOptions);
+            IMqttToken token = this.client.connect(connectionOptions);
             token.waitForCompletion();
         } catch (MqttException me) {
             printException(me);
@@ -117,8 +115,8 @@ public class MqttHandler {
      */
     public void subscribe(String topic, int qos) {
         try {
-            this.token = this.client.subscribe(topic, qos);
-            this.token.waitForCompletion();
+            IMqttToken token = this.client.subscribe(topic, qos);
+            token.waitForCompletion();
         } catch (MqttException me) {
             printException(me);
         }
@@ -131,8 +129,8 @@ public class MqttHandler {
      */
     public void unsubscribe(String topic) {
         try {
-            this.token = this.client.unsubscribe(topic);
-            this.token.waitForCompletion();
+            IMqttToken token = this.client.unsubscribe(topic);
+            token.waitForCompletion();
         } catch (MqttException me) {
             printException(me);
         }
@@ -169,11 +167,11 @@ public class MqttHandler {
      */
     public void publish(String topic, MqttMessage message) {
         try {
-            this.token = this.client.publish(topic, message);
-            this.token.waitForCompletion();
+            this.client.publish(topic, message);
         } catch (MqttException me) {
             printException(me);
         }
+
     }
 
     /**
@@ -181,8 +179,7 @@ public class MqttHandler {
      */
     public void disconnect() {
         try {
-            System.out.println("Disconnecting from broker: " + this.brokerAddress);
-            this.token = this.client.disconnect();
+            IMqttToken token = this.client.disconnect();
             token.waitForCompletion();
         } catch (MqttException me) {
             printException(me);
@@ -248,7 +245,8 @@ public class MqttHandler {
     /**
      * Print exception to console.
      * 
-     * *NOTE* Further exception handling may be needed on a service by series basis.
+     * *NOTE* Further exception handling may be needed on a service by service
+     * basis.
      * 
      * @param mqttException MqttException object.
      */
