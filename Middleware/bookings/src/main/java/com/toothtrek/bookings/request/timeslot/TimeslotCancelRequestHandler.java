@@ -2,7 +2,7 @@ package com.toothtrek.bookings.request.timeslot;
 
 import java.util.List;
 
-import org.eclipse.paho.mqttv5.common.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 

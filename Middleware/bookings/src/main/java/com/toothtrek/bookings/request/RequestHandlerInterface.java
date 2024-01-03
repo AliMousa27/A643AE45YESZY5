@@ -1,6 +1,6 @@
 package com.toothtrek.bookings.request;
 
-import org.eclipse.paho.mqttv5.common.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 public interface RequestHandlerInterface {
     // Reminder to add 'synchronized' keyword to handle methods that requires it.
