@@ -28,7 +28,6 @@ public class Patient {
         this.id = id;
         this.name = name;
         this.email = email;
-        this.notified = true;
     }
 
     public Patient() {

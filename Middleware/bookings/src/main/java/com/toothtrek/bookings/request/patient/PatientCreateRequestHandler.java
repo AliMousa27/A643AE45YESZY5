@@ -56,6 +56,7 @@ public class PatientCreateRequestHandler implements RequestHandlerInterface {
         patient.setId(json.get("id").getAsString());
         patient.setName(json.get("name").getAsString());
         patient.setEmail(json.get("email").getAsString());
+        patient.setNotified(true);
 
         patientRepo.save(patient);
 
