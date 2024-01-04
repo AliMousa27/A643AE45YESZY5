@@ -114,7 +114,7 @@ class InitialPage extends StatelessWidget {
 
     if (buttonId == "Google BTN") {
       await signInWithGoogle();
-      //Request.createPatient();
+      Request.createPatient();
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const MapPage()));
     } else {

@@ -26,7 +26,6 @@ class MapPageState extends State<MapPage> {
   @override
   void initState() {
     super.initState();
-    print("inside of map");
     DrawerState.registerObserver(this);
     dentistOfficesFuture = Request.getOffices();
   }

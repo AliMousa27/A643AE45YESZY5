@@ -48,11 +48,9 @@ class Request {
       final FirebaseAuth auth = FirebaseAuth.instance;
       final User? user = auth.currentUser;
       var url = Uri.http('127.0.0.1:3000', 'offices/${user!.uid}');
-      print("url is $url");
       return http
           .get(url, headers: {"Accept": "application/json"}).then((response) {
         var data = jsonDecode(response.body);
-        print("response is $data");
 
         data = data["content"];
         List<DentistOffice> offices = [];
