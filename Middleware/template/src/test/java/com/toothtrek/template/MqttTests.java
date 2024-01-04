@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.UUID;
 
-import org.eclipse.paho.mqttv5.client.IMqttToken;
-import org.eclipse.paho.mqttv5.common.MqttMessage;
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,7 +36,7 @@ public class MqttTests {
         }
 
         @Override
-        public void deliveryComplete(IMqttToken token) {
+        public void deliveryComplete(IMqttDeliveryToken token) {
             messageDelivered = true;
         }
     };

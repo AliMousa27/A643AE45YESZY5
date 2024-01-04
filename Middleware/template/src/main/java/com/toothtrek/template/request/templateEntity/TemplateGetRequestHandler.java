@@ -1,6 +1,6 @@
 package com.toothtrek.template.request.templateEntity;
 
-import org.eclipse.paho.mqttv5.common.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.context.annotation.Configuration;
 
 import com.toothtrek.template.request.RequestHandlerInterface;
