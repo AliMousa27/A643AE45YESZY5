@@ -19,5 +19,15 @@
     "setting_language": "Språk",
 
     "dental_records_title": "Tandläkarjournal",
-    "dental_records_notes": "Anteckningar: "
+    "dental_records_notes": "Anteckningar: ",
+    "my_bookings_address": "Adress",
+    "my_bookings_time": "Tid",
+    "my_bookings_cancel":"Avboka",
+    "my_bookings_bookingid": "Booknings ID",
+    "navbar_logout": "Logga ut",
+    "navbar_settings": "Inställningar",
+    "navbar_map": "Karta",
+    "navbar_my_bookings": "Mina Bookningar",
+    "navbar_dental_records": "Tandläkarjournaler"
+    
 }

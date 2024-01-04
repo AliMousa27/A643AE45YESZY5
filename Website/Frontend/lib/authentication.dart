@@ -223,11 +223,9 @@ class _AuthenticationState extends State<Authentication> {
         setState(() {});
         await FirebaseAuth.instance.signOut();
       } else {
-        if (context.mounted) {
-          Request.createPatient();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const MapPage()));
-        }
+        Request.createPatient();
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => const MapPage()));
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {

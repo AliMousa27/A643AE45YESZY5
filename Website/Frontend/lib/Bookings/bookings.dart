@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application/Map/dentist_apointment.dart';
 import 'package:flutter_application/request.dart';
 import 'package:flutter_application/widget_util.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MyBookings extends StatefulWidget {
   const MyBookings({super.key});
@@ -92,11 +93,7 @@ class _MyBookingsState extends State<MyBookings> {
                   ),
                   child: SingleChildScrollView(
                       child: Column(
-                    children: buildAppointmentCards(snapshot.data)
-                    /*const SizedBox(height: 50),
-                      createTimeSlot(
-                          '1234 Main St', DateTime.now(), '1234', context),*/
-                    ,
+                    children: buildAppointmentCards(snapshot.data),
                   )),
                 ),
               ),
@@ -153,16 +150,19 @@ class _MyBookingsState extends State<MyBookings> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  WidgetUtil.createText(Colors.grey, 15, "Address"),
+                  WidgetUtil.createText(Colors.grey, 15,
+                      AppLocalizations.of(context)!.my_bookings_address),
                   const SizedBox(height: 5),
                   WidgetUtil.createText(Colors.white, 18, address),
                   const SizedBox(height: 5),
-                  WidgetUtil.createText(Colors.grey, 15, "Time"),
+                  WidgetUtil.createText(Colors.grey, 15,
+                      AppLocalizations.of(context)!.my_bookings_time),
                   const SizedBox(height: 5),
                   WidgetUtil.createText(Colors.white, 18,
                       "${date.hour}:${date.minute} - ${to.hour}:${to.minute}"),
                   const SizedBox(height: 5),
-                  WidgetUtil.createText(Colors.grey, 15, "Booking ID"),
+                  WidgetUtil.createText(Colors.grey, 15,
+                      AppLocalizations.of(context)!.my_bookings_bookingid),
                   const SizedBox(height: 5),
                   WidgetUtil.createText(Colors.white, 18, bookingId),
                 ],
@@ -202,7 +202,8 @@ class _MyBookingsState extends State<MyBookings> {
                             child: WidgetUtil.createText(
                                 Theme.of(context).colorScheme.onPrimary,
                                 10,
-                                "Cancel")),
+                                AppLocalizations.of(context)!
+                                    .my_bookings_cancel)),
                       )
                     ],
                   ),
