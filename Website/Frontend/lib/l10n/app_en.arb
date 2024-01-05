@@ -69,5 +69,43 @@
     "dental_records_notes": "Notes: ",
     "@dental_records_notes": {
         "description": "The notes label on the dental records page"
+    },
+    "my_bookings_address": "Address",
+    "@my_bookings_address": {
+        "description": "The address label of a booking"
+    },
+    
+    "my_bookings_time": "Time",
+    "@my_bookings_time": {
+        "description": "The time label of a booking"
+    },
+    "my_bookings_cancel": "Cancel",
+    "@my_bookings_cancel": {
+        "description": "The cancel label of a booking"
+    },
+    "my_bookings_bookingid": "Booking ID",
+    "@my_bookings_bookingid": {
+        "description": "The bookingid label of a booking"
+    },
+    "navbar_logout": "Logout",
+    "@navbar_logout": {
+        "description": "The logout label"
+    },
+    "navbar_settings": "Settings",
+    "@navbar_settings": {
+        "description": "The settings label"
+    },
+    "navbar_map": "Map",
+    "@navbar_map": {
+        "description": "The map label"
+    },
+    "navbar_my_bookings": "My Bookings",
+    "@navbar_my_bookings": {
+        "description": "The my bookings label"
+    },
+    "navbar_dental_records": "Dental Records",
+    "@navbar_dental_records": {
+        "description": "The Dental Records label"
     }
+
 }
