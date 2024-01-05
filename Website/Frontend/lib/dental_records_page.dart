@@ -15,6 +15,7 @@ class DentalRecordsPage extends StatefulWidget {
 
 class DentalRecordsPageState extends State<DentalRecordsPage> {
   String patientName = "Patient Name";
+  List<Records> records = [];
 
   @override
   void initState() {
@@ -23,25 +24,18 @@ class DentalRecordsPageState extends State<DentalRecordsPage> {
       setState(() {
         patientName = value;
       });
-    });
-    /*
-    Request.getRecords().then((value) {
-      setState(() {
-        records = value;
+      Request.getRecordsbyPatientId().then((value) {
+        setState(() {
+          records = value;
+        });
       });
     });
-    */
   }
 
   @override
   Widget build(BuildContext context) {
     List<Records> records = [];
     var screenWidth = MediaQuery.of(context).size.width;
-    // TODO: Replace with actual data
-    for (int i = 0; i < 10; i++) {
-      records.add(Records("Notes $i", "2023-12-$i", "Doctor $i"));
-    }
-
     return Consumer<SettingProvider>(
         builder: (context, settingProvider, child) {
       return Scaffold(

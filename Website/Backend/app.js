@@ -7,6 +7,7 @@ var port = process.env.PORT || 3000;
 var bookings = require('./routers/bookings.js');
 var timeslots = require('./routers/timeslots.js');
 var patients = require('./routers/patients.js');
+var records = require('./routers/records.js');
 // Create Express app
 var app = express();
 // Parse requests of content-type 'application/json'
@@ -23,6 +24,7 @@ app.use(cors());
 app.use(timeslots);
 app.use(bookings);
 app.use(patients);
+app.use(records);
 console.log(new Date().toString());
 // Import routes
 app.get('/api', function (req, res) {

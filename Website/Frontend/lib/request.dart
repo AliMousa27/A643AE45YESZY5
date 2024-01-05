@@ -144,7 +144,7 @@ class Request {
     }
   }
 
-  static Future<List<Records>> getRecords() async {
+  static Future<List<Records>> getRecordsbyPatientId() async {
     try {
       final FirebaseAuth auth = FirebaseAuth.instance;
       final User? user = auth.currentUser;
