@@ -22,8 +22,8 @@ public class DentistRequestAllocatorService {
     @Autowired
     public DentistRequestAllocatorService(DentistCreateRequestHandler createHandler,
             DentistGetRequestHandler getHandler,
-            DentistUpdateHandler updateHandler,
-            DentistDeleteHandler deleteHandler) {
+            DentistUpdateRequestHandler updateHandler,
+            DentistDeleteRequestHandler deleteHandler) {
         handlers.put(DentistRequestType.CREATE, createHandler);
         handlers.put(DentistRequestType.GET, getHandler);
         handlers.put(DentistRequestType.UPDATE, updateHandler);

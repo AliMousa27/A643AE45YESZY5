@@ -1,4 +1,4 @@
-package com.toothtrek.bookings;
+package com.toothtrek.bookings.entityRequestTests;
 
 import java.text.SimpleDateFormat;
 

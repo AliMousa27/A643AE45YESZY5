@@ -1,4 +1,4 @@
-package com.toothtrek.bookings;
+package com.toothtrek.bookings.entityRequestTests;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
@@ -247,7 +247,7 @@ public class OfficeRequestTests {
         assert (response != null);
         assert (new String(response.getPayload()).contains("success"));
 
-        // Check that no office was created
+        // Check that office was deleted and no longer exists
         assert (officeRepository.findAll().size() == 0);
     }
 

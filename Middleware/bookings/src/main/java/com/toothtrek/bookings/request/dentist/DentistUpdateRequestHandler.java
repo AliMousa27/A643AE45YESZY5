@@ -18,7 +18,7 @@ import com.toothtrek.bookings.response.ResponseHandler;
 import com.toothtrek.bookings.response.ResponseStatus;
 
 @Configuration
-public class DentistUpdateHandler implements RequestHandlerInterface {
+public class DentistUpdateRequestHandler implements RequestHandlerInterface {
     @Autowired
     private DentistRepository dentistRepository;
 
