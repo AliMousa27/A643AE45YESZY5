@@ -13,7 +13,7 @@ class Request {
     try {
       final FirebaseAuth auth = FirebaseAuth.instance;
       final User? user = auth.currentUser;
-      var url = Uri.http('127.0.0.1:3000', 'bookings/${user!.uid}');
+      var url = Uri.http('127.0.0.1:3001', 'bookings/${user!.uid}');
       return http
           .post(url, headers: {"Content-Type": "application/json"}, body: body)
           .then((response) {
@@ -32,7 +32,7 @@ class Request {
     try {
       String userId = jsonDecode(json)["patientId"];
       String bookingId = jsonDecode(json)["bookingId"];
-      var url = Uri.http('127.0.0.1:3000', 'bookings/$userId/$bookingId');
+      var url = Uri.http('127.0.0.1:3001', 'bookings/$userId/$bookingId');
       return http.delete(url,
           headers: {"Content-Type": "application/json"}).then((response) {
         Map<String, dynamic> data = jsonDecode(response.body);
@@ -47,7 +47,7 @@ class Request {
     try {
       final FirebaseAuth auth = FirebaseAuth.instance;
       final User? user = auth.currentUser;
-      var url = Uri.http('127.0.0.1:3000', 'offices/${user!.uid}');
+      var url = Uri.http('127.0.0.1:3001', 'offices/${user!.uid}');
       return http
           .get(url, headers: {"Accept": "application/json"}).then((response) {
         var data = jsonDecode(response.body);
@@ -70,7 +70,7 @@ class Request {
     try {
       final FirebaseAuth auth = FirebaseAuth.instance;
       final User? user = auth.currentUser;
-      var url = Uri.http('127.0.0.1:3000', 'patients/${user!.uid}');
+      var url = Uri.http('127.0.0.1:3001', 'patients/${user!.uid}');
       return http
           .patch(url,
               headers: {"Content-Type": "application/json"},
@@ -89,7 +89,7 @@ class Request {
     try {
       final FirebaseAuth auth = FirebaseAuth.instance;
       final User? user = auth.currentUser;
-      var url = Uri.http('127.0.0.1:3000', '/patients/${user!.uid}');
+      var url = Uri.http('127.0.0.1:3001', '/patients/${user!.uid}');
       return http.get(url).then((response) {
         var data = jsonDecode(response.body);
         return data["content"]["notified"];
@@ -104,7 +104,7 @@ class Request {
     try {
       final FirebaseAuth auth = FirebaseAuth.instance;
       final User? user = auth.currentUser;
-      var url = Uri.http('127.0.0.1:3000', '/patients/${user!.uid}');
+      var url = Uri.http('127.0.0.1:3001', '/patients/${user!.uid}');
       return http
           .post(url,
               headers: {"Content-Type": "application/json"},
@@ -127,7 +127,7 @@ class Request {
     try {
       final FirebaseAuth auth = FirebaseAuth.instance;
       final User? user = auth.currentUser;
-      var url = Uri.http('127.0.0.1:3000', 'bookings/${user!.uid}');
+      var url = Uri.http('127.0.0.1:3001', 'bookings/${user!.uid}');
 
       return http.get(url).then((response) {
         var data = jsonDecode(response.body);
@@ -148,7 +148,7 @@ class Request {
     try {
       final FirebaseAuth auth = FirebaseAuth.instance;
       final User? user = auth.currentUser;
-      var url = Uri.http('127.0.0.1:3000', 'records/${user!.uid}');
+      var url = Uri.http('127.0.0.1:3001', 'records/${user!.uid}');
 
       return http
           .get(url, headers: {"Accept": "application/json"}).then((response) {
@@ -171,7 +171,7 @@ class Request {
     try {
       final FirebaseAuth auth = FirebaseAuth.instance;
       final User? user = auth.currentUser;
-      var url = Uri.http('127.0.0.1:3000', '/patients/${user!.uid}');
+      var url = Uri.http('127.0.0.1:3001', '/patients/${user!.uid}');
       return http.get(url).then((response) {
         var data = jsonDecode(response.body);
         return data["content"]["name"];

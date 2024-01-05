@@ -1,20 +1,53 @@
 var express = require('express');
 var router = express.Router();
 var mqttClient = require('./../mqttHelper.js');
+
+var counter = require('./metrics').counter;
+var histogram = require('./metrics').histogram;
  
 router.post('/patients/:id', (req, res) => {
-  mqttClient.handleRequest(req, res, 'toothtrek/booking_service/patient/create/', req.params.id, req.body);
+  try {
+    const start = new Date();
+    mqttClient.handleRequest(req, res, 'toothtrek/booking_service/patient/create/', req.params.id, req.body);
+    counter.inc({ Entity: 'patients', method: 'post', statusCode: 200 });
+    const end = new Date();
+    histogram.observe((end - start) / 1000);
+  } catch (err) {
+    console.error(err);
+    counter.inc({ Entity: 'patients', method: 'post', statusCode: 500 });
+    res.status(500).send();
+  }
 });
 
 router.patch('/patients/:id', (req, res) => {
-  mqttClient.handleRequest(req, res, 'toothtrek/booking_service/patient/set/', req.params.id, req.body);
+  try {
+    const start = new Date();
+    mqttClient.handleRequest(req, res, 'toothtrek/booking_service/patient/set/', req.params.id, req.body);
+    counter.inc({ Entity: 'patients', method: 'patch', statusCode: 200 });
+    const end = new Date();
+    histogram.observe((end - start) / 1000);
+  } catch (err) {
+    console.error(err);
+    counter.inc({ Entity: 'patients', method: 'patch', statusCode: 500 });
+    res.status(500).send();
+  }
 });
 
 router.get('/patients/:id', (req, res) => {
-  var body = {
-    "id": req.params.id
+  try {
+    const start = new Date();
+    var body = {
+      "id": req.params.id
+    }
+    mqttClient.handleRequest(req, res, 'toothtrek/booking_service/patient/get/', req.params.id, body);
+    counter.inc({ Entity: 'patients', method: 'get', statusCode: 200 });
+    const end = new Date();
+    histogram.observe((end - start) / 1000);
+  } catch (err) {
+    console.error(err);
+    counter.inc({ Entity: 'patients', method: 'get', statusCode: 500 });
+    res.status(500).send();
   }
-  mqttClient.handleRequest(req, res, 'toothtrek/booking_service/patient/get/', req.params.id, body);
 });
 
 module.exports = router;
