@@ -14,8 +14,7 @@ import com.toothtrek.bookings.response.ResponseHandler;
 import com.toothtrek.bookings.response.ResponseStatus;
 
 @Configuration
-public class OfficeDeleteHandler implements RequestHandlerInterface {
-
+public class OfficeUpdateRequestHandler implements RequestHandlerInterface {
     @Autowired
     private OfficeRepository officeRepository;
 
@@ -26,6 +25,7 @@ public class OfficeDeleteHandler implements RequestHandlerInterface {
 
     @Override
     public void handle(MqttMessage request) {
+
         // Check if payload is JSON
         JsonObject json = null;
         try {
@@ -44,15 +44,28 @@ public class OfficeDeleteHandler implements RequestHandlerInterface {
             Long officeId = json.get("id").getAsLong();
             Office office = officeRepository.findById(officeId).get();
 
-            // Delete office
-            officeRepository.delete(office);
+            // set office properties if they exist
+            if (json.has("name")) {
+                office.setName(json.get("name").getAsString());
+            }
+            if (json.has("address")) {
+                office.setAddress(json.get("address").getAsString());
+            }
+            if (json.has("latitude")) {
+                office.setLatitude(json.get("latitude").getAsFloat());
+            }
+            if (json.has("longitude")) {
+                office.setLongitude(json.get("longitude").getAsFloat());
+            }
+
+            // Save office
+            officeRepository.save(office);
 
             // Reply with success
             responseHandler.reply(ResponseStatus.SUCCESS, request);
         } catch (Exception e) {
             responseHandler.reply(ResponseStatus.ERROR, "Office not found", request);
         }
-
     }
 
     /**
