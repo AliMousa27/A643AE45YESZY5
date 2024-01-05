@@ -23,7 +23,6 @@ import com.toothtrek.bookings.request.dentist.DentistCreateRequestHandler;
 import com.toothtrek.bookings.request.dentist.DentistGetRequestHandler;
 import com.toothtrek.bookings.request.dentist.DentistUpdateRequestHandler;
 import com.toothtrek.bookings.request.dentist.DentistDeleteRequestHandler;
-import com.toothtrek.bookings.util.TestUtil;
 
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
@@ -50,13 +49,8 @@ public class DentistRequestTests {
     @Autowired
     private DentistDeleteRequestHandler dentistDeleteRequestHandler;
 
-    // Test Util
-    @Autowired
-    private TestUtil testUtil;
-
     // Variables
     private static final String DENTIST_NAME = "Test Dentist";
-    private static final String DENTIST_DOB = "1990-01-01 00:00";
     private static final String UPDATED_DENTIST_NAME = "Updated Dentist Name";
 
     // MQTT callback variables
@@ -76,14 +70,6 @@ public class DentistRequestTests {
     public void setup() throws Exception {
         mqttHandler.initialize(mqttCallbackHandler);
         mqttHandler.connect(false, false);
-
-        testUtil.createDummyData(
-                false, // Create patient
-                false, // Create dentist
-                false, // Create office
-                false, // Create timeslot
-                false // Create booking
-        );
     }
 
     @Test
@@ -91,9 +77,8 @@ public class DentistRequestTests {
     public void invalidDentistCreateRequest() {
         // Message
         JsonObject jsonMessage = new JsonObject();
-        jsonMessage.addProperty("name", DENTIST_NAME);
-        // Invalid: missing date of birth field
-        // jsonMessage.addProperty("dateOfBirth", DENTIST_DOB);
+        // Invalid: missing name field
+        // jsonMessage.addProperty("name", DENTIST_NAME);
 
         String responseTopic = "test/response/" + System.currentTimeMillis();
         jsonMessage.addProperty("responseTopic", responseTopic);
@@ -114,7 +99,6 @@ public class DentistRequestTests {
 
         // Check that no dentist was created
         assert (dentistRepository.findAll().size() == 0);
-
     }
 
     @Test
@@ -123,7 +107,6 @@ public class DentistRequestTests {
         // Message
         JsonObject jsonMessage = new JsonObject();
         jsonMessage.addProperty("name", DENTIST_NAME);
-        jsonMessage.addProperty("dateOfBirth", DENTIST_DOB);
 
         String responseTopic = "test/response/" + System.currentTimeMillis();
         jsonMessage.addProperty("responseTopic", responseTopic);
@@ -144,7 +127,6 @@ public class DentistRequestTests {
 
         // Check that dentist was created
         assert (dentistRepository.findAll().size() == 1);
-
         Dentist dentist = dentistRepository.findAll().get(0);
         assert (dentist != null);
         assert (dentist.getName().equals(DENTIST_NAME));
@@ -175,12 +157,9 @@ public class DentistRequestTests {
         assert (response != null);
         assert (new String(response.getPayload()).contains("success"));
 
-        // Check if name is correct
+        // Check if name & id are correct
         assert (new String(response.getPayload()).contains(DENTIST_NAME));
-
-        // Check if id is correct
         assert (new String(response.getPayload()).contains(dentistId.toString()));
-
     }
 
     @Test
@@ -193,7 +172,6 @@ public class DentistRequestTests {
         JsonObject jsonMessage = new JsonObject();
         jsonMessage.addProperty("id", dentistId);
         jsonMessage.addProperty("name", UPDATED_DENTIST_NAME);
-        jsonMessage.addProperty("dateOfBirth", DENTIST_DOB);
 
         String responseTopic = "test/response/" + System.currentTimeMillis();
         jsonMessage.addProperty("responseTopic", responseTopic);
@@ -216,7 +194,6 @@ public class DentistRequestTests {
         Dentist dentist = dentistRepository.findAll().get(0);
         assert (dentist != null);
         assert (dentist.getName().equals(UPDATED_DENTIST_NAME));
-        assert (dentist.getDateOfBirth().toString().equals(DENTIST_DOB));
     }
 
     @Test
@@ -259,7 +236,6 @@ public class DentistRequestTests {
     @AfterAll
     public void cleanUp() {
         mqttHandler.disconnect();
-        testUtil.deleteAll();
     }
 
     private void waitUntilMessageArrived() {

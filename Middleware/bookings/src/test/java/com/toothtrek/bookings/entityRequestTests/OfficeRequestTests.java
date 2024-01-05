@@ -23,7 +23,6 @@ import com.toothtrek.bookings.request.office.OfficeCreateRequestHandler;
 import com.toothtrek.bookings.request.office.OfficeGetRequestHandler;
 import com.toothtrek.bookings.request.office.OfficeUpdateRequestHandler;
 import com.toothtrek.bookings.request.office.OfficeDeleteRequestHandler;
-import com.toothtrek.bookings.util.TestUtil;
 
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
@@ -47,10 +46,6 @@ public class OfficeRequestTests {
     @Autowired
     private OfficeDeleteRequestHandler officeDeleteRequestHandler;
 
-    // Test Util
-    @Autowired
-    private TestUtil testUtil;
-
     // Variables
     private static final String OFFICE_NAME = "Test Office";
     private static final String UPDATED_OFFICE_NAME = "Updated Office Name";
@@ -73,14 +68,6 @@ public class OfficeRequestTests {
     public void setup() throws Exception {
         mqttHandler.initialize(mqttCallbackHandler);
         mqttHandler.connect(false, false);
-
-        testUtil.createDummyData(
-                false, // Create patient
-                false, // Create dentist
-                false, // Create office
-                false, // Create timeslot
-                false // Create booking
-        );
     }
 
     @Test
@@ -117,7 +104,7 @@ public class OfficeRequestTests {
 
     @Test
     @Order(2)
-    public void officeCreateRequest() {
+    public void validOfficeCreateRequest() {
         // Message
         JsonObject jsonMessage = new JsonObject();
         jsonMessage.addProperty("name", OFFICE_NAME);
@@ -144,7 +131,6 @@ public class OfficeRequestTests {
 
         // Check if office is created
         assert (officeRepository.findAll().size() == 1);
-
         Office office = officeRepository.findAll().get(0);
         assert (office != null);
         assert (office.getName().equals(OFFICE_NAME));
@@ -175,10 +161,8 @@ public class OfficeRequestTests {
         assert (response != null);
         assert (new String(response.getPayload()).contains("success"));
 
-        // Check if name is correct
+        // Check if name & id are correct
         assert (new String(response.getPayload()).contains(OFFICE_NAME));
-
-        // Check if id is correct
         assert (new String(response.getPayload()).contains(officeId.toString()));
     }
 
@@ -260,7 +244,6 @@ public class OfficeRequestTests {
     @AfterAll
     public void cleanUp() {
         mqttHandler.disconnect();
-        testUtil.deleteAll();
     }
 
     private void waitUntilMessageArrived() {

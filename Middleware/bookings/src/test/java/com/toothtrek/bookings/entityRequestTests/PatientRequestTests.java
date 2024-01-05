@@ -22,7 +22,6 @@ import com.toothtrek.bookings.repository.PatientRepository;
 import com.toothtrek.bookings.request.patient.PatientCreateRequestHandler;
 import com.toothtrek.bookings.request.patient.PatientGetRequestHandler;
 import com.toothtrek.bookings.request.patient.PatientUpdateRequestHandler;
-import com.toothtrek.bookings.util.TestUtil;
 
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
@@ -73,7 +72,7 @@ public class PatientRequestTests {
 
     @Test
     @Order(1)
-    public void invalidPatientCreateRequestTest() {
+    public void invalidPatientCreateRequest() {
         // Message
         JsonObject jsonMessage = new JsonObject();
         jsonMessage.addProperty("id", PATIENT_ID);
@@ -105,7 +104,7 @@ public class PatientRequestTests {
 
     @Test
     @Order(2)
-    public void validPatientCreateRequestTest() {
+    public void validPatientCreateRequest() {
         // Message
         JsonObject jsonMessage = new JsonObject();
         jsonMessage.addProperty("id", PATIENT_ID);
@@ -131,8 +130,6 @@ public class PatientRequestTests {
 
         // Check that patient was created
         assert (patientRepository.findAll().size() == 1);
-
-        // Check that patient was created with correct values
         Patient patient = patientRepository.findAll().get(0);
         assert (patient != null);
         assert (patient.getName().equals(PATIENT_NAME));
@@ -140,7 +137,7 @@ public class PatientRequestTests {
 
     @Test
     @Order(3)
-    public void patientGetRequestTest() {
+    public void patientGetRequest() {
         // Message
         JsonObject jsonMessage = new JsonObject();
         jsonMessage.addProperty("id", PATIENT_ID);
@@ -162,16 +159,15 @@ public class PatientRequestTests {
         assert (response != null);
         assert (new String(response.getPayload()).contains("success"));
 
-        // Check if name is correct
-        assert (new String(response.getPayload()).contains(PATIENT_NAME));
-
-        // Check if id is correct
+        // Check if all fields are correct
         assert (new String(response.getPayload()).contains(PATIENT_ID));
+        assert (new String(response.getPayload()).contains(PATIENT_NAME));
+        assert (new String(response.getPayload()).contains(PATIENT_EMAIL));
     }
 
     @Test
     @Order(4)
-    public void patientUpdateRequestTest() {
+    public void patientUpdateRequest() {
         // Message
         JsonObject jsonMessage = new JsonObject();
         jsonMessage.addProperty("id", PATIENT_ID);
