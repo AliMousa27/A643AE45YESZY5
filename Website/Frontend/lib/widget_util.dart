@@ -187,11 +187,11 @@ class WidgetUtil {
       itemBuilder: (BuildContext context) {
         List<PopupMenuEntry<int>> items = [];
         List<String> actionPrompts = [
-          AppLocalizations.of(context)!.navbar_my_bookings,
-          AppLocalizations.of(context)!.navbar_map,
-          AppLocalizations.of(context)!.navbar_settings,
           AppLocalizations.of(context)!.navbar_logout,
-          AppLocalizations.of(context)!.navbar_dental_records
+          AppLocalizations.of(context)!.navbar_settings,
+          AppLocalizations.of(context)!.navbar_dental_records,
+          AppLocalizations.of(context)!.navbar_my_bookings,
+          AppLocalizations.of(context)!.navbar_map
         ];
         for (int i = 0; i < actionPrompts.length; i++) {
           items.add(
@@ -216,11 +216,11 @@ class WidgetUtil {
     List<Widget> actions = [];
 
     List<String> actionPrompts = [
-      AppLocalizations.of(context)!.navbar_my_bookings,
-      AppLocalizations.of(context)!.navbar_map,
-      AppLocalizations.of(context)!.navbar_settings,
       AppLocalizations.of(context)!.navbar_logout,
-      AppLocalizations.of(context)!.navbar_dental_records
+      AppLocalizations.of(context)!.navbar_settings,
+      AppLocalizations.of(context)!.navbar_dental_records,
+      AppLocalizations.of(context)!.navbar_my_bookings,
+      AppLocalizations.of(context)!.navbar_map
     ];
     for (int i = 0; i < actionPrompts.length; i++) {
       actions.add(
@@ -260,25 +260,25 @@ class WidgetUtil {
   static void navigateBasedOnIndex(int i, BuildContext context) {
     switch (i) {
       case 0:
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => const MyBookings()));
-        break;
-      case 1:
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => const MapPage()));
-        break;
-      case 2:
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => const SettingPage()));
-        break;
-      case 3:
         FirebaseAuth.instance.signOut();
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) => const InitialPage()));
         break;
-      case 4:
+      case 1:
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => const SettingPage()));
+        break;
+      case 2:
         Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => const DentalRecordsPage()));
+        break;
+      case 3:
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => const MyBookings()));
+        break;
+      case 4:
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => const MapPage()));
         break;
     }
   }
