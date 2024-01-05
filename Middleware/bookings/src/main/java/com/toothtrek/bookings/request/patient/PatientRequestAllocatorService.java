@@ -22,10 +22,10 @@ public class PatientRequestAllocatorService {
     @Autowired
     public PatientRequestAllocatorService(PatientCreateRequestHandler createHandler,
             PatientGetRequestHandler getHandler,
-            PatientSetRequestHandler setHandler) {
+            PatientUpdateRequestHandler updateHandler) {
         handlers.put(PatientRequestType.CREATE, createHandler);
         handlers.put(PatientRequestType.GET, getHandler);
-        handlers.put(PatientRequestType.SET, setHandler);
+        handlers.put(PatientRequestType.UPDATE, updateHandler);
     }
 
     /**

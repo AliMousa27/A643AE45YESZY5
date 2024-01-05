@@ -14,7 +14,7 @@ import com.google.gson.JsonSyntaxException;
 import com.toothtrek.bookings.entity.Patient;
 
 @Configuration
-public class PatientSetRequestHandler implements RequestHandlerInterface {
+public class PatientUpdateRequestHandler implements RequestHandlerInterface {
 
     @Autowired
     private PatientRepository patientRepo;
