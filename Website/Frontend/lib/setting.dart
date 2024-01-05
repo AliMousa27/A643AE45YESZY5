@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'setting_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'request.dart';
+import 'widget_util.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({Key? key}) : super(key: key);
@@ -26,9 +27,16 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
+    var screenWidth = MediaQuery.of(context).size.width;
     return Consumer<SettingProvider>(
       builder: (context, settingProvider, child) {
         return Scaffold(
+          appBar: WidgetUtil.buildNavBar(
+              context,
+              screenWidth,
+              Theme.of(context).colorScheme.onPrimary,
+              Theme.of(context).colorScheme.primaryContainer,
+              Theme.of(context).colorScheme.primary),
           body: Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(

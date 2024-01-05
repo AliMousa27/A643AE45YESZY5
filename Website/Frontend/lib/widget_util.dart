@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application/Bookings/bookings.dart';
 import 'package:flutter_application/Map/map.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_application/dental_records_page.dart';
 import 'package:flutter_application/initial_page.dart';
 import 'package:flutter_application/setting.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class WidgetUtil {
-  static List<bool> hovering = List<bool>.filled(4, false);
+  static List<bool> hovering = List<bool>.filled(5, false);
 
   static ElevatedButton createBTN(BuildContext context, Color textColor,
       Size btnSize, Color btnColor, VoidCallback onPressed, String text) {
@@ -186,10 +187,11 @@ class WidgetUtil {
       itemBuilder: (BuildContext context) {
         List<PopupMenuEntry<int>> items = [];
         List<String> actionPrompts = [
-          'My Bookings',
-          'Map',
-          'Settings',
-          'Logout'
+          AppLocalizations.of(context)!.navbar_logout,
+          AppLocalizations.of(context)!.navbar_settings,
+          AppLocalizations.of(context)!.navbar_dental_records,
+          AppLocalizations.of(context)!.navbar_my_bookings,
+          AppLocalizations.of(context)!.navbar_map
         ];
         for (int i = 0; i < actionPrompts.length; i++) {
           items.add(
@@ -213,7 +215,13 @@ class WidgetUtil {
   ) {
     List<Widget> actions = [];
 
-    List<String> actionPrompts = ['My Bookings', 'Map', 'Settings', 'Logout'];
+    List<String> actionPrompts = [
+      AppLocalizations.of(context)!.navbar_logout,
+      AppLocalizations.of(context)!.navbar_settings,
+      AppLocalizations.of(context)!.navbar_dental_records,
+      AppLocalizations.of(context)!.navbar_my_bookings,
+      AppLocalizations.of(context)!.navbar_map
+    ];
     for (int i = 0; i < actionPrompts.length; i++) {
       actions.add(
         ElevatedButton(
@@ -252,21 +260,25 @@ class WidgetUtil {
   static void navigateBasedOnIndex(int i, BuildContext context) {
     switch (i) {
       case 0:
+        FirebaseAuth.instance.signOut();
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => const MyBookings()));
+            .push(MaterialPageRoute(builder: (context) => const InitialPage()));
         break;
       case 1:
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => const MapPage()));
-        break;
-      case 2:
-        Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) => const SettingPage()));
         break;
+      case 2:
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const DentalRecordsPage()));
+        break;
       case 3:
-          FirebaseAuth.instance.signOut();
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const InitialPage()));
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => const MyBookings()));
+        break;
+      case 4:
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => const MapPage()));
         break;
     }
   }

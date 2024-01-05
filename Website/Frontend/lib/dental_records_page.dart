@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application/records.dart';
+import 'package:flutter_application/widget_util.dart';
 import 'package:provider/provider.dart';
 import 'setting_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -33,9 +34,17 @@ class DentalRecordsPageState extends State<DentalRecordsPage> {
 
   @override
   Widget build(BuildContext context) {
+    List<Records> records = [];
+    var screenWidth = MediaQuery.of(context).size.width;
     return Consumer<SettingProvider>(
         builder: (context, settingProvider, child) {
       return Scaffold(
+          appBar: WidgetUtil.buildNavBar(
+              context,
+              screenWidth,
+              Theme.of(context).colorScheme.onPrimary,
+              Theme.of(context).colorScheme.primaryContainer,
+              Theme.of(context).colorScheme.primary),
           body: Container(
               alignment: Alignment.center,
               decoration: BoxDecoration(
