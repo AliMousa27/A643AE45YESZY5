@@ -5,7 +5,7 @@ var mqttClient = require('../mqttHelper');
 
 router.get('/offices/:id', (req, res) => {
   console.log('Requesting offices with id:', req.params.id);
-  mqttClient.handleRequest(req, res, 'toothtrek/booking_service/timeslot/get/', req.params.id);
+  mqttClient.handleRequest(req, res, 'toothtrek/timeslot/get/', req.params.id);
 });
 
 
