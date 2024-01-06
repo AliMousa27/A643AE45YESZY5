@@ -1,6 +1,6 @@
 package com.toothtrek.bookings.response;
 
-import org.eclipse.paho.mqttv5.common.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -39,16 +39,8 @@ public class ResponseHandler {
      */
     public void reply(ResponseStatus status, String content, MqttMessage request) {
         // Get response topic from message properties
-        String topic = request.getProperties().getResponseTopic();
-        if (topic == null) {
-            JsonObject json = new Gson().fromJson(new String(request.getPayload()), JsonObject.class);
-            topic = json.get("responseTopic").getAsString();
-        }
-
-        if (topic == null) {
-            // No response topic found
-            return;
-        }
+        JsonObject json = new Gson().fromJson(new String(request.getPayload()), JsonObject.class);
+        String topic = json.get("responseTopic").getAsString();
 
         // Create JSON object
         JsonObject responseJson = new JsonObject();

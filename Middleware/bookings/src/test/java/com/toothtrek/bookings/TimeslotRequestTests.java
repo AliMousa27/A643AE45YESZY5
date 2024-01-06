@@ -2,13 +2,15 @@ package com.toothtrek.bookings;
 
 import java.text.SimpleDateFormat;
 
-import org.eclipse.paho.mqttv5.common.MqttMessage;
-import org.eclipse.paho.mqttv5.common.packet.MqttProperties;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -25,6 +27,7 @@ import com.toothtrek.bookings.request.timeslot.TimeslotGetRequestHandler;
 import com.toothtrek.bookings.util.TestUtil;
 
 @SpringBootTest
+@TestMethodOrder(OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class TimeslotRequestTests {
 
@@ -88,6 +91,7 @@ public class TimeslotRequestTests {
     }
 
     @Test
+    @Order(1)
     public void timeslotCreateRequest() {
         // Message
         JsonObject jsonMessage = new JsonObject();
@@ -95,14 +99,14 @@ public class TimeslotRequestTests {
         jsonMessage.addProperty("officeId", officeRepo.findAll().get(0).getId());
         jsonMessage.addProperty("dateAndTime", "2025-12-06 18:40");
 
+        String responseTopic = "test/response/" + System.currentTimeMillis();
+        jsonMessage.addProperty("responseTopic", responseTopic);
+
         // Set payload
         MqttMessage message = new MqttMessage();
         message.setPayload(jsonMessage.toString().getBytes());
-        MqttProperties properties = new MqttProperties();
-        String responseTopic = "test/response/" + System.currentTimeMillis();
-        properties.setResponseTopic(responseTopic);
-        message.setProperties(properties);
 
+        // Handle message
         mqttHandler.subscribe(responseTopic);
         timeslotCreateRequestHandler.handle(message);
 
@@ -120,19 +124,19 @@ public class TimeslotRequestTests {
     }
 
     @Test
+    @Order(2)
     public void timeslotGetRequest() {
         // Message
         JsonObject jsonMessage = new JsonObject();
+
         String responseTopic = "test/response/" + System.currentTimeMillis();
         jsonMessage.addProperty("responseTopic", responseTopic);
 
         // Set payload
         MqttMessage message = new MqttMessage();
         message.setPayload(jsonMessage.toString().getBytes());
-        MqttProperties properties = new MqttProperties();
-        properties.setResponseTopic(responseTopic);
-        message.setProperties(properties);
 
+        // Handle message
         mqttHandler.subscribe(responseTopic);
         timeslotGetRequestHandler.handle(message);
 
@@ -144,20 +148,20 @@ public class TimeslotRequestTests {
     }
 
     @Test
+    @Order(3)
     private void cancelTimeslot() {
         // Message
         JsonObject jsonMessage = new JsonObject();
-        String responseTopic = "test/response/" + System.currentTimeMillis();
         jsonMessage.addProperty("timeslotId", timeslotRepository.findAll().get(0).getId());
+
+        String responseTopic = "test/response/" + System.currentTimeMillis();
         jsonMessage.addProperty("responseTopic", responseTopic);
 
         // Set payload
         MqttMessage message = new MqttMessage();
         message.setPayload(jsonMessage.toString().getBytes());
-        MqttProperties properties = new MqttProperties();
-        properties.setResponseTopic(responseTopic);
-        message.setProperties(properties);
 
+        // Handle message
         mqttHandler.subscribe(responseTopic);
         timeslotCancelRequestHandler.handle(message);
 

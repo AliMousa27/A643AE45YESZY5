@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.sql.Timestamp;
 
-import org.eclipse.paho.mqttv5.common.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import com.toothtrek.bookings.request.RequestHandlerInterface;
 import com.toothtrek.bookings.response.ResponseHandler;
 import com.toothtrek.bookings.response.ResponseStatus;

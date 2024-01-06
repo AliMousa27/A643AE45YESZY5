@@ -1,7 +1,6 @@
 package com.toothtrek.dentalRecord;
 
-import org.eclipse.paho.mqttv5.common.MqttMessage;
-import org.eclipse.paho.mqttv5.common.packet.MqttProperties;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -100,12 +99,17 @@ public class RecordTests {
         jsonMessage.addProperty("timeslotId", timeslotRepository.findAll().get(0).getId());
         jsonMessage.addProperty("notes", "this is a note");
 
-        // Create message
-        MqttMessage message = createMqttMessage(jsonMessage);
-        mqttHandler.subscribe(message.getProperties().getResponseTopic());
+        String responseTopic = "test/response/" + System.currentTimeMillis();
+        jsonMessage.addProperty("responseTopic", responseTopic);
+
+        // Set payload
+        MqttMessage message = new MqttMessage();
+        message.setPayload(jsonMessage.toString().getBytes());
 
         // Handle message
+        mqttHandler.subscribe(responseTopic);
         recordCreateRequestHandler.handle(message);
+
         waitUntilMessageArrived();
 
         // Check if reply is success
@@ -129,12 +133,17 @@ public class RecordTests {
         jsonMessage.addProperty("timeslotId", timeslotRepository.findAll().get(0).getId());
         jsonMessage.addProperty("notes", NOTE);
 
-        // Create message
-        MqttMessage message = createMqttMessage(jsonMessage);
-        mqttHandler.subscribe(message.getProperties().getResponseTopic());
+        String responseTopic = "test/response/" + System.currentTimeMillis();
+        jsonMessage.addProperty("responseTopic", responseTopic);
+
+        // Set payload
+        MqttMessage message = new MqttMessage();
+        message.setPayload(jsonMessage.toString().getBytes());
 
         // Handle message
+        mqttHandler.subscribe(responseTopic);
         recordCreateRequestHandler.handle(message);
+        
         waitUntilMessageArrived();
 
         // Check if reply is success
@@ -149,11 +158,15 @@ public class RecordTests {
         JsonObject jsonMessage = new JsonObject();
         jsonMessage.addProperty("timeslotId", timeslotRepository.findAll().get(0).getId());
 
-        // Create message
-        MqttMessage message = createMqttMessage(jsonMessage);
-        mqttHandler.subscribe(message.getProperties().getResponseTopic());
+        String responseTopic = "test/response/" + System.currentTimeMillis();
+        jsonMessage.addProperty("responseTopic", responseTopic);
+
+        // Set payload
+        MqttMessage message = new MqttMessage();
+        message.setPayload(jsonMessage.toString().getBytes());
 
         // Handle message
+        mqttHandler.subscribe(responseTopic);
         recordGetRequestHandler.handle(message);
         waitUntilMessageArrived();
 
@@ -170,11 +183,15 @@ public class RecordTests {
         jsonMessage.addProperty("id", recordRepository.findAll().get(0).getId());
         jsonMessage.addProperty("notes", UPDATED_NOTE);
 
-        // Create message
-        MqttMessage message = createMqttMessage(jsonMessage);
-        mqttHandler.subscribe(message.getProperties().getResponseTopic());
+        String responseTopic = "test/response/" + System.currentTimeMillis();
+        jsonMessage.addProperty("responseTopic", responseTopic);
+
+        // Set payload
+        MqttMessage message = new MqttMessage();
+        message.setPayload(jsonMessage.toString().getBytes());
 
         // Handle message
+        mqttHandler.subscribe(responseTopic);
         recordUpdateRequestHandler.handle(message);
         waitUntilMessageArrived();
 
@@ -196,16 +213,6 @@ public class RecordTests {
     public void cleanUp() {
         mqttHandler.disconnect();
         testDatabaseUtil.deleteAll();
-    }
-
-    private MqttMessage createMqttMessage(JsonObject jsonMessage) {
-        MqttMessage message = new MqttMessage();
-        message.setPayload(jsonMessage.toString().getBytes());
-        MqttProperties properties = new MqttProperties();
-        String responseTopic = "test/response/" + System.currentTimeMillis();
-        properties.setResponseTopic(responseTopic);
-        message.setProperties(properties);
-        return message;
     }
 
     private void waitUntilMessageArrived() {
