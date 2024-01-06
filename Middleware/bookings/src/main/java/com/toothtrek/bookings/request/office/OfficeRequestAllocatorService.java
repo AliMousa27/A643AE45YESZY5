@@ -22,8 +22,8 @@ public class OfficeRequestAllocatorService {
     @Autowired
     public OfficeRequestAllocatorService(OfficeCreateRequestHandler createHandler,
             OfficeGetRequestHandler getHandler,
-            OfficeUpdateHandler updateHandler,
-            OfficeDeleteHandler deleteHandler) {
+            OfficeUpdateRequestHandler updateHandler,
+            OfficeDeleteRequestHandler deleteHandler) {
         handlers.put(OfficeRequestType.CREATE, createHandler);
         handlers.put(OfficeRequestType.GET, getHandler);
         handlers.put(OfficeRequestType.UPDATE, updateHandler);

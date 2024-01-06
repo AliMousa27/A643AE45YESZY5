@@ -1,4 +1,4 @@
-package com.toothtrek.bookings.request.dentist;
+package com.toothtrek.bookings.request.office;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,17 +7,17 @@ import org.springframework.context.annotation.Configuration;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import com.toothtrek.bookings.entity.Dentist;
-import com.toothtrek.bookings.repository.DentistRepository;
+import com.toothtrek.bookings.entity.Office;
+import com.toothtrek.bookings.repository.OfficeRepository;
 import com.toothtrek.bookings.request.RequestHandlerInterface;
 import com.toothtrek.bookings.response.ResponseHandler;
 import com.toothtrek.bookings.response.ResponseStatus;
 
 @Configuration
-public class DentistDeleteHandler implements RequestHandlerInterface {
+public class OfficeDeleteRequestHandler implements RequestHandlerInterface {
 
     @Autowired
-    private DentistRepository dentistRepository;
+    private OfficeRepository officeRepository;
 
     @Autowired
     private ResponseHandler responseHandler;
@@ -40,17 +40,17 @@ public class DentistDeleteHandler implements RequestHandlerInterface {
         }
 
         try {
-            // Get dentist by id
-            Long dentistId = json.get("id").getAsLong();
-            Dentist dentist = dentistRepository.findById(dentistId).get();
+            // Get office by id
+            Long officeId = json.get("id").getAsLong();
+            Office office = officeRepository.findById(officeId).get();
 
-            // Delete dentist
-            dentistRepository.delete(dentist);
+            // Delete office
+            officeRepository.delete(office);
 
             // Reply with success
             responseHandler.reply(ResponseStatus.SUCCESS, request);
         } catch (Exception e) {
-            responseHandler.reply(ResponseStatus.ERROR, "Dentist not found", request);
+            responseHandler.reply(ResponseStatus.ERROR, "Office not found", request);
         }
 
     }

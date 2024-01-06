@@ -1,74 +1,62 @@
-package com.toothtrek.bookings;
-
-import java.text.SimpleDateFormat;
+package com.toothtrek.bookings.entityRequestTests;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.google.gson.JsonObject;
-import com.toothtrek.bookings.entity.Timeslot;
+import com.toothtrek.bookings.entity.Patient;
 import com.toothtrek.bookings.mqtt.MqttCallbackHandler;
 import com.toothtrek.bookings.mqtt.MqttHandler;
-import com.toothtrek.bookings.repository.DentistRepository;
-import com.toothtrek.bookings.repository.OfficeRepository;
-import com.toothtrek.bookings.repository.TimeslotRepository;
-import com.toothtrek.bookings.request.timeslot.TimeslotCancelRequestHandler;
-import com.toothtrek.bookings.request.timeslot.TimeslotCreateRequestHandler;
-import com.toothtrek.bookings.request.timeslot.TimeslotGetRequestHandler;
-import com.toothtrek.bookings.util.TestUtil;
+import com.toothtrek.bookings.repository.PatientRepository;
+import com.toothtrek.bookings.request.patient.PatientCreateRequestHandler;
+import com.toothtrek.bookings.request.patient.PatientGetRequestHandler;
+import com.toothtrek.bookings.request.patient.PatientUpdateRequestHandler;
 
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class TimeslotRequestTests {
+public class PatientRequestTests {
 
     @Autowired
     private MqttHandler mqttHandler;
 
     // Repositories
+    @Autowired
+    private PatientRepository patientRepository;
+
+    // Patient request handlers
+    @Autowired
+    private PatientCreateRequestHandler patientCreateRequestHandler;
 
     @Autowired
-    private TimeslotRepository timeslotRepository;
+    private PatientGetRequestHandler patientGetRequestHandler;
 
     @Autowired
-    private OfficeRepository officeRepo;
+    private PatientUpdateRequestHandler patientUpdateRequestHandler;
 
-    @Autowired
-    private DentistRepository dentistRepo;
-
-    // Timeslot request handlers
-
-    @Autowired
-    private TimeslotCreateRequestHandler timeslotCreateRequestHandler;
-
-    @Autowired
-    private TimeslotGetRequestHandler timeslotGetRequestHandler;
-
-    @Autowired
-    private TimeslotCancelRequestHandler timeslotCancelRequestHandler;
-
-    // Test Util
-
-    @Autowired
-    private TestUtil testUtil;
+    // Variables
+    private static final String PATIENT_ID = "Test Patient ID";
+    private static final String PATIENT_NAME = "Test Patient Name";
+    private static final String PATIENT_EMAIL = "Test Email";
+    private static final String UPDATED_PATIENT_NAME = "Updated Patient Name";
 
     // MQTT callback variables
-
     private static boolean messageArrived = false;
     private static MqttMessage response;
 
     // Customized MQTT callback handler for testing.
     private static MqttCallbackHandler mqttCallbackHandler = new MqttCallbackHandler() {
-
         @Override
         public void messageArrived(String topic, MqttMessage message) {
             response = message;
@@ -80,24 +68,17 @@ public class TimeslotRequestTests {
     public void setup() throws Exception {
         mqttHandler.initialize(mqttCallbackHandler);
         mqttHandler.connect(false, false);
-
-        testUtil.createDummyData(
-                true, // Create patient
-                true, // Create dentist
-                true, // Create office
-                false, // Create timeslot
-                false // Create booking
-        );
     }
 
     @Test
     @Order(1)
-    public void timeslotCreateRequest() {
+    public void invalidPatientCreateRequest() {
         // Message
         JsonObject jsonMessage = new JsonObject();
-        jsonMessage.addProperty("dentistId", dentistRepo.findAll().get(0).getId());
-        jsonMessage.addProperty("officeId", officeRepo.findAll().get(0).getId());
-        jsonMessage.addProperty("dateAndTime", "2025-12-06 18:40");
+        jsonMessage.addProperty("id", PATIENT_ID);
+        // Invalid: missing name field
+        // jsonMessage.addProperty("name", PATIENT_NAME);
+        jsonMessage.addProperty("email", PATIENT_EMAIL);
 
         String responseTopic = "test/response/" + System.currentTimeMillis();
         jsonMessage.addProperty("responseTopic", responseTopic);
@@ -108,26 +89,27 @@ public class TimeslotRequestTests {
 
         // Handle message
         mqttHandler.subscribe(responseTopic);
-        timeslotCreateRequestHandler.handle(message);
+        patientCreateRequestHandler.handle(message);
 
         waitUntilMessageArrived();
 
         // Check if reply is success
         assert (response != null);
+        assert (new String(response.getPayload()).contains("error"));
 
-        // response to JSON
-        Timeslot timeslot = timeslotRepository.findAll().get(0);
-        assert (timeslot.getDentist().getId() == jsonMessage.get("dentistId").getAsLong());
-        assert (timeslot.getOffice().getId() == jsonMessage.get("officeId").getAsLong());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        assert (sdf.format(timeslot.getDateAndTime()).equals(jsonMessage.get("dateAndTime").getAsString()));
+        // Check that no patient was created
+        assert (patientRepository.findAll().size() == 0);
+
     }
 
     @Test
     @Order(2)
-    public void timeslotGetRequest() {
+    public void validPatientCreateRequest() {
         // Message
         JsonObject jsonMessage = new JsonObject();
+        jsonMessage.addProperty("id", PATIENT_ID);
+        jsonMessage.addProperty("name", PATIENT_NAME);
+        jsonMessage.addProperty("email", PATIENT_EMAIL);
 
         String responseTopic = "test/response/" + System.currentTimeMillis();
         jsonMessage.addProperty("responseTopic", responseTopic);
@@ -138,21 +120,27 @@ public class TimeslotRequestTests {
 
         // Handle message
         mqttHandler.subscribe(responseTopic);
-        timeslotGetRequestHandler.handle(message);
+        patientCreateRequestHandler.handle(message);
 
         waitUntilMessageArrived();
 
         // Check if reply is success
         assert (response != null);
         assert (new String(response.getPayload()).contains("success"));
+
+        // Check that patient was created
+        assert (patientRepository.findAll().size() == 1);
+        Patient patient = patientRepository.findAll().get(0);
+        assert (patient != null);
+        assert (patient.getName().equals(PATIENT_NAME));
     }
 
     @Test
     @Order(3)
-    private void cancelTimeslot() {
+    public void patientGetRequest() {
         // Message
         JsonObject jsonMessage = new JsonObject();
-        jsonMessage.addProperty("timeslotId", timeslotRepository.findAll().get(0).getId());
+        jsonMessage.addProperty("id", PATIENT_ID);
 
         String responseTopic = "test/response/" + System.currentTimeMillis();
         jsonMessage.addProperty("responseTopic", responseTopic);
@@ -163,7 +151,7 @@ public class TimeslotRequestTests {
 
         // Handle message
         mqttHandler.subscribe(responseTopic);
-        timeslotCancelRequestHandler.handle(message);
+        patientGetRequestHandler.handle(message);
 
         waitUntilMessageArrived();
 
@@ -171,9 +159,42 @@ public class TimeslotRequestTests {
         assert (response != null);
         assert (new String(response.getPayload()).contains("success"));
 
-        // Check if timeslot is cancelled
-        Timeslot timeslot = timeslotRepository.findAll().get(0);
-        assert (timeslot.getState() == Timeslot.State.cancelled);
+        // Check if all fields are correct
+        assert (new String(response.getPayload()).contains(PATIENT_ID));
+        assert (new String(response.getPayload()).contains(PATIENT_NAME));
+        assert (new String(response.getPayload()).contains(PATIENT_EMAIL));
+    }
+
+    @Test
+    @Order(4)
+    public void patientUpdateRequest() {
+        // Message
+        JsonObject jsonMessage = new JsonObject();
+        jsonMessage.addProperty("id", PATIENT_ID);
+        jsonMessage.addProperty("name", UPDATED_PATIENT_NAME);
+        jsonMessage.addProperty("email", PATIENT_EMAIL);
+
+        String responseTopic = "test/response/" + System.currentTimeMillis();
+        jsonMessage.addProperty("responseTopic", responseTopic);
+
+        // Set payload
+        MqttMessage message = new MqttMessage();
+        message.setPayload(jsonMessage.toString().getBytes());
+
+        // Handle message
+        mqttHandler.subscribe(responseTopic);
+        patientUpdateRequestHandler.handle(message);
+
+        waitUntilMessageArrived();
+
+        // Check if reply is success
+        assert (response != null);
+        assert (new String(response.getPayload()).contains("success"));
+
+        // Check that patient was updated with correct values
+        Patient patient = patientRepository.findAll().get(0);
+        assert (patient != null);
+        assert (patient.getName().equals(UPDATED_PATIENT_NAME));
     }
 
     @AfterEach
@@ -185,7 +206,6 @@ public class TimeslotRequestTests {
     @AfterAll
     public void cleanUp() {
         mqttHandler.disconnect();
-        testUtil.deleteAll();
     }
 
     private void waitUntilMessageArrived() {
@@ -201,4 +221,5 @@ public class TimeslotRequestTests {
             }
         }
     }
+
 }

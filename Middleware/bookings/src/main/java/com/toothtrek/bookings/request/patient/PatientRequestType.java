@@ -2,7 +2,7 @@ package com.toothtrek.bookings.request.patient;
 
 public enum PatientRequestType {
     CREATE,
-    SET,
+    UPDATE,
     GET;
 
     // The corresponding topic for each enum, see fromTopic()

@@ -1,4 +1,4 @@
-package com.toothtrek.bookings;
+package com.toothtrek.bookings.entityRequestTests;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.junit.jupiter.api.AfterAll;

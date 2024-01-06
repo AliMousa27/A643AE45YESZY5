@@ -1,4 +1,8 @@
-package com.toothtrek.bookings.request.office;
+package com.toothtrek.bookings.request.dentist;
+
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,19 +11,21 @@ import org.springframework.context.annotation.Configuration;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import com.toothtrek.bookings.entity.Office;
-import com.toothtrek.bookings.repository.OfficeRepository;
+import com.toothtrek.bookings.entity.Dentist;
+import com.toothtrek.bookings.repository.DentistRepository;
 import com.toothtrek.bookings.request.RequestHandlerInterface;
 import com.toothtrek.bookings.response.ResponseHandler;
 import com.toothtrek.bookings.response.ResponseStatus;
 
 @Configuration
-public class OfficeUpdateHandler implements RequestHandlerInterface {
+public class DentistUpdateRequestHandler implements RequestHandlerInterface {
     @Autowired
-    private OfficeRepository officeRepository;
+    private DentistRepository dentistRepository;
 
     @Autowired
     private ResponseHandler responseHandler;
+
+    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     private final String[] MESSAGE_PROPERTIES = { "id" };
 
@@ -40,31 +46,34 @@ public class OfficeUpdateHandler implements RequestHandlerInterface {
         }
 
         try {
-            // Get office by id
-            Long officeId = json.get("id").getAsLong();
-            Office office = officeRepository.findById(officeId).get();
+            // Get dentist by id
+            Long dentistId = json.get("id").getAsLong();
+            Dentist dentist = dentistRepository.findById(dentistId).get();
 
-            // set office properties if they exist
+            // set dentist properties if they exist
             if (json.has("name")) {
-                office.setName(json.get("name").getAsString());
+                dentist.setName(json.get("name").getAsString());
             }
-            if (json.has("address")) {
-                office.setAddress(json.get("address").getAsString());
-            }
-            if (json.has("latitude")) {
-                office.setLatitude(json.get("latitude").getAsFloat());
-            }
-            if (json.has("longitude")) {
-                office.setLongitude(json.get("longitude").getAsFloat());
+            if (json.has("dateOfBirth")) {
+                long time;
+                String dateOfBirthString = json.get("dateOfBirth").getAsString();
+                try {
+                    time = sdf.parse(dateOfBirthString).getTime();
+                } catch (ParseException e) {
+                    responseHandler.reply(ResponseStatus.ERROR, "Wrongly formatted date of birth", request);
+                    return;
+                }
+                Timestamp dateOfBirthTimestamp = new Timestamp(time);
+                dentist.setDateOfBirth(dateOfBirthTimestamp);
             }
 
-            // Save office
-            officeRepository.save(office);
+            // Save dentist
+            dentistRepository.save(dentist);
 
             // Reply with success
             responseHandler.reply(ResponseStatus.SUCCESS, request);
         } catch (Exception e) {
-            responseHandler.reply(ResponseStatus.ERROR, "Office not found", request);
+            responseHandler.reply(ResponseStatus.ERROR, "Dentist not found", request);
         }
     }
 
