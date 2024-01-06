@@ -1,3 +1,5 @@
 #ignore the node_modules folder
 /Website/Backend/node_modules/
 .vscode/
+/data/
+/Monitoring/data/
