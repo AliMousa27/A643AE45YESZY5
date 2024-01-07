@@ -142,7 +142,7 @@ test-logs-middleware:
     - apk add postgresql-client
     - apk update
     - mosquitto -d
-    - cd Middleware/Logs/src/main/resources
+    - cd Middleware/Logs/src/test/resources
     - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -tc "SELECT 1 FROM pg_database WHERE datname = 'test_logs_db'" | grep -q 1 || PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -c "CREATE DATABASE test_logs_db"
     - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -d test_logs_db -f schema.sql
     - cd ../../../
@@ -173,7 +173,7 @@ test-bookings-middleware:
 
   script:
     - apk update && apk add postgresql-client
-    - cd Middleware/bookings/src/main/resources
+    - cd Middleware/bookings/src/test/resources
     - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -tc "SELECT 1 FROM pg_database WHERE datname = 'test_booking_db'" | grep -q 1 || PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -c "CREATE DATABASE test_booking_db"
     - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -d test_booking_db -f schema.sql
     - cd ../../../
@@ -205,7 +205,7 @@ test-record-middleware:
 
   script:
     - apk update && apk add postgresql-client
-    - cd Middleware/dentalRecord/src/main/resources
+    - cd Middleware/dentalRecord/src/test/resources
     - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -tc "SELECT 1 FROM pg_database WHERE datname = 'test_record_db'" | grep -q 1 || PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -c "CREATE DATABASE test_record_db"
     - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -d test_record_db -f schema.sql
     - cd ../../../
@@ -236,7 +236,7 @@ test-notifications-middleware:
 
   script:
     - apk update && apk add postgresql-client
-    - cd Middleware/notifications/src/main/resources
+    - cd Middleware/notifications/src/test/resources
     - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -tc "SELECT 1 FROM pg_database WHERE datname = 'test_notification_db'" | grep -q 1 || PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -c "CREATE DATABASE test_notification_db"
     - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -d test_notification_db -f schema.sql
     - cd ../../../
