@@ -25,7 +25,7 @@ import com.toothtrek.bookings.request.dentist.DentistRequestType;
  * This class implements the MqttCallback interface and overrides all of its
  * methods. This class is used to handle callbacks from the Paho Java Client.
  * 
- * @see org.eclipse.paho.mqttv5.client.MqttCallback
+ * @see org.eclipse.paho.client.mqttv3.MqttCallback
  */
 @Component
 public class MqttCallbackHandler implements MqttCallback {
