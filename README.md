@@ -64,7 +64,7 @@ ToothTrek simplifies dental appointments in Sweden, specifically Gothenburg. Our
 
 
 ## Setup
-The system consists of 4 main components, the website/app frontend, the express backend server,the dentist API, and the various services in the middleware layer. All four components must be set up correctly for the system to function properly.
+The system consists of 4 main components, the website/app frontend, the express backend server, the dentist API, and the various services in the middleware layer. All four components must be set up correctly for the system to function properly.
 
 
 **Refer to the various parts of the system to set them up**
