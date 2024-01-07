@@ -16,6 +16,7 @@ import com.toothtrek.bookings.repository.TimeslotRepository;
 import com.toothtrek.bookings.request.RequestHandlerInterface;
 import com.toothtrek.bookings.response.ResponseHandler;
 import com.toothtrek.bookings.response.ResponseStatus;
+import com.toothtrek.bookings.notification.NotificationHandler;
 
 @Configuration
 public class TimeslotCancelRequestHandler implements RequestHandlerInterface {
@@ -28,6 +29,9 @@ public class TimeslotCancelRequestHandler implements RequestHandlerInterface {
 
     @Autowired
     private ResponseHandler responseHandler;
+
+    @Autowired
+    private NotificationHandler notificationHandler;
 
     @Override
     public void handle(MqttMessage request) {
@@ -69,6 +73,7 @@ public class TimeslotCancelRequestHandler implements RequestHandlerInterface {
 
     private synchronized void cancelBooking(Timeslot timeslot, MqttMessage request) {
         // Get bookings for timeslot
+        Booking updatedBooking = null;
         List<Booking> bookings = bookingRepository.findByTimeslotId(timeslot.getId());
         for (Booking booking : bookings) {
             if (booking.getState() == Booking.State.cancelled || booking.getState() == Booking.State.rejected) {
@@ -82,11 +87,15 @@ public class TimeslotCancelRequestHandler implements RequestHandlerInterface {
 
             // Cancel booking
             booking.setState(Booking.State.cancelled);
+            updatedBooking = booking;
         }
 
         // Save bookings, separated from loop to avoid saving if:
         // timeslot already completed
         bookingRepository.saveAll(bookings);
+
+        // Send email to notify user
+        notificationHandler.sendNotification(updatedBooking.getId(), "cancelled");
 
         // Cancel timeslot & save
         timeslot.setState(Timeslot.State.cancelled);
