@@ -28,7 +28,8 @@
     "dotenv": "^16.3.1",
     "express": "^4.17.1",
     "morgan": "^1.10.0",
-    "mqtt": "^5.2.2"
+    "mqtt": "^5.2.2",
+    "prom-client": "^15.1.0"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
