@@ -1,5 +1,4 @@
 
-
 <div align="center">
 
 <img src="https://cdn.pixabay.com/photo/2016/06/13/13/46/shark-1454245_1280.png" width="200" />
@@ -12,10 +11,10 @@
 ![Backend CI](https://git.chalmers.se/courses/dit355/2023/student-teams/dit356-2023-12/toothtrek//badges/main/pipeline.svg?job=androidBuild&key_text=Backend+CI&key_width=80)
 </div>
 <div align="center">
-        <img width ="20" alt="java img" src="https://cdn.freebiesupply.com/logos/large/2x/java-14-logo-png-transparent.png">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <img width ="20" alt="javascript img" src="https://static.vecteezy.com/system/resources/previews/027/127/463/original/javascript-logo-javascript-icon-transparent-free-png.png">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <img width ="20" alt="flutter img" src="https://storage.googleapis.com/cms-storage-bucket/0dbfcc7a59cd1cf16282.png">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <img width ="20" alt="Node JS" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Node.js_logo.svg/590px-Node.js_logo.svg.png">
+        <img width ="40" alt="java img" src="https://cdn.freebiesupply.com/logos/large/2x/java-14-logo-png-transparent.png">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <img width ="40" alt="javascript img" src="https://static.vecteezy.com/system/resources/previews/027/127/463/original/javascript-logo-javascript-icon-transparent-free-png.png">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <img width ="40" alt="flutter img" src="https://storage.googleapis.com/cms-storage-bucket/0dbfcc7a59cd1cf16282.png">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <img width ="40" alt="Node JS" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Node.js_logo.svg/590px-Node.js_logo.svg.png">
 </div>
 
   # ToothTrek
