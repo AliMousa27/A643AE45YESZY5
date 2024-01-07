@@ -97,5 +97,5 @@ Our architecture is a service oriented architecture.
 </div>
 For more detailed information, refer to the [architecture wiki page](https://git.chalmers.se/courses/dit355/2023/student-teams/dit356-2023-12/toothtrek/-/wikis/architecture)
 
-
+For a thorough analysis of how the architecture performs, refer to our [system analysis wiki page](https://git.chalmers.se/courses/dit355/2023/student-teams/dit356-2023-12/toothtrek/-/wikis/system-analysis)  
 
