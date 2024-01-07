@@ -77,8 +77,13 @@ test-backend:
   tags:
     - docker
 
+  variables:
+  TEST: "true"
+
   script:
+    - apk add mosquitto
     - cd Website/Backend
+    - mosquitto -d
     - npm test 
 
   # Allow failure til we have tests
