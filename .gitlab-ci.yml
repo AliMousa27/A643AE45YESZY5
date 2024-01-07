@@ -77,12 +77,10 @@ test-backend:
   tags:
     - docker
 
-  variables:
-    TEST: true
-
   script:
     - apk add mosquitto
     - cd Website/Backend
+    - export TEST=true
     - mosquitto -d
     - npm test 
 
