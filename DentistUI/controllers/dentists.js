@@ -47,7 +47,7 @@ router.patch('/:dentistId', async (req, res) => {
 
 
     try {
-        let topic = 'toothtrek/booking_service/dentist/update/';
+        let topic = 'toothtrek/booking_service/dentist/update';
 
         mqttClient.subscribe(responseTopic);
         mqttClient.publish(topic, JSON.stringify(dentist));
@@ -99,7 +99,7 @@ router.get('/:dentistId', async (req, res) => {
     };
 
     try {
-        let topic = 'toothtrek/booking_service/dentist/get/';
+        let topic = 'toothtrek/booking_service/dentist/get';
 
         mqttClient.subscribe(responseTopic);
         mqttClient.publish(topic, JSON.stringify(dentist));
@@ -142,7 +142,7 @@ router.get('/', async (req, res) => {
     };
 
     try {
-        let topic = 'toothtrek/booking_service/dentist/get/';
+        let topic = 'toothtrek/booking_service/dentist/get';
 
         mqttClient.subscribe(responseTopic);
         mqttClient.publish(topic, JSON.stringify(dentist));
@@ -194,7 +194,7 @@ router.post('/', async (req, res) => {
     }
 
     try {
-        let topic = 'toothtrek/booking_service/dentist/create/';
+        let topic = 'toothtrek/booking_service/dentist/create';
 
         mqttClient.subscribe(responseTopic);
         mqttClient.publish(topic, JSON.stringify(dentist));
@@ -246,7 +246,7 @@ router.delete('/:dentistId', async (req, res) => {
     };
 
     try {
-        let topic = 'toothtrek/booking_service/dentist/delete/';
+        let topic = 'toothtrek/booking_service/dentist/delete';
 
         mqttClient.subscribe(responseTopic);
         mqttClient.publish(topic, JSON.stringify(dentist));

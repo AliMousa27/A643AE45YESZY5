@@ -37,8 +37,8 @@ router.patch('/:timeslotId', async (req, res) => {
         return res.status(400).send('invalid parameters: state should be one of: ' + STATES.join(', ') + ')');
     }
 
-    const topic = 'toothtrek/booking_service/booking/state/';
-    const responseTopic = topic + uuidv4();
+    const topic = 'toothtrek/booking_service/booking/state';
+    const responseTopic = topic + '/' + uuidv4();
 
     var timeslot = {
         id: req.params.timeslotId,

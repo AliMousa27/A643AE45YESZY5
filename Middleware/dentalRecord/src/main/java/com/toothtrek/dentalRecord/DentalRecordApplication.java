@@ -89,7 +89,7 @@ public class DentalRecordApplication implements CommandLineRunner {
 		// Initialize MQTT
 		mqttHandler.initialize(mqttCallbackHandler);
 		mqttHandler.connect(true, true);
-		mqttHandler.subscribe("toothtrek/record/+/");
+		mqttHandler.subscribe("toothtrek/record/+");
 	}
 
 }

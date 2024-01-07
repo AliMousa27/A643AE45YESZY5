@@ -1,8 +1,7 @@
 require('dotenv').config();
 
-if (process.env.TEST === 'true') {
-    console.log('Environment variable TEST is set to true. Entering MQTT mock Service...');
-    module.exports = require('./tests/mqttMock.js');
+if (process.env.TEST !== 'true') {
+    console.log('Environment variable TEST is not set to true. Exiting MQTT mock Service...');
     return;
 }
 
@@ -17,14 +16,36 @@ const mqttClient = mqtt.connect(connectUrl, {
     clientId,
     clean: true,
     connectTimeout: 4000,
-    username: clientId,
-    password: 'public',
     reconnectPeriod: 1000,
 })
 
+const topicToSubscribe = 'toothtrek/#'
+
 mqttClient.on('connect', () => {
-    console.log(`Connected to mqtt server with url ${connectUrl}`)
+    console.log(`Connected to mqtt server with url ${connectUrl}`);
+    
+    mqttClient.subscribe(topicToSubscribe, (err) => {
+        if (err) {
+            console.error('Error subscribing to topic:', err);
+        }
+    });
 })
+
+mqttClient.on('message', (topic, message) => {
+    const topics = topic.split('/');
+    // The following should be replaced after topic refactoring
+    // if (topics.length == 2) {
+    if (topics.length == 3 || (topics.length == 4 && topics[1] == 'booking_service')) {
+        const parsedMessage = JSON.parse(message);
+        const responseTopic = parsedMessage.responseTopic;
+        const responseMessage = JSON.stringify({ "status": "success" });
+        mqttClient.publish(responseTopic, responseMessage, (err) => {
+            if (err) {
+                console.error('Error publishing message:', err);
+            }
+        });
+    }
+});
 
 mqttClient.on('error', (err) => {
     console.log(err)
@@ -81,9 +102,4 @@ mqttClient.handleRequest = async function(req, res, requestTopic, uid,body) {
     }
 };
 
-process.on('SIGINT', () => {
-    mqttClient.end();
-    console.log('Closed MQTT connection');
-});
-
-module. Exports = mqttClient;
+module.exports = mqttClient;

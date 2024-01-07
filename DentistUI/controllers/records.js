@@ -32,8 +32,8 @@ router.post('/', async (req, res) => {
         return res.status(400).send('Bad request (invalid parameters)');
     }
 
-    const topic = 'toothtrek/record/create/';
-    const responseTopic = topic + uuidv4();
+    const topic = 'toothtrek/record/create';
+    const responseTopic = topic + '/' + uuidv4();
 
     var record = {
         timeslotId: req.body.timeslotId,
@@ -77,8 +77,8 @@ router.post('/', async (req, res) => {
 
 // Get a record
 router.get('/:id', async (req, res) => {
-    const topic = 'toothtrek/record/get/';
-    const responseTopic = topic + uuidv4();
+    const topic = 'toothtrek/record/get';
+    const responseTopic = topic + '/' + uuidv4();
 
     var record = {
         id: req.params.id,
@@ -120,8 +120,8 @@ router.get('/:id', async (req, res) => {
 
 // Update a record
 router.patch('/:id', async (req, res) => {
-    const topic = 'toothtrek/record/update/';
-    const responseTopic = topic + uuidv4();
+    const topic = 'toothtrek/record/update';
+    const responseTopic = topic + '/' + uuidv4();
 
     var record = {
         id: req.params.id,

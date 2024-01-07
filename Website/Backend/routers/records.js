@@ -7,7 +7,7 @@ router.get('/records/:id', (req, res) => {
     var body = {
         "patientId": req.params.id
       }
-    mqttClient.handleRequest(req, res, 'toothtrek/record/get/', req.params.id, body);
+    mqttClient.handleRequest(req, res, 'toothtrek/record/get', '/' + req.params.id, body);
 });
 
 module.exports = router;
