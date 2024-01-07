@@ -1,16 +1,15 @@
 
 
-
 <div align="center">
 
 <img src="https://cdn.pixabay.com/photo/2016/06/13/13/46/shark-1454245_1280.png" width="200" />
-
-# Wio Play
 
 </div>
 
 <div align="center">
 ![Middleware tests](https://git.chalmers.se/courses/dit355/2023/student-teams/dit356-2023-12/toothtrek//badges/main/pipeline.svg?job=androidBuild&key_text=Middleware+CI&key_width=80)
+![Frontend CI](https://git.chalmers.se/courses/dit355/2023/student-teams/dit356-2023-12/toothtrek//badges/main/pipeline.svg?job=androidBuild&key_text=Frontend+CI&key_width=80)
+![Backend CI](https://git.chalmers.se/courses/dit355/2023/student-teams/dit356-2023-12/toothtrek//badges/main/pipeline.svg?job=androidBuild&key_text=Backend+CI&key_width=80)
 </div>
 <div align="center">
         <img width ="20" alt="java img" src="https://cdn.freebiesupply.com/logos/large/2x/java-14-logo-png-transparent.png">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -71,5 +70,7 @@ Our system sports a comprehensive API that any exterenal dentist can utilize to 
 
 ## Architecture
 Our architecture is a service oriented architecture.
+<div align="center">
 ![Architecture diagram](https://git.chalmers.se/courses/dit355/2023/student-teams/dit356-2023-12/toothtrek/-/wikis/uploads/ca6c5e7b9c24f6ab56e04f0411428b00/image.png)
+</div>
 For more detailed information, refer to the [architecture wiki page](https://git.chalmers.se/courses/dit355/2023/student-teams/dit356-2023-12/toothtrek/-/wikis/Architecture/edit)
