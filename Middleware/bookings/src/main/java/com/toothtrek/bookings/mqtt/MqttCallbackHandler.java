@@ -50,38 +50,41 @@ public class MqttCallbackHandler implements MqttCallback {
 
     @Override
     public void messageArrived(String topic, MqttMessage message) {
+
+        // [0] = "toothtrek"
+        // [1] = "booking", "timeslot", "patient", "office", "dentist"
+        // [2] = "create", "get, "update", "delete"
+
         String[] topicParts = topic.split("/");
 
-        switch (topicParts[2]) {
+        switch (topicParts[1]) {
             case "booking":
                 executorService.submit(() -> bookingRequestAllocatorService
-                        .handleRequest(BookingRequestType.fromString(topicParts[3]), message));
+                        .handleRequest(BookingRequestType.fromString(topicParts[2]), message));
                 break;
 
             case "timeslot":
                 executorService.submit(() -> timeslotRequestAllocatorService
-                        .handleRequest(TimeslotRequestType.fromString(topicParts[3]), message));
+                        .handleRequest(TimeslotRequestType.fromString(topicParts[2]), message));
                 break;
 
             case "patient":
                 executorService.submit(() -> patientRequestAllocatorService
-                        .handleRequest(PatientRequestType.fromString(topicParts[3]), message));
+                        .handleRequest(PatientRequestType.fromString(topicParts[2]), message));
                 break;
 
             case "office":
                 executorService.submit(() -> officeRequestAllocatorService
-                        .handleRequest(OfficeRequestType.fromString(topicParts[3]), message));
+                        .handleRequest(OfficeRequestType.fromString(topicParts[2]), message));
                 break;
 
             case "dentist":
                 executorService.submit(() -> dentistRequestAllocatorService
-                        .handleRequest(DentistRequestType.fromString(topicParts[3]), message));
+                        .handleRequest(DentistRequestType.fromString(topicParts[2]), message));
                 break;
 
             default:
-                // TODO: Implement unknown request type
                 throw new UnsupportedOperationException("Unknown request type.");
-            // break;
         }
     }
 
