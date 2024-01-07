@@ -61,7 +61,7 @@ test-frontend:
 build-backend:
   stage: build
 
-  image: node:18
+  image: node:18-alpine
   tags:
     - docker
 
@@ -73,7 +73,7 @@ test-backend:
   stage: test
   needs: ["build-backend"]
 
-  image: node:18
+  image: node:18-alpine
   tags:
     - docker
 
@@ -84,8 +84,6 @@ test-backend:
     - mosquitto -d
     - npm test 
 
-  # Allow failure til we have tests
-  allow_failure: true
 
 # Dentist UI
 
