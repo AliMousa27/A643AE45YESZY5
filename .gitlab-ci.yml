@@ -78,7 +78,7 @@ test-backend:
     - docker
 
   variables:
-  TEST: "true"
+    TEST: true
 
   script:
     - apk add mosquitto
