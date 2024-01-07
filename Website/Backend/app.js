@@ -8,6 +8,7 @@ var bookings = require('./routers/bookings.js');
 var timeslots = require('./routers/timeslots.js');
 var patients = require('./routers/patients.js');
 var metrics = require('./routers/metrics.js').router;
+var records = require('./routers/records.js');
 // Create Express app
 var app = express();
 // Parse requests of content-type 'application/json'
@@ -25,6 +26,7 @@ app.use(timeslots);
 app.use(bookings);
 app.use(patients);
 app.use(metrics);
+app.use(records);
 console.log(new Date().toString());
 // Import routes
 app.get('/api', function (req, res) {

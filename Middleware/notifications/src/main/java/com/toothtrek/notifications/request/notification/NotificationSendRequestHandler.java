@@ -1,6 +1,6 @@
 package com.toothtrek.notifications.request.notification;
 
-import org.eclipse.paho.mqttv5.common.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.thymeleaf.context.Context;
@@ -81,7 +81,6 @@ public class NotificationSendRequestHandler implements RequestHandlerInterface {
             "Dental Appointment: " + json.get("type").getAsString(), processedTemplate);
         
         // Reply with success
-        System.out.println("SUCCESS TEST");
         responseHandler.reply(ResponseStatus.SUCCESS, request);
     }
 

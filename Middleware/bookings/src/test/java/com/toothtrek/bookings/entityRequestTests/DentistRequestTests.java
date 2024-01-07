@@ -1,12 +1,12 @@
-package com.toothtrek.dentalRecord;
+package com.toothtrek.bookings.entityRequestTests;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -15,62 +15,50 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.google.gson.JsonObject;
-
-import com.toothtrek.dentalRecord.entity.Booking;
-import com.toothtrek.dentalRecord.entity.Record;
-import com.toothtrek.dentalRecord.mqtt.MqttCallbackHandler;
-import com.toothtrek.dentalRecord.mqtt.MqttHandler;
-import com.toothtrek.dentalRecord.repository.BookingRepository;
-import com.toothtrek.dentalRecord.repository.RecordRepository;
-import com.toothtrek.dentalRecord.repository.TimeslotRepository;
-import com.toothtrek.dentalRecord.request.record.RecordCreateRequestHandler;
-import com.toothtrek.dentalRecord.request.record.RecordGetRequestHandler;
-import com.toothtrek.dentalRecord.request.record.RecordUpdateRequestHandler;
-import com.toothtrek.dentalRecord.util.TestDatabaseUtil;
+import com.toothtrek.bookings.entity.Dentist;
+import com.toothtrek.bookings.mqtt.MqttCallbackHandler;
+import com.toothtrek.bookings.mqtt.MqttHandler;
+import com.toothtrek.bookings.repository.DentistRepository;
+import com.toothtrek.bookings.request.dentist.DentistCreateRequestHandler;
+import com.toothtrek.bookings.request.dentist.DentistGetRequestHandler;
+import com.toothtrek.bookings.request.dentist.DentistUpdateRequestHandler;
+import com.toothtrek.bookings.request.dentist.DentistDeleteRequestHandler;
 
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class RecordTests {
-
-    // Repositories
-
-    @Autowired
-    private BookingRepository bookingRepository;
-
-    @Autowired
-    private RecordRepository recordRepository;
-
-    @Autowired
-    private TimeslotRepository timeslotRepository;
-
-    // Request Handlers
-
-    @Autowired
-    private RecordCreateRequestHandler recordCreateRequestHandler;
-
-    @Autowired
-    private RecordGetRequestHandler recordGetRequestHandler;
-
-    @Autowired
-    private RecordUpdateRequestHandler recordUpdateRequestHandler;
-
-    // Test Util
-
-    @Autowired
-    TestDatabaseUtil testDatabaseUtil;
-
-    // MQTT
+public class DentistRequestTests {
 
     @Autowired
     private MqttHandler mqttHandler;
 
+    // Repositories
+    @Autowired
+    private DentistRepository dentistRepository;
+
+    // Dentist request handlers
+    @Autowired
+    private DentistCreateRequestHandler dentistCreateRequestHandler;
+
+    @Autowired
+    private DentistGetRequestHandler dentistGetRequestHandler;
+
+    @Autowired
+    private DentistUpdateRequestHandler dentistUpdateRequestHandler;
+
+    @Autowired
+    private DentistDeleteRequestHandler dentistDeleteRequestHandler;
+
+    // Variables
+    private static final String DENTIST_NAME = "Test Dentist";
+    private static final String UPDATED_DENTIST_NAME = "Updated Dentist Name";
+
+    // MQTT callback variables
     private static boolean messageArrived = false;
     private static MqttMessage response;
 
     // Customized MQTT callback handler for testing.
     private static MqttCallbackHandler mqttCallbackHandler = new MqttCallbackHandler() {
-
         @Override
         public void messageArrived(String topic, MqttMessage message) {
             response = message;
@@ -78,26 +66,19 @@ public class RecordTests {
         }
     };
 
-    // Variables
-
-    private static final String NOTE = "this is a note";
-    private static final String UPDATED_NOTE = "this is an updated note";
-
     @BeforeAll
-    void setup() throws Exception {
+    public void setup() throws Exception {
         mqttHandler.initialize(mqttCallbackHandler);
         mqttHandler.connect(false, false);
-
-        testDatabaseUtil.createDummyData(true, true, true, true, true);
     }
 
     @Test
     @Order(1)
-    void invalidCreateRecord() {
+    public void invalidDentistCreateRequest() {
         // Message
         JsonObject jsonMessage = new JsonObject();
-        jsonMessage.addProperty("timeslotId", timeslotRepository.findAll().get(0).getId());
-        jsonMessage.addProperty("notes", "this is a note");
+        // Invalid: missing name field
+        // jsonMessage.addProperty("name", DENTIST_NAME);
 
         String responseTopic = "test/response/" + System.currentTimeMillis();
         jsonMessage.addProperty("responseTopic", responseTopic);
@@ -108,30 +89,24 @@ public class RecordTests {
 
         // Handle message
         mqttHandler.subscribe(responseTopic);
-        recordCreateRequestHandler.handle(message);
+        dentistCreateRequestHandler.handle(message);
 
         waitUntilMessageArrived();
 
         // Check if reply is success
         assert (response != null);
-
-        // Timeslot is not "completed", cannot create record
         assert (new String(response.getPayload()).contains("error"));
+
+        // Check that no dentist was created
+        assert (dentistRepository.findAll().size() == 0);
     }
 
     @Test
     @Order(2)
-    void createRecord() {
-        // Set booking to "completed"
-        Booking booking = bookingRepository.findAll().get(0);
-        booking.setState(Booking.State.completed);
-        bookingRepository.save(booking);
-        bookingRepository.flush();
-
+    public void validDentistCreateRequest() {
         // Message
         JsonObject jsonMessage = new JsonObject();
-        jsonMessage.addProperty("timeslotId", timeslotRepository.findAll().get(0).getId());
-        jsonMessage.addProperty("notes", NOTE);
+        jsonMessage.addProperty("name", DENTIST_NAME);
 
         String responseTopic = "test/response/" + System.currentTimeMillis();
         jsonMessage.addProperty("responseTopic", responseTopic);
@@ -142,21 +117,28 @@ public class RecordTests {
 
         // Handle message
         mqttHandler.subscribe(responseTopic);
-        recordCreateRequestHandler.handle(message);
-        
+        dentistCreateRequestHandler.handle(message);
+
         waitUntilMessageArrived();
 
         // Check if reply is success
         assert (response != null);
         assert (new String(response.getPayload()).contains("success"));
+
+        // Check that dentist was created
+        assert (dentistRepository.findAll().size() == 1);
+        Dentist dentist = dentistRepository.findAll().get(0);
+        assert (dentist != null);
+        assert (dentist.getName().equals(DENTIST_NAME));
     }
 
     @Test
     @Order(3)
-    void getRecord() {
+    public void dentistGetRequest() {
         // Message
         JsonObject jsonMessage = new JsonObject();
-        jsonMessage.addProperty("timeslotId", timeslotRepository.findAll().get(0).getId());
+        Long dentistId = dentistRepository.findAll().get(0).getId();
+        jsonMessage.addProperty("id", dentistId);
 
         String responseTopic = "test/response/" + System.currentTimeMillis();
         jsonMessage.addProperty("responseTopic", responseTopic);
@@ -167,21 +149,29 @@ public class RecordTests {
 
         // Handle message
         mqttHandler.subscribe(responseTopic);
-        recordGetRequestHandler.handle(message);
+        dentistGetRequestHandler.handle(message);
+
         waitUntilMessageArrived();
 
         // Check if reply is success
         assert (response != null);
         assert (new String(response.getPayload()).contains("success"));
+
+        // Check if name & id are correct
+        assert (new String(response.getPayload()).contains(DENTIST_NAME));
+        assert (new String(response.getPayload()).contains(dentistId.toString()));
     }
 
     @Test
     @Order(4)
-    void updateRecord() {
+    public void dentistUpdateRequest() {
+        // Variables
+        Long dentistId = dentistRepository.findAll().get(0).getId();
+
         // Message
         JsonObject jsonMessage = new JsonObject();
-        jsonMessage.addProperty("id", recordRepository.findAll().get(0).getId());
-        jsonMessage.addProperty("notes", UPDATED_NOTE);
+        jsonMessage.addProperty("id", dentistId);
+        jsonMessage.addProperty("name", UPDATED_DENTIST_NAME);
 
         String responseTopic = "test/response/" + System.currentTimeMillis();
         jsonMessage.addProperty("responseTopic", responseTopic);
@@ -192,15 +182,49 @@ public class RecordTests {
 
         // Handle message
         mqttHandler.subscribe(responseTopic);
-        recordUpdateRequestHandler.handle(message);
+        dentistUpdateRequestHandler.handle(message);
+
         waitUntilMessageArrived();
 
         // Check if reply is success
         assert (response != null);
         assert (new String(response.getPayload()).contains("success"));
 
-        Record record = recordRepository.findAll().get(0);
-        assert (record.getNotes().equals(UPDATED_NOTE));
+        // Check if dentist is updated
+        Dentist dentist = dentistRepository.findAll().get(0);
+        assert (dentist != null);
+        assert (dentist.getName().equals(UPDATED_DENTIST_NAME));
+    }
+
+    @Test
+    @Order(5)
+    public void dentistDeleteRequest() {
+        // Variables
+        Long dentistId = dentistRepository.findAll().get(0).getId();
+
+        // Message
+        JsonObject jsonMessage = new JsonObject();
+        jsonMessage.addProperty("id", dentistId);
+
+        String responseTopic = "test/response/" + System.currentTimeMillis();
+        jsonMessage.addProperty("responseTopic", responseTopic);
+
+        // Set payload
+        MqttMessage message = new MqttMessage();
+        message.setPayload(jsonMessage.toString().getBytes());
+
+        // Handle message
+        mqttHandler.subscribe(responseTopic);
+        dentistDeleteRequestHandler.handle(message);
+
+        waitUntilMessageArrived();
+
+        // Check if reply is success
+        assert (response != null);
+        assert (new String(response.getPayload()).contains("success"));
+
+        // Check that dentist was deleted and no longer exists
+        assert (dentistRepository.findAll().size() == 0);
     }
 
     @AfterEach
@@ -212,7 +236,6 @@ public class RecordTests {
     @AfterAll
     public void cleanUp() {
         mqttHandler.disconnect();
-        testDatabaseUtil.deleteAll();
     }
 
     private void waitUntilMessageArrived() {

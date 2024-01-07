@@ -112,42 +112,7 @@ test-dentistUI:
   # Allow failure til we have tests
   allow_failure: true
 
-# Java Middleware
-
-# !!! Add one per service !!!
-
-# Template
-build-template-middleware:
-  stage: build
-
-  image: maven:3.9.5-eclipse-temurin-17-alpine
-  tags:
-    - docker
-
-  script:
-    - cd Middleware/template
-    - mvn --show-version install -DskipTests
-
-test-template-middleware:
-  stage: test
-  needs: ["build-template-middleware"]
-
-
-  image: maven:3.9.5-eclipse-temurin-17-alpine
-  tags:
-    - docker
-
-  variables:
-    POSTGRES_DB: test_template_db
-
-  script:
-    - apk update && apk add postgresql-client
-    - cd Middleware/template/src/main/resources
-    - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -tc "SELECT 1 FROM pg_database WHERE datname = 'test_template_db'" | grep -q 1 || PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -c "CREATE DATABASE test_template_db"
-    - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -d test_template_db -f schema.sql
-    - cd ../../../
-    - mvn --show-version test
-
+# --- Java Middleware ---
 
 # Java Middleware - Logs
 build-logs-middleware:
@@ -173,7 +138,10 @@ test-logs-middleware:
     POSTGRES_DB: test_logs_db
 
   script:
-    - apk update && apk add postgresql-client
+    - apk add mosquitto
+    - apk add postgresql-client
+    - apk update
+    - mosquitto -d
     - cd Middleware/Logs/src/main/resources
     - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -tc "SELECT 1 FROM pg_database WHERE datname = 'test_logs_db'" | grep -q 1 || PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -c "CREATE DATABASE test_logs_db"
     - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U $POSTGRES_USER -d test_logs_db -f schema.sql

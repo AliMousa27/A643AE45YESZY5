@@ -22,7 +22,15 @@ mqttClient.on('connect', () => {
 mqttClient.on('error', (err) => {
     console.log(err)
 })
-mqttClient.handleRequest = function(req, res, requestTopic, uid,body) {
+const resolvers = new Map();
+mqttClient.on('message', (topic, message) => {
+    const resolve = resolvers.get(topic);
+    if (resolve) {
+        resolve(message.toString());
+        resolvers.delete(topic);
+    }
+});
+mqttClient.handleRequest = async function(req, res, requestTopic, uid,body) {
     try {
         const responseTopic = `${requestTopic}${uid}`;
         this.subscribe(responseTopic);
@@ -32,6 +40,33 @@ mqttClient.handleRequest = function(req, res, requestTopic, uid,body) {
         else{
             publishJson = JSON.stringify({ "responseTopic": responseTopic });
         }
+        mqttClient.publish(requestTopic, publishJson);
+
+        // Create a new Promise for the request
+        const response = await new Promise((resolve, reject) => {
+            // Store the resolver in the map
+            resolvers.set(responseTopic, resolve);
+
+            // Set a timeout for the response
+            const timeout = setTimeout(() => {
+                mqttClient.unsubscribe(responseTopic);
+                resolvers.delete(responseTopic);
+                reject(new Error('Request timed out'));
+            }, 15000);
+        });
+
+        mqttClient.unsubscribe(responseTopic);
+
+        // Handle the response from the broker
+        const parsedResponse = JSON.parse(response);
+        if (parsedResponse.status === 'success') {
+            return res.status(200).send(parsedResponse);
+        }
+        else {
+            return res.status(400).send(parsedResponse);
+        }
+
+        /*
         this.publish(requestTopic, publishJson);
         console.log("the publish json is: " + publishJson)
         console.log("published to topic " + requestTopic)
@@ -47,7 +82,7 @@ mqttClient.handleRequest = function(req, res, requestTopic, uid,body) {
                 return res.json(JSON.parse(message.toString()));
 
             }
-        });
+        });*/
 
     } catch (error) {
         console.error('Error:', error);

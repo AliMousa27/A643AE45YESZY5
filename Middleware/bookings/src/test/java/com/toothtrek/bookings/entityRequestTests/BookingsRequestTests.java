@@ -1,7 +1,6 @@
-package com.toothtrek.bookings;
+package com.toothtrek.bookings.entityRequestTests;
 
-import org.eclipse.paho.mqttv5.common.MqttMessage;
-import org.eclipse.paho.mqttv5.common.packet.MqttProperties;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -109,14 +108,14 @@ public class BookingsRequestTests {
         jsonMessage.add("patient", jsonPatient);
         jsonMessage.addProperty("timeslotId", timeslotId);
 
+        String responseTopic = "test/response/" + System.currentTimeMillis();
+        jsonMessage.addProperty("responseTopic", responseTopic);
+
         // Set payload
         MqttMessage message = new MqttMessage();
         message.setPayload(jsonMessage.toString().getBytes());
-        MqttProperties properties = new MqttProperties();
-        String responseTopic = "test/response/" + System.currentTimeMillis();
-        properties.setResponseTopic(responseTopic);
-        message.setProperties(properties);
 
+        // Handle message
         mqttHandler.subscribe(responseTopic);
         bookingCreateRequestHandler.handle(message);
 
@@ -140,20 +139,18 @@ public class BookingsRequestTests {
         String patientId = patientRepository.findAll().get(0).getId();
         jsonMessage.addProperty("patientId", patientId);
 
+        String responseTopic = "test/response/" + System.currentTimeMillis();
+        jsonMessage.addProperty("responseTopic", responseTopic);
+
         // Create MQTT message
         MqttMessage message = new MqttMessage();
         message.setPayload(jsonMessage.toString().getBytes());
-        MqttProperties properties = new MqttProperties();
-        String responseTopic = "test/response/" + System.currentTimeMillis();
-        properties.setResponseTopic(responseTopic);
-        message.setProperties(properties);
 
+        // Handle message
         mqttHandler.subscribe(responseTopic);
         bookingGetRequestHandler.handle(message);
 
         waitUntilMessageArrived();
-
-        System.out.println(new String(response.getPayload()));
 
         // Check if reply is success
         assert (response != null);
@@ -166,20 +163,19 @@ public class BookingsRequestTests {
     @Test
     @Order(3)
     public void bookingChangeState() {
-        // JSON message
-        String responseTopic = "test/response/" + System.currentTimeMillis();
+        // Message
         JsonObject jsonMessage = new JsonObject();
         jsonMessage.addProperty("bookingId", bookingRepository.findAll().get(0).getId());
         jsonMessage.addProperty("state", "confirmed");
+
+        String responseTopic = "test/response/" + System.currentTimeMillis();
         jsonMessage.addProperty("responseTopic", responseTopic);
 
-        // MQTT message
+        // Set payload
         MqttMessage message = new MqttMessage();
         message.setPayload(jsonMessage.toString().getBytes());
-        MqttProperties properties = new MqttProperties();
-        properties.setResponseTopic(responseTopic);
-        message.setProperties(properties);
 
+        // Handle message
         mqttHandler.subscribe(responseTopic);
         bookingStateRequestHandler.handle(message);
 
@@ -197,20 +193,19 @@ public class BookingsRequestTests {
     @Test
     @Order(4)
     public void invalidBookingStateChange() {
-        // JSON message
-        String responseTopic = "test/response/" + System.currentTimeMillis();
+        // Message
         JsonObject jsonMessage = new JsonObject();
         jsonMessage.addProperty("id", bookingRepository.findAll().get(0).getId());
         jsonMessage.addProperty("state", "confirmed"); // Invalid state: Cannot change from confirmed to confirmed
+
+        String responseTopic = "test/response/" + System.currentTimeMillis();
         jsonMessage.addProperty("responseTopic", responseTopic);
 
-        // MQTT message
+        // Set payload
         MqttMessage message = new MqttMessage();
         message.setPayload(jsonMessage.toString().getBytes());
-        MqttProperties properties = new MqttProperties();
-        properties.setResponseTopic(responseTopic);
-        message.setProperties(properties);
 
+        // Handle message
         mqttHandler.subscribe(responseTopic);
         bookingStateRequestHandler.handle(message);
 
@@ -224,21 +219,20 @@ public class BookingsRequestTests {
     @Test
     @Order(5)
     private void cancelBooking() {
-        // JSON message
-        String responseTopic = "test/response/" + System.currentTimeMillis();
+        // Message
         JsonObject jsonMessage = new JsonObject();
         jsonMessage.addProperty("id", bookingRepository.findAll().get(0).getId());
         jsonMessage.addProperty("patientId", patientRepository.findAll().get(0).getId());
         jsonMessage.addProperty("state", "cancelled");
+
+        String responseTopic = "test/response/" + System.currentTimeMillis();
         jsonMessage.addProperty("responseTopic", responseTopic);
 
-        // MQTT message
+        // Set payload
         MqttMessage message = new MqttMessage();
         message.setPayload(jsonMessage.toString().getBytes());
-        MqttProperties properties = new MqttProperties();
-        properties.setResponseTopic(responseTopic);
-        message.setProperties(properties);
 
+        // Handle message
         mqttHandler.subscribe(responseTopic);
         bookingStateRequestHandler.handle(message);
 

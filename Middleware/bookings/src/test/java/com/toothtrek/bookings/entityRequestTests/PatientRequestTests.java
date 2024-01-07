@@ -1,12 +1,12 @@
-package com.toothtrek.dentalRecord;
+package com.toothtrek.bookings.entityRequestTests;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -15,62 +15,48 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.google.gson.JsonObject;
-
-import com.toothtrek.dentalRecord.entity.Booking;
-import com.toothtrek.dentalRecord.entity.Record;
-import com.toothtrek.dentalRecord.mqtt.MqttCallbackHandler;
-import com.toothtrek.dentalRecord.mqtt.MqttHandler;
-import com.toothtrek.dentalRecord.repository.BookingRepository;
-import com.toothtrek.dentalRecord.repository.RecordRepository;
-import com.toothtrek.dentalRecord.repository.TimeslotRepository;
-import com.toothtrek.dentalRecord.request.record.RecordCreateRequestHandler;
-import com.toothtrek.dentalRecord.request.record.RecordGetRequestHandler;
-import com.toothtrek.dentalRecord.request.record.RecordUpdateRequestHandler;
-import com.toothtrek.dentalRecord.util.TestDatabaseUtil;
+import com.toothtrek.bookings.entity.Patient;
+import com.toothtrek.bookings.mqtt.MqttCallbackHandler;
+import com.toothtrek.bookings.mqtt.MqttHandler;
+import com.toothtrek.bookings.repository.PatientRepository;
+import com.toothtrek.bookings.request.patient.PatientCreateRequestHandler;
+import com.toothtrek.bookings.request.patient.PatientGetRequestHandler;
+import com.toothtrek.bookings.request.patient.PatientUpdateRequestHandler;
 
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class RecordTests {
-
-    // Repositories
-
-    @Autowired
-    private BookingRepository bookingRepository;
-
-    @Autowired
-    private RecordRepository recordRepository;
-
-    @Autowired
-    private TimeslotRepository timeslotRepository;
-
-    // Request Handlers
-
-    @Autowired
-    private RecordCreateRequestHandler recordCreateRequestHandler;
-
-    @Autowired
-    private RecordGetRequestHandler recordGetRequestHandler;
-
-    @Autowired
-    private RecordUpdateRequestHandler recordUpdateRequestHandler;
-
-    // Test Util
-
-    @Autowired
-    TestDatabaseUtil testDatabaseUtil;
-
-    // MQTT
+public class PatientRequestTests {
 
     @Autowired
     private MqttHandler mqttHandler;
 
+    // Repositories
+    @Autowired
+    private PatientRepository patientRepository;
+
+    // Patient request handlers
+    @Autowired
+    private PatientCreateRequestHandler patientCreateRequestHandler;
+
+    @Autowired
+    private PatientGetRequestHandler patientGetRequestHandler;
+
+    @Autowired
+    private PatientUpdateRequestHandler patientUpdateRequestHandler;
+
+    // Variables
+    private static final String PATIENT_ID = "Test Patient ID";
+    private static final String PATIENT_NAME = "Test Patient Name";
+    private static final String PATIENT_EMAIL = "Test Email";
+    private static final String UPDATED_PATIENT_NAME = "Updated Patient Name";
+
+    // MQTT callback variables
     private static boolean messageArrived = false;
     private static MqttMessage response;
 
     // Customized MQTT callback handler for testing.
     private static MqttCallbackHandler mqttCallbackHandler = new MqttCallbackHandler() {
-
         @Override
         public void messageArrived(String topic, MqttMessage message) {
             response = message;
@@ -78,26 +64,21 @@ public class RecordTests {
         }
     };
 
-    // Variables
-
-    private static final String NOTE = "this is a note";
-    private static final String UPDATED_NOTE = "this is an updated note";
-
     @BeforeAll
-    void setup() throws Exception {
+    public void setup() throws Exception {
         mqttHandler.initialize(mqttCallbackHandler);
         mqttHandler.connect(false, false);
-
-        testDatabaseUtil.createDummyData(true, true, true, true, true);
     }
 
     @Test
     @Order(1)
-    void invalidCreateRecord() {
+    public void invalidPatientCreateRequest() {
         // Message
         JsonObject jsonMessage = new JsonObject();
-        jsonMessage.addProperty("timeslotId", timeslotRepository.findAll().get(0).getId());
-        jsonMessage.addProperty("notes", "this is a note");
+        jsonMessage.addProperty("id", PATIENT_ID);
+        // Invalid: missing name field
+        // jsonMessage.addProperty("name", PATIENT_NAME);
+        jsonMessage.addProperty("email", PATIENT_EMAIL);
 
         String responseTopic = "test/response/" + System.currentTimeMillis();
         jsonMessage.addProperty("responseTopic", responseTopic);
@@ -108,30 +89,27 @@ public class RecordTests {
 
         // Handle message
         mqttHandler.subscribe(responseTopic);
-        recordCreateRequestHandler.handle(message);
+        patientCreateRequestHandler.handle(message);
 
         waitUntilMessageArrived();
 
         // Check if reply is success
         assert (response != null);
-
-        // Timeslot is not "completed", cannot create record
         assert (new String(response.getPayload()).contains("error"));
+
+        // Check that no patient was created
+        assert (patientRepository.findAll().size() == 0);
+
     }
 
     @Test
     @Order(2)
-    void createRecord() {
-        // Set booking to "completed"
-        Booking booking = bookingRepository.findAll().get(0);
-        booking.setState(Booking.State.completed);
-        bookingRepository.save(booking);
-        bookingRepository.flush();
-
+    public void validPatientCreateRequest() {
         // Message
         JsonObject jsonMessage = new JsonObject();
-        jsonMessage.addProperty("timeslotId", timeslotRepository.findAll().get(0).getId());
-        jsonMessage.addProperty("notes", NOTE);
+        jsonMessage.addProperty("id", PATIENT_ID);
+        jsonMessage.addProperty("name", PATIENT_NAME);
+        jsonMessage.addProperty("email", PATIENT_EMAIL);
 
         String responseTopic = "test/response/" + System.currentTimeMillis();
         jsonMessage.addProperty("responseTopic", responseTopic);
@@ -142,21 +120,27 @@ public class RecordTests {
 
         // Handle message
         mqttHandler.subscribe(responseTopic);
-        recordCreateRequestHandler.handle(message);
-        
+        patientCreateRequestHandler.handle(message);
+
         waitUntilMessageArrived();
 
         // Check if reply is success
         assert (response != null);
         assert (new String(response.getPayload()).contains("success"));
+
+        // Check that patient was created
+        assert (patientRepository.findAll().size() == 1);
+        Patient patient = patientRepository.findAll().get(0);
+        assert (patient != null);
+        assert (patient.getName().equals(PATIENT_NAME));
     }
 
     @Test
     @Order(3)
-    void getRecord() {
+    public void patientGetRequest() {
         // Message
         JsonObject jsonMessage = new JsonObject();
-        jsonMessage.addProperty("timeslotId", timeslotRepository.findAll().get(0).getId());
+        jsonMessage.addProperty("id", PATIENT_ID);
 
         String responseTopic = "test/response/" + System.currentTimeMillis();
         jsonMessage.addProperty("responseTopic", responseTopic);
@@ -167,21 +151,28 @@ public class RecordTests {
 
         // Handle message
         mqttHandler.subscribe(responseTopic);
-        recordGetRequestHandler.handle(message);
+        patientGetRequestHandler.handle(message);
+
         waitUntilMessageArrived();
 
         // Check if reply is success
         assert (response != null);
         assert (new String(response.getPayload()).contains("success"));
+
+        // Check if all fields are correct
+        assert (new String(response.getPayload()).contains(PATIENT_ID));
+        assert (new String(response.getPayload()).contains(PATIENT_NAME));
+        assert (new String(response.getPayload()).contains(PATIENT_EMAIL));
     }
 
     @Test
     @Order(4)
-    void updateRecord() {
+    public void patientUpdateRequest() {
         // Message
         JsonObject jsonMessage = new JsonObject();
-        jsonMessage.addProperty("id", recordRepository.findAll().get(0).getId());
-        jsonMessage.addProperty("notes", UPDATED_NOTE);
+        jsonMessage.addProperty("id", PATIENT_ID);
+        jsonMessage.addProperty("name", UPDATED_PATIENT_NAME);
+        jsonMessage.addProperty("email", PATIENT_EMAIL);
 
         String responseTopic = "test/response/" + System.currentTimeMillis();
         jsonMessage.addProperty("responseTopic", responseTopic);
@@ -192,15 +183,18 @@ public class RecordTests {
 
         // Handle message
         mqttHandler.subscribe(responseTopic);
-        recordUpdateRequestHandler.handle(message);
+        patientUpdateRequestHandler.handle(message);
+
         waitUntilMessageArrived();
 
         // Check if reply is success
         assert (response != null);
         assert (new String(response.getPayload()).contains("success"));
 
-        Record record = recordRepository.findAll().get(0);
-        assert (record.getNotes().equals(UPDATED_NOTE));
+        // Check that patient was updated with correct values
+        Patient patient = patientRepository.findAll().get(0);
+        assert (patient != null);
+        assert (patient.getName().equals(UPDATED_PATIENT_NAME));
     }
 
     @AfterEach
@@ -212,7 +206,6 @@ public class RecordTests {
     @AfterAll
     public void cleanUp() {
         mqttHandler.disconnect();
-        testDatabaseUtil.deleteAll();
     }
 
     private void waitUntilMessageArrived() {

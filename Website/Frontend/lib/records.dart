@@ -7,8 +7,8 @@ class Records {
 
   factory Records.fromJson(Map<String, dynamic> json) {
     String notes = json["notes"];
-    String date = json["date"];
-    String doctorName = json["doctor_name"];
+    String date = json["timeslot"]["date_and_time"];
+    String doctorName = json["timeslot"]["dentist"]["name"];
     return Records(notes, date, doctorName);
   }
 }

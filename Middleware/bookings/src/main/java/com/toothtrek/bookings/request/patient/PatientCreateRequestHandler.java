@@ -1,7 +1,7 @@
 package com.toothtrek.bookings.request.patient;
 
 
-import org.eclipse.paho.mqttv5.common.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
@@ -56,6 +56,7 @@ public class PatientCreateRequestHandler implements RequestHandlerInterface {
         patient.setId(json.get("id").getAsString());
         patient.setName(json.get("name").getAsString());
         patient.setEmail(json.get("email").getAsString());
+        patient.setNotified(true);
 
         patientRepo.save(patient);
 

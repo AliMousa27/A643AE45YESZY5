@@ -1,23 +1,23 @@
-package com.toothtrek.bookings.request.office;
+package com.toothtrek.bookings.request.dentist;
 
-import org.eclipse.paho.mqttv5.common.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import com.toothtrek.bookings.entity.Office;
-import com.toothtrek.bookings.repository.OfficeRepository;
+import com.toothtrek.bookings.entity.Dentist;
+import com.toothtrek.bookings.repository.DentistRepository;
 import com.toothtrek.bookings.request.RequestHandlerInterface;
 import com.toothtrek.bookings.response.ResponseHandler;
 import com.toothtrek.bookings.response.ResponseStatus;
 
 @Configuration
-public class OfficeDeleteHandler implements RequestHandlerInterface {
+public class DentistDeleteRequestHandler implements RequestHandlerInterface {
 
     @Autowired
-    private OfficeRepository officeRepository;
+    private DentistRepository dentistRepository;
 
     @Autowired
     private ResponseHandler responseHandler;
@@ -40,17 +40,17 @@ public class OfficeDeleteHandler implements RequestHandlerInterface {
         }
 
         try {
-            // Get office by id
-            Long officeId = json.get("id").getAsLong();
-            Office office = officeRepository.findById(officeId).get();
+            // Get dentist by id
+            Long dentistId = json.get("id").getAsLong();
+            Dentist dentist = dentistRepository.findById(dentistId).get();
 
-            // Delete office
-            officeRepository.delete(office);
+            // Delete dentist
+            dentistRepository.delete(dentist);
 
             // Reply with success
             responseHandler.reply(ResponseStatus.SUCCESS, request);
         } catch (Exception e) {
-            responseHandler.reply(ResponseStatus.ERROR, "Office not found", request);
+            responseHandler.reply(ResponseStatus.ERROR, "Dentist not found", request);
         }
 
     }

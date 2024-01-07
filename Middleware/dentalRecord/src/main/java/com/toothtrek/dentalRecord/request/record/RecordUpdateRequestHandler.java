@@ -8,7 +8,7 @@ import com.google.gson.JsonSyntaxException;
 import java.sql.Timestamp;
 import java.util.Optional;
 
-import org.eclipse.paho.mqttv5.common.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 

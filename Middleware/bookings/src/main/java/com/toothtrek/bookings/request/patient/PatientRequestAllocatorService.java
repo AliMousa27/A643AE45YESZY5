@@ -3,7 +3,7 @@ package com.toothtrek.bookings.request.patient;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.paho.mqttv5.common.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,10 +22,10 @@ public class PatientRequestAllocatorService {
     @Autowired
     public PatientRequestAllocatorService(PatientCreateRequestHandler createHandler,
             PatientGetRequestHandler getHandler,
-            PatientSetRequestHandler setHandler) {
+            PatientUpdateRequestHandler updateHandler) {
         handlers.put(PatientRequestType.CREATE, createHandler);
         handlers.put(PatientRequestType.GET, getHandler);
-        handlers.put(PatientRequestType.SET, setHandler);
+        handlers.put(PatientRequestType.UPDATE, updateHandler);
     }
 
     /**
