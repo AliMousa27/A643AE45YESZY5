@@ -1,4 +1,3 @@
-
 <div align="center">
 
 <img src="https://cdn.pixabay.com/photo/2016/06/13/13/46/shark-1454245_1280.png" width="200" />
@@ -72,4 +71,4 @@ Our architecture is a service oriented architecture.
 <div align="center">
 ![Architecture diagram](https://git.chalmers.se/courses/dit355/2023/student-teams/dit356-2023-12/toothtrek/-/wikis/uploads/ca6c5e7b9c24f6ab56e04f0411428b00/image.png)
 </div>
-For more detailed information, refer to the [architecture wiki page](https://git.chalmers.se/courses/dit355/2023/student-teams/dit356-2023-12/toothtrek/-/wikis/Architecture/edit)
+For more detailed information, refer to the [architecture wiki page](https://git.chalmers.se/courses/dit355/2023/student-teams/dit356-2023-12/toothtrek/-/wikis/architecture)
