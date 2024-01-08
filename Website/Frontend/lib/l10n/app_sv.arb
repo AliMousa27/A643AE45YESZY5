@@ -19,6 +19,7 @@
 
     "dental_records_title": "Tandläkarjournal",
     "dental_records_notes": "Anteckningar: ",
+    "dental_records_no_records": "Din tandvårdsjournal är tom.",
 
     "my_bookings_address": "Adress",
     "my_bookings_time": "Tid",

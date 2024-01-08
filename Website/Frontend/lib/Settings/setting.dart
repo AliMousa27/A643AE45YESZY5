@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'setting_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'request.dart';
-import 'widget_util.dart';
+import '../Utils/request.dart';
+import '../Utils/widget_util.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({Key? key}) : super(key: key);

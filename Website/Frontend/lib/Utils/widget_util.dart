@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application/Bookings/bookings.dart';
 import 'package:flutter_application/Map/map.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_application/dental_records_page.dart';
-import 'package:flutter_application/initial_page.dart';
-import 'package:flutter_application/setting.dart';
+import 'package:flutter_application/Records/dental_records_page.dart';
+import 'package:flutter_application/Authentication/initial_page.dart';
+import 'package:flutter_application/Settings/setting.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class WidgetUtil {

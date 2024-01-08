@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application/request.dart';
+import 'package:flutter_application/Utils/request.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import '../widget_util.dart';
+import '../Utils/widget_util.dart';
 import 'dentist_apointment.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

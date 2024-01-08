@@ -69,6 +69,10 @@
     "@dental_records_notes": {
         "description": "The notes label on the dental records page"
     },
+    "dental_records_no_records": "Your dental record is empty.",
+    "@dental_records_no_records": {
+        "description": "Message in the case of empty records page"
+    },
 
 
     "my_bookings_address": "Address",

@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application/Map/dentist_apointment.dart';
-import 'package:flutter_application/request.dart';
-import 'package:flutter_application/widget_util.dart';
+import 'package:flutter_application/Utils/request.dart';
+import 'package:flutter_application/Utils/widget_util.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MyBookings extends StatefulWidget {

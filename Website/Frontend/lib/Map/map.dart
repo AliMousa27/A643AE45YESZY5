@@ -5,9 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_application/Map/bottom_sheet.dart';
 import 'package:flutter_application/Map/dentist_apointment.dart';
 import 'package:flutter_application/Map/side_drawer.dart';
-import 'package:flutter_application/widget_util.dart';
+import 'package:flutter_application/Utils/widget_util.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
-import '../request.dart';
+import '../Utils/request.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});

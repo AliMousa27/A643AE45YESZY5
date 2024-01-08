@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application/l10n/l10n.dart';
-import 'initial_page.dart';
-import 'color_schemes.g.dart';
+import 'Authentication/initial_page.dart';
+import 'Utils/color_schemes.g.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
+import 'Utils/firebase_options.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'Map/map.dart';
 import 'package:provider/provider.dart';
-import 'setting_provider.dart';
+import 'Settings/setting_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,24 +17,28 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  final settingProvider = SettingProvider();
+
   FirebaseAuth.instance.authStateChanges().listen((User? user) {
     if (user == null) {
-      runApp(const MyApp(home: InitialPage()));
+      runApp(
+          MyApp(home: const InitialPage(), settingProvider: settingProvider));
     } else {
-      runApp(const MyApp(home: MapPage()));
+      runApp(MyApp(home: const MapPage(), settingProvider: settingProvider));
     }
   });
 }
 
 class MyApp extends StatelessWidget {
   final Widget home;
+  final SettingProvider settingProvider;
 
-  const MyApp({super.key, required this.home});
+  const MyApp({super.key, required this.home, required this.settingProvider});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => SettingProvider(),
+    return ChangeNotifierProvider.value(
+      value: settingProvider,
       child: Consumer<SettingProvider>(
         builder: (context, settingProvider, child) {
           return MaterialApp(
