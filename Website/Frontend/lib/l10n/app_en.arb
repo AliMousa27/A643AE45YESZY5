@@ -4,7 +4,6 @@
         "description": "The current display language"
     },
 
-    
 
     "initial_logInButton": "Log in",
     "@initial_logInButton": {
@@ -70,6 +69,8 @@
     "@dental_records_notes": {
         "description": "The notes label on the dental records page"
     },
+
+
     "my_bookings_address": "Address",
     "@my_bookings_address": {
         "description": "The address label of a booking"
@@ -87,6 +88,8 @@
     "@my_bookings_bookingid": {
         "description": "The bookingid label of a booking"
     },
+
+
     "navbar_logout": "Logout",
     "@navbar_logout": {
         "description": "The logout label"
@@ -107,5 +110,4 @@
     "@navbar_dental_records": {
         "description": "The Dental Records label"
     }
-
 }
