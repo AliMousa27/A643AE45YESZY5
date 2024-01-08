@@ -82,7 +82,8 @@ test-backend:
     - cd Website/Backend
     - export TEST=true
     - mosquitto -d
-    - npm test 
+    - npm install
+    - npm run ci-test 
 
 
 # Dentist UI
