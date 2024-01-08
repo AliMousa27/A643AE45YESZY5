@@ -62,15 +62,15 @@ class WidgetUtil {
       builder: (BuildContext context) {
         dialogContext = context;
 
-        return const Dialog(
+        return Dialog(
           child: Padding(
-            padding: EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(20.0),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                CircularProgressIndicator(),
-                SizedBox(width: 30),
-                Text("Processing..."),
+                const CircularProgressIndicator(),
+                const SizedBox(width: 30),
+                Text(AppLocalizations.of(context)!.processing_request),
               ],
             ),
           ),

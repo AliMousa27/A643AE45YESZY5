@@ -226,10 +226,10 @@ class _MyBookingsState extends State<MyBookings> {
       String json = jsonEncode(payload);
       WidgetUtil.proccessARequest(
           context,
-          "Cancelled apointment",
-          "Your booking was successfully cancelled",
-          "Cancellation failed",
-          "Your booking was not cancelled. Try again later",
+          AppLocalizations.of(context)!.my_bookings_success_title,
+          AppLocalizations.of(context)!.my_bookings_success_subtitle,
+          AppLocalizations.of(context)!.my_bookings_failure_title,
+          AppLocalizations.of(context)!.my_bookings_failure_subtitle,
           (json) => Request.cancelBookingRequest(json),
           json);
     }
