@@ -64,8 +64,10 @@ class CustomExpansionTileState extends State<CustomExpansionTile> {
       String json = jsonEncode(payload);
       WidgetUtil.proccessARequest(
           context,
-          "Booking successful",
-          "Your booking was successfully completed",
+          AppLocalizations.of(context)!.map_success_title,
+          AppLocalizations.of(context)!.map_success_subtitle,
+          AppLocalizations.of(context)!.map_failure_title,
+          AppLocalizations.of(context)!.map_failure_subtitle,
           (json) => Request.sendBookingRequest(json),
           json);
     }

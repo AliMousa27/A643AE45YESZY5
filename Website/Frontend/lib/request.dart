@@ -19,6 +19,8 @@ class Request {
           .then((response) {
         Map<String, dynamic> data = jsonDecode(response.body);
         return data["status"] == "success";
+      }).catchError((onError) {
+        return false;
       });
     } catch (error) {
       _logger.warning("caught error which is $error");
@@ -37,6 +39,8 @@ class Request {
           headers: {"Content-Type": "application/json"}).then((response) {
         Map<String, dynamic> data = jsonDecode(response.body);
         return data["status"] == "success";
+      }).catchError((onError) {
+        return false;
       });
     } catch (error) {
       return false;
