@@ -12,8 +12,6 @@ const mqttClient = mqtt.connect(connectUrl, {
     clientId,
     clean: true,
     connectTimeout: 4000,
-    username: 'emqx',
-    password: 'public',
     reconnectPeriod: 1000,
 })
 mqttClient.on('connect', () => {
@@ -66,30 +64,10 @@ mqttClient.handleRequest = async function(req, res, requestTopic, uid,body) {
             return res.status(400).send(parsedResponse);
         }
 
-        /*
-        this.publish(requestTopic, publishJson);
-        console.log("the publish json is: " + publishJson)
-        console.log("published to topic " + requestTopic)
-        const timeout = setTimeout(() => {
-            this.unsubscribe(responseTopic);
-            return res.status(500).json({ error: 'Request timed out' });
-        }, 50000);//CHANGE BACK TO 10 SEC
-
-        this.once('message', (topic, message) => {
-            if (topic === responseTopic) {
-                clearTimeout(timeout);
-                this.unsubscribe(responseTopic);
-                return res.json(JSON.parse(message.toString()));
-
-            }
-        });*/
-
     } catch (error) {
         console.error('Error:', error);
         return res.status(500).send('Internal Server Error');
     }
 };
-
-module.exports = mqttClient;
 
 module.exports = mqttClient;
