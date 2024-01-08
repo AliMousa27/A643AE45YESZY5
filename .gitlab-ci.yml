@@ -91,7 +91,7 @@ test-backend:
 build-dentistUI:
   stage: build
 
-  image: node:18
+  image: node:18-alpine
   tags:
     - docker
 
@@ -103,13 +103,17 @@ test-dentistUI:
   stage: test
   needs: ["build-dentistUI"]
 
-  image: node:18
+  image: node:18-alpine
   tags:
     - docker
 
   script:
+    - apk add mosquitto
     - cd DentistUI
-    - npm test 
+    - export TEST=true
+    - mosquitto -d
+    - npm install
+    - npm run ci-test
 
   # Allow failure til we have tests
   allow_failure: true

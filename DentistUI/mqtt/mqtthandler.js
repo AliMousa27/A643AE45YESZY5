@@ -1,4 +1,11 @@
 require('dotenv').config();
+
+if (process.env.TEST === 'true') {
+    console.log('Environment variable TEST is set to true. Entering MQTT mock Service...');
+    module.exports = require('../tests/mqttMock.js');
+    return;
+}
+
 const mqtt = require('mqtt');
 const { v4: uuidv4 } = require('uuid');
 const protocol = 'tcp'

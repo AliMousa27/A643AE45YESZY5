@@ -37,9 +37,9 @@ mqttClient.on('message', (topic, message) => {
     }
 });
 
-mqttClient.handleRequest = async function(req, res, requestTopic, uid,body) {
+mqttClient.handleRequest = async function(req, res, requestTopic, uid, body) {
     try {
-        const responseTopic = `${requestTopic}${uid}`;
+        const responseTopic = `${requestTopic}/${uid}`;
         this.subscribe(responseTopic);
         var publishJson;
         if(body){

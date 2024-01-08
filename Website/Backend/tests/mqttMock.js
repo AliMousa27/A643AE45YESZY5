@@ -19,11 +19,10 @@ const mqttClient = mqtt.connect(connectUrl, {
     reconnectPeriod: 1000,
 })
 
-const topicToSubscribe = 'toothtrek/#'
-
 mqttClient.on('connect', () => {
     console.log(`Connected to mqtt server with url ${connectUrl}`);
     
+    const topicToSubscribe = 'toothtrek/#';
     mqttClient.subscribe(topicToSubscribe, (err) => {
         if (err) {
             console.error('Error subscribing to topic:', err);
@@ -33,9 +32,7 @@ mqttClient.on('connect', () => {
 
 mqttClient.on('message', (topic, message) => {
     const topics = topic.split('/');
-    // The following should be replaced after topic refactoring
-    // if (topics.length == 2) {
-    if (topics.length == 3 || (topics.length == 4 && topics[1] == 'booking_service')) {
+    if (topics.length == 2) {
         const parsedMessage = JSON.parse(message);
         const responseTopic = parsedMessage.responseTopic;
         const responseMessage = JSON.stringify({ "status": "success" });
