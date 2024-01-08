@@ -71,7 +71,7 @@ router.post('/', async (req, res) => {
         mqttClient.unsubscribe(responseTopic);
 
         const parsedResponse = JSON.parse(response.toString());
-        if (response.status === 'success') {
+        if (parsedResponse.status === 'success') {
             return res.status(201).send(parsedResponse);
         }
         else {
@@ -79,7 +79,7 @@ router.post('/', async (req, res) => {
         }
 
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error: in catch', error);
         return next(error);
     }
 });
@@ -121,7 +121,7 @@ router.delete('/:timeslotId', async (req, res) => {
         mqttClient.unsubscribe(responseTopic);
 
         const parsedResponse = JSON.parse(response.toString());
-        if (response.status === 'success') {
+        if (parsedResponse.status === 'success') {
             return res.status(200).send(parsedResponse);
         }
         else {
