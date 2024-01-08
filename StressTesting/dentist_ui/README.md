@@ -6,7 +6,7 @@ This is the ```locustfile``` script for running the stress test for the followin
 
 ## Setup
 
-0. Run the Express server for the website backend. You can find the instructions to do so [here](../../Website/Backend/README.md).
+0. Run the Express server for the dentist ui backend. You can find the instructions to do so [here](../../DentistUI/README.md).
 1. Open a terminal and navigate to ```cd /../StressTesting/dentist_ui/```
 2. Run ```locust``` to start the Locust server.
 3. Open a browser and go to ```http://localhost:8089/```
