@@ -49,8 +49,10 @@ class WidgetUtil {
 //used to book and cancel apointment to load and await a response from the server
   static void proccessARequest(
       BuildContext context,
-      String titleMessage,
-      String subtitleMessage,
+      String successTitleMessage,
+      String successSubtitleMessage,
+      String failureTitleMessage,
+      String failureSubtitleMessage,
       Future<bool> Function(String json) requestFunction,
       String json) async {
     late BuildContext dialogContext;
@@ -84,8 +86,8 @@ class WidgetUtil {
         context: context,
         builder: (BuildContext context) {
           return showSuccessOrFailure(
-              "Booking successful",
-              "Your booking was successfully completed",
+              successTitleMessage,
+              successSubtitleMessage,
               const Icon(Icons.check, color: Colors.green),
               success,
               context);
@@ -96,8 +98,8 @@ class WidgetUtil {
         context: context,
         builder: (BuildContext context) {
           return showSuccessOrFailure(
-              "Booking failed",
-              "Your booking was not completed, please try again later",
+              failureTitleMessage,
+              failureSubtitleMessage,
               const Icon(Icons.error, color: Colors.red),
               success,
               context);

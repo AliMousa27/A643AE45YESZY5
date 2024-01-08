@@ -66,6 +66,8 @@ class CustomExpansionTileState extends State<CustomExpansionTile> {
           context,
           "Booking successful",
           "Your booking was successfully completed",
+          "Booking failed",
+          "Your booking was not completed. Try again later",
           (json) => Request.sendBookingRequest(json),
           json);
     }

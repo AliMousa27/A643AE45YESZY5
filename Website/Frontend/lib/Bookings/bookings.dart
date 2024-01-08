@@ -228,6 +228,8 @@ class _MyBookingsState extends State<MyBookings> {
           context,
           "Cancelled apointment",
           "Your booking was successfully cancelled",
+          "Cancellation failed",
+          "Your booking was not cancelled. Try again later",
           (json) => Request.cancelBookingRequest(json),
           json);
     }
