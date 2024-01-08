@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application/records.dart';
-import 'package:flutter_application/widget_util.dart';
+import 'package:flutter_application/Records/records.dart';
+import 'package:flutter_application/Utils/widget_util.dart';
 import 'package:provider/provider.dart';
-import 'setting_provider.dart';
+import '../Settings/setting_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'request.dart';
+import '../Utils/request.dart';
 
 class DentalRecordsPage extends StatefulWidget {
   const DentalRecordsPage({Key? key}) : super(key: key);
@@ -34,7 +34,6 @@ class DentalRecordsPageState extends State<DentalRecordsPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<Records> records = [];
     var screenWidth = MediaQuery.of(context).size.width;
     return Consumer<SettingProvider>(
         builder: (context, settingProvider, child) {
@@ -80,6 +79,10 @@ class DentalRecordsPageState extends State<DentalRecordsPage> {
                     const SizedBox(
                       height: 20,
                     ),
+                    if (records.isEmpty)
+                      Text(
+                        AppLocalizations.of(context)!.dental_records_no_records,
+                      ),
                     Expanded(
                         child: SingleChildScrollView(
                       child: Column(

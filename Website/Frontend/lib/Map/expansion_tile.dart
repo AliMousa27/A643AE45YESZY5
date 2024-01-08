@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application/request.dart';
+import 'package:flutter_application/Utils/request.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import '../widget_util.dart';
+import '../Utils/widget_util.dart';
 import 'dentist_apointment.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -64,8 +64,10 @@ class CustomExpansionTileState extends State<CustomExpansionTile> {
       String json = jsonEncode(payload);
       WidgetUtil.proccessARequest(
           context,
-          "Booking successful",
-          "Your booking was successfully completed",
+          AppLocalizations.of(context)!.map_success_title,
+          AppLocalizations.of(context)!.map_success_subtitle,
+          AppLocalizations.of(context)!.map_failure_title,
+          AppLocalizations.of(context)!.map_failure_subtitle,
           (json) => Request.sendBookingRequest(json),
           json);
     }

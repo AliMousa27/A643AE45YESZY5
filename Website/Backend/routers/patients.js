@@ -8,7 +8,7 @@ var histogram = require('./metrics').histogram;
 router.post('/patients/:id', (req, res) => {
   try {
     const start = new Date();
-    mqttClient.handleRequest(req, res, 'toothtrek/booking_service/patient/create/', req.params.id, req.body);
+    mqttClient.handleRequest(req, res, 'toothtrek/patient/create/', req.params.id, req.body);
     counter.inc({ Entity: 'patients', method: 'post', statusCode: 200 });
     const end = new Date();
     histogram.observe((end - start) / 1000);
@@ -22,7 +22,7 @@ router.post('/patients/:id', (req, res) => {
 router.patch('/patients/:id', (req, res) => {
   try {
     const start = new Date();
-    mqttClient.handleRequest(req, res, 'toothtrek/booking_service/patient/set/', req.params.id, req.body);
+    mqttClient.handleRequest(req, res, 'toothtrek/patient/update/', req.params.id, req.body);
     counter.inc({ Entity: 'patients', method: 'patch', statusCode: 200 });
     const end = new Date();
     histogram.observe((end - start) / 1000);
@@ -39,7 +39,7 @@ router.get('/patients/:id', (req, res) => {
     var body = {
       "id": req.params.id
     }
-    mqttClient.handleRequest(req, res, 'toothtrek/booking_service/patient/get/', req.params.id, body);
+    mqttClient.handleRequest(req, res, 'toothtrek/patient/get/', req.params.id, body);
     counter.inc({ Entity: 'patients', method: 'get', statusCode: 200 });
     const end = new Date();
     histogram.observe((end - start) / 1000);

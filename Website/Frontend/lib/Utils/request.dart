@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_application/Map/dentist_apointment.dart';
-import 'package:flutter_application/records.dart';
+import 'package:flutter_application/Records/records.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -19,6 +19,8 @@ class Request {
           .then((response) {
         Map<String, dynamic> data = jsonDecode(response.body);
         return data["status"] == "success";
+      }).catchError((onError) {
+        return false;
       });
     } catch (error) {
       _logger.warning("caught error which is $error");
@@ -37,6 +39,8 @@ class Request {
           headers: {"Content-Type": "application/json"}).then((response) {
         Map<String, dynamic> data = jsonDecode(response.body);
         return data["status"] == "success";
+      }).catchError((onError) {
+        return false;
       });
     } catch (error) {
       return false;

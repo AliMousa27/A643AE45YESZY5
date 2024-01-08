@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application/Map/dentist_apointment.dart';
-import 'package:flutter_application/request.dart';
-import 'package:flutter_application/widget_util.dart';
+import 'package:flutter_application/Utils/request.dart';
+import 'package:flutter_application/Utils/widget_util.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MyBookings extends StatefulWidget {
@@ -226,8 +226,10 @@ class _MyBookingsState extends State<MyBookings> {
       String json = jsonEncode(payload);
       WidgetUtil.proccessARequest(
           context,
-          "Cancelled apointment",
-          "Your booking was successfully cancelled",
+          AppLocalizations.of(context)!.my_bookings_success_title,
+          AppLocalizations.of(context)!.my_bookings_success_subtitle,
+          AppLocalizations.of(context)!.my_bookings_failure_title,
+          AppLocalizations.of(context)!.my_bookings_failure_subtitle,
           (json) => Request.cancelBookingRequest(json),
           json);
     }
