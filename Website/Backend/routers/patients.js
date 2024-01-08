@@ -22,7 +22,7 @@ router.post('/patients/:id', (req, res) => {
 router.patch('/patients/:id', (req, res) => {
   try {
     const start = new Date();
-    mqttClient.handleRequest(req, res, 'toothtrek/patient/set/', req.params.id, req.body);
+    mqttClient.handleRequest(req, res, 'toothtrek/patient/update/', req.params.id, req.body);
     counter.inc({ Entity: 'patients', method: 'patch', statusCode: 200 });
     const end = new Date();
     histogram.observe((end - start) / 1000);
