@@ -1,5 +1,6 @@
 package com.toothtrek.bookings.repository;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,5 +13,5 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     List<Booking> findByPatient(Patient patient);
 
-    List<Booking> findByPatientAndState(Patient patient, Booking.State state);
+    List<Booking> findByPatientAndStateIn(Patient patient, Collection<Booking.State> states);
 }

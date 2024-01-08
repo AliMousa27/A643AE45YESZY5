@@ -1,6 +1,7 @@
 package com.toothtrek.bookings.request.booking;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -56,9 +57,8 @@ public class BookingGetRequestHandler implements RequestHandlerInterface {
             return;
         }
 
-        List<Booking> bookings = bookingRepository.findByPatientAndState(patient, Booking.State.booked);
-
-        
+        List<Booking.State> states = Arrays.asList(Booking.State.booked, Booking.State.confirmed);
+        List<Booking> bookings = bookingRepository.findByPatientAndStateIn(patient, states);
 
         // Create JSON response
         Gson gson = new GsonBuilder()
