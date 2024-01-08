@@ -1,14 +1,6 @@
 import datetime
 import random
 from locust import HttpUser, task
-from matplotlib.pylab import f, rand
-
-'''class Patient(HttpUser):
-    @task
-    def hello_world(self):
-        self.client.get("/hello")
-        self.client.get("/world")'''
-        
 
 class Dentist(HttpUser):
     def on_start(self):
