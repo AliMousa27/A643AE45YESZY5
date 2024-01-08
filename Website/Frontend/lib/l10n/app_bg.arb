@@ -4,12 +4,11 @@
     "initial_logInButton": "Вход",
     "initial_signUpButton": "Регистрация",
 
-
     "authentication_confirmButton": "Потвърди",
     "authentication_enterEmail": "Въведете имейл",
     "authentication_enterPassword": "Въведете парола",
     "authentication_confirmPassword": "Потвърдете паролата",
-    "authentication_enterName": "Въведи име",
+    "authentication_enterName": "Въведете име",
 
     "dentist_offices": "Зъболекарски кабинети: ",
 
@@ -18,16 +17,18 @@
     "setting_darkMode": "Тъмен режим",
     "setting_language": "Език",
 
-    "dental_records_title": "зъболекарско досие",
+    "dental_records_title": "Зъболекарско досие",
     "dental_records_notes": "Бележки: ",
+
     "my_bookings_address": "Адрес",
-    "my_bookings_time": "време",
+    "my_bookings_time": "Час",
     "my_bookings_cancel":"Отказ",
-    "my_bookings_bookingid": "ID на резервацията",
-    "navbar_logout" : "Излез от профила си",
+    "my_bookings_bookingid": "Номер на резервация",
+
+    "navbar_logout" : "Изход",
     "navbar_settings" : "Настройки",
     "navbar_map" : "Карта",
     "navbar_my_bookings" : "Моите резервации",
-    "navbar_dental_records": "Стоматологични досиета"
+    "navbar_dental_records": "Зъболекарски досиета"
 
 }

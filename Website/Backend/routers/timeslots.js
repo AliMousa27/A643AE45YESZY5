@@ -9,7 +9,7 @@ var histogram = require('./metrics').histogram;
 router.get('/offices/:id', (req, res) => {
   try {
     const start = new Date();
-    mqttClient.handleRequest(req, res, 'toothtrek/booking_service/timeslot/get', '/' + req.params.id);
+    mqttClient.handleRequest(req, res, 'toothtrek/timeslot/get', '/' + req.params.id);
     counter.inc({ Entity: 'timeslots', method: 'get', statusCode: 200 });
     const end = new Date();
     histogram.observe((end - start) / 1000);

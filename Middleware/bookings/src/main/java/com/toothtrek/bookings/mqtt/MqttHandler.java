@@ -89,6 +89,7 @@ public class MqttHandler {
             MqttConnectOptions connectionOptions = new MqttConnectOptions();
             connectionOptions.setCleanSession(cleanStart);
             connectionOptions.setAutomaticReconnect(automaticReconnect);
+            connectionOptions.setMaxInflight(10000);
 
             // Connection
             IMqttToken token = this.client.connect(connectionOptions);

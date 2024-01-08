@@ -30,7 +30,7 @@ router.patch('/:officeId', async (req, res) => {
         return res.status(400).send('invalid parameters: officeId should be a number');
     }
 
-    const responseTopic = 'toothtrek/booking_service/office/update/' + uuidv4();
+    const responseTopic = 'toothtrek/office/update/' + uuidv4();
 
     var office = {
         id: req.params.officeId,
@@ -55,7 +55,7 @@ router.patch('/:officeId', async (req, res) => {
 
 
     try {
-        let topic = 'toothtrek/booking_service/office/update';
+        let topic = 'toothtrek/office/update';
 
         mqttClient.subscribe(responseTopic);
         mqttClient.publish(topic, JSON.stringify(office));
@@ -99,7 +99,7 @@ router.get('/:officeId', async (req, res) => {
         return res.status(400).send('invalid parameters: officeId should be a number');
     }
 
-    const responseTopic = 'toothtrek/booking_service/office/get/' + uuidv4();
+    const responseTopic = 'toothtrek/office/get/' + uuidv4();
 
     var office = {
         id: req.params.officeId,
@@ -107,7 +107,7 @@ router.get('/:officeId', async (req, res) => {
     };
 
     try {
-        let topic = 'toothtrek/booking_service/office/get';
+        let topic = 'toothtrek/office/get';
 
         mqttClient.subscribe(responseTopic);
         mqttClient.publish(topic, JSON.stringify(office));
@@ -143,14 +143,14 @@ router.get('/:officeId', async (req, res) => {
 
 router.get('/', async (req, res) => {
 
-    const responseTopic = 'toothtrek/booking_service/office/get/' + uuidv4();
+    const responseTopic = 'toothtrek/office/get/' + uuidv4();
 
     var office = {
         responseTopic: responseTopic
     };
 
     try {
-        let topic = 'toothtrek/booking_service/office/get';
+        let topic = 'toothtrek/office/get';
 
         mqttClient.subscribe(responseTopic);
         mqttClient.publish(topic, JSON.stringify(office));
@@ -194,7 +194,7 @@ router.post('/', async (req, res) => {
         return res.status(400).send('invalid parameters: longitude and latitude should be a number');
     }
 
-    const responseTopic = 'toothtrek/booking_service/office/create/' + uuidv4();
+    const responseTopic = 'toothtrek/office/create/' + uuidv4();
 
     var office = {
         name: req.body.name,
@@ -205,7 +205,7 @@ router.post('/', async (req, res) => {
     };
 
     try {
-        let topic = 'toothtrek/booking_service/office/create';
+        let topic = 'toothtrek/office/create';
 
         mqttClient.subscribe(responseTopic);
         mqttClient.publish(topic, JSON.stringify(office));
@@ -249,7 +249,7 @@ router.delete('/:officeId', async (req, res) => {
         return res.status(400).send('invalid parameters: officeId should be a number');
     }
 
-    const responseTopic = 'toothtrek/booking_service/office/delete/' + uuidv4();
+    const responseTopic = 'toothtrek/office/delete/' + uuidv4();
 
     var office = {
         id: req.params.officeId,
@@ -257,7 +257,7 @@ router.delete('/:officeId', async (req, res) => {
     };
 
     try {
-        let topic = 'toothtrek/booking_service/office/delete';
+        let topic = 'toothtrek/office/delete';
 
         mqttClient.subscribe(responseTopic);
         mqttClient.publish(topic, JSON.stringify(office));

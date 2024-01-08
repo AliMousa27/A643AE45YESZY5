@@ -41,7 +41,7 @@ router.post('/', async (req, res) => {
         return res.status(400).send('Bad request (date should be in the future)');
     }
 
-    const topic = 'toothtrek/booking_service/timeslot/create';
+    const topic = 'toothtrek/timeslot/create';
     const responseTopic = topic + '/' + uuidv4();
 
     var timeslot = {
@@ -93,7 +93,7 @@ router.delete('/:timeslotId', async (req, res) => {
         return res.status(400).send('Bad request (invalid parameters)');
     }
 
-    const topic = 'toothtrek/booking_service/timeslot/cancel';
+    const topic = 'toothtrek/timeslot/cancel';
     const responseTopic = topic + '/' + uuidv4();
 
     var timeslot = {

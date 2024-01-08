@@ -17,8 +17,6 @@ const mqttClient = mqtt.connect(connectUrl, {
     clientId,
     clean: true,
     connectTimeout: 4000,
-    username: clientId,
-    password: 'public',
     reconnectPeriod: 1000,
 })
 
@@ -86,4 +84,4 @@ process.on('SIGINT', () => {
     console.log('Closed MQTT connection');
 });
 
-module. Exports = mqttClient;
+module.exports = mqttClient;

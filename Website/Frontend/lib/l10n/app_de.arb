@@ -3,7 +3,6 @@
 
     "initial_logInButton": "Anmelden",
     "initial_signUpButton": "Registrieren",
-
     
     "authentication_confirmButton": "Bestätigen",
     "authentication_enterEmail": "E-Mail-Adresse eingeben",
@@ -20,14 +19,15 @@
 
     "dental_records_title": "Vorherige Termine",
     "dental_records_notes": "Anmerkungen: ",
+
     "my_bookings_address": "Adresse",
-        "my_bookings_time": "Zeit",
-    "my_bookings_cancel":"Termin",
+    "my_bookings_time": "Zeit",
+    "my_bookings_cancel":"Stornieren",
     "my_bookings_bookingid": "Buchungs-ID",
+
     "navbar_logout" : "Ausloggen",
     "navbar_settings" : "Einstellungen",
     "navbar_map" : "Karte",
     "navbar_my_bookings" : "Meine Buchungen",
     "navbar_dental_records": "Zahnarztunterlagen"
-
 }
