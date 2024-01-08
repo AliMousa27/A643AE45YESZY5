@@ -79,7 +79,8 @@ router.post('/', async (req, res) => {
         }
 
     } catch (error) {
-        return res.status(500).send(error.message);
+        console.error('Error: in catch', error);
+        return next(error);
     }
 });
 

@@ -30,8 +30,7 @@ router.patch('/:dentistId', async (req, res) => {
         return res.status(400).send('invalid parameters: dentistId should be a number');
     }
 
-    let topic = 'toothtrek/dentist/update/';
-    const responseTopic = topic + uuidv4();
+    const responseTopic = 'toothtrek/dentist/update/' + uuidv4();
 
     var dentist = {
         id: req.params.dentistId,
@@ -48,6 +47,8 @@ router.patch('/:dentistId', async (req, res) => {
 
 
     try {
+        let topic = 'toothtrek/dentist/update/';
+
         mqttClient.subscribe(responseTopic);
         mqttClient.publish(topic, JSON.stringify(dentist));
 
@@ -90,8 +91,7 @@ router.get('/:dentistId', async (req, res) => {
         return res.status(400).send('invalid parameters: dentistId should be a number');
     }
 
-    let topic = 'toothtrek/dentist/get/';
-    const responseTopic = topic + uuidv4();
+    const responseTopic = 'toothtrek/dentist/get/' + uuidv4();
 
     var dentist = {
         id: req.params.dentistId,
@@ -99,6 +99,8 @@ router.get('/:dentistId', async (req, res) => {
     };
 
     try {
+        let topic = 'toothtrek/dentist/get/';
+
         mqttClient.subscribe(responseTopic);
         mqttClient.publish(topic, JSON.stringify(dentist));
 
@@ -133,14 +135,15 @@ router.get('/:dentistId', async (req, res) => {
 
 router.get('/', async (req, res) => {
 
-    let topic = 'toothtrek/dentist/get/';
-    const responseTopic = topic + uuidv4();
+    const responseTopic = 'toothtrek/dentist/get/' + uuidv4();
 
     var dentist = {
         responseTopic: responseTopic
     };
 
     try {
+        let topic = 'toothtrek/dentist/get/';
+
         mqttClient.subscribe(responseTopic);
         mqttClient.publish(topic, JSON.stringify(dentist));
 
@@ -179,8 +182,7 @@ router.post('/', async (req, res) => {
         return res.status(400).send('missing parameters' + JSON.stringify(req.body));
     }
 
-    let topic = 'toothtrek/dentist/create/';
-    const responseTopic = topic + uuidv4();
+    const responseTopic = 'toothtrek/dentist/create/' + uuidv4();
 
     var dentist = {
         name: req.body.name,
@@ -192,6 +194,7 @@ router.post('/', async (req, res) => {
     }
 
     try {
+        let topic = 'toothtrek/dentist/create/';
 
         mqttClient.subscribe(responseTopic);
         mqttClient.publish(topic, JSON.stringify(dentist));
@@ -235,8 +238,7 @@ router.delete('/:dentistId', async (req, res) => {
         return res.status(400).send('invalid parameters: dentistId should be a number');
     }
 
-    let topic = 'toothtrek/dentist/delete/';
-    const responseTopic = topic + uuidv4();
+    const responseTopic = 'toothtrek/dentist/delete/' + uuidv4();
 
     var dentist = {
         id: req.params.dentistId,
@@ -244,6 +246,8 @@ router.delete('/:dentistId', async (req, res) => {
     };
 
     try {
+        let topic = 'toothtrek/dentist/delete/';
+
         mqttClient.subscribe(responseTopic);
         mqttClient.publish(topic, JSON.stringify(dentist));
 
