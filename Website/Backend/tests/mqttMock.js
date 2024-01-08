@@ -32,7 +32,9 @@ mqttClient.on('connect', () => {
 
 mqttClient.on('message', (topic, message) => {
     const topics = topic.split('/');
-    if (topics.length == 2) {
+    console.log(topics);
+    console.log(topics.length);
+    if (topics.length == 3) {
         const parsedMessage = JSON.parse(message);
         const responseTopic = parsedMessage.responseTopic;
         const responseMessage = JSON.stringify({ "status": "success" });
@@ -59,7 +61,7 @@ mqttClient.on('message', (topic, message) => {
 
 mqttClient.handleRequest = async function(req, res, requestTopic, uid,body) {
     try {
-        const responseTopic = `${requestTopic}${uid}`;
+        const responseTopic = `${requestTopic}/${uid}`;
         this.subscribe(responseTopic);
         var publishJson;
         if(body){

@@ -115,8 +115,6 @@ test-dentistUI:
     - npm install
     - npm run ci-test
 
-  # Allow failure til we have tests
-  allow_failure: true
 
 # --- Java Middleware ---
 

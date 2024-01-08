@@ -26,6 +26,10 @@ app.use('/api/bookings', bookingsController);
 app.use('/api/offices', officesController);
 app.use('/api/dentists', dentistsController);
 
+app.get('/api', function (req, res) {
+    res.json({ 'message': 'Message from the DentistUI!' });
+});
+
 // Catch all non-error handler for api (i.e., 404 Not Found)
 app.use('/api/*', function (req, res) {
     res.status(404).json({ 'message': 'Not Found' });

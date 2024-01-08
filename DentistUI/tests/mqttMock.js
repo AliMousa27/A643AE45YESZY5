@@ -42,7 +42,7 @@ mqttClient.on('error', (err) => {
 
 mqttClient.on('message', (topic, message) => {
     const topics = topic.split('/');
-    if (topics.length == 2) {
+    if (topics.length == 3) {
         const parsedMessage = JSON.parse(message);
         const responseTopic = parsedMessage.responseTopic;
         const responseMessage = JSON.stringify({ "status": "success" });
