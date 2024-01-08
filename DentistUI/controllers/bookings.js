@@ -23,14 +23,14 @@ mqttClient.on('message', (topic, message) => {
     }
 });
 
-router.patch('/:timeslotId', async (req, res) => {
+router.patch('/:bookingId', async (req, res) => {
 
-    if (!req.params.timeslotId || !req.body.state) {
+    if (!req.params.bookingId || !req.body.state) {
         return res.status(400).send('missing parameters');
     }
 
-    if (isNaN(req.params.timeslotId)) {
-        return res.status(400).send('invalid parameters: timeslotId should be a number');
+    if (isNaN(req.params.bookingId)) {
+        return res.status(400).send('invalid parameters: bookingId should be a number');
     }
 
     if (!STATES.includes(req.body.state.toLowerCase())) {
@@ -40,8 +40,8 @@ router.patch('/:timeslotId', async (req, res) => {
     const topic = 'toothtrek/booking/state/';
     const responseTopic = topic + uuidv4();
 
-    var timeslot = {
-        id: req.params.timeslotId,
+    var booking = {
+        bookingId: req.params.bookingId,
         state: req.body.state.toLowerCase(),
         responseTopic: responseTopic
     };
@@ -49,7 +49,7 @@ router.patch('/:timeslotId', async (req, res) => {
     try {
 
         mqttClient.subscribe(responseTopic);
-        mqttClient.publish(topic, JSON.stringify(timeslot));
+        mqttClient.publish(topic, JSON.stringify(booking));
 
         // Create a new Promise for the request
         const response = await new Promise((resolve, reject) => {
