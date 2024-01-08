@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application/authentication.dart';
-import 'package:flutter_application/request.dart';
+import 'package:flutter_application/Authentication/authentication.dart';
+import 'package:flutter_application/Utils/request.dart';
 import 'initial_pages_background.dart';
-import 'widget_util.dart';
+import '../Utils/widget_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'Map/map.dart';
+import '../Map/map.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class InitialPage extends StatelessWidget {

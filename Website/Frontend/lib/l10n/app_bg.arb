@@ -19,6 +19,7 @@
 
     "dental_records_title": "Зъболекарско досие",
     "dental_records_notes": "Бележки: ",
+    "dental_records_no_records": "Нямате зъболекарски досиета.",
 
     "my_bookings_address": "Адрес",
     "my_bookings_time": "Час",

@@ -19,6 +19,7 @@
 
     "dental_records_title": "Vorherige Termine",
     "dental_records_notes": "Anmerkungen: ",
+    "dental_records_no_records": "Ihre Zahnakte ist leer.",
 
     "my_bookings_address": "Adresse",
     "my_bookings_time": "Zeit",
