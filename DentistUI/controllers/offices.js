@@ -228,7 +228,7 @@ router.post('/', async (req, res) => {
         // Handle the response from the broker
         const parsedResponse = JSON.parse(response);
         if (parsedResponse.status === 'success') {
-            return res.status(200).send(parsedResponse);
+            return res.status(201).send(parsedResponse);
         }
         else {
             return res.status(400).send(parsedResponse);
