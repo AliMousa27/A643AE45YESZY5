@@ -41,8 +41,8 @@ router.post('/', async (req, res) => {
         return res.status(400).send('Bad request (date should be in the future)');
     }
 
-    const topic = 'toothtrek/timeslot/create/';
-    const responseTopic = topic + uuidv4();
+    const topic = 'toothtrek/timeslot/create';
+    const responseTopic = topic + '/' + uuidv4();
 
     var timeslot = {
         dentistId: req.body.dentistId,
@@ -71,7 +71,7 @@ router.post('/', async (req, res) => {
         mqttClient.unsubscribe(responseTopic);
 
         const parsedResponse = JSON.parse(response.toString());
-        if (response.status === 'success') {
+        if (parsedResponse.status === 'success') {
             return res.status(201).send(parsedResponse);
         }
         else {
@@ -93,8 +93,8 @@ router.delete('/:timeslotId', async (req, res) => {
         return res.status(400).send('Bad request (invalid parameters)');
     }
 
-    const topic = 'toothtrek/timeslot/cancel/';
-    const responseTopic = topic + uuidv4();
+    const topic = 'toothtrek/timeslot/cancel';
+    const responseTopic = topic + '/' + uuidv4();
 
     var timeslot = {
         timeslotId: timeslotId,
@@ -121,7 +121,7 @@ router.delete('/:timeslotId', async (req, res) => {
         mqttClient.unsubscribe(responseTopic);
 
         const parsedResponse = JSON.parse(response.toString());
-        if (response.status === 'success') {
+        if (parsedResponse.status === 'success') {
             return res.status(200).send(parsedResponse);
         }
         else {

@@ -55,7 +55,7 @@ router.patch('/:officeId', async (req, res) => {
 
 
     try {
-        let topic = 'toothtrek/office/update/';
+        let topic = 'toothtrek/office/update';
 
         mqttClient.subscribe(responseTopic);
         mqttClient.publish(topic, JSON.stringify(office));
@@ -107,7 +107,7 @@ router.get('/:officeId', async (req, res) => {
     };
 
     try {
-        let topic = 'toothtrek/office/get/';
+        let topic = 'toothtrek/office/get';
 
         mqttClient.subscribe(responseTopic);
         mqttClient.publish(topic, JSON.stringify(office));
@@ -150,7 +150,7 @@ router.get('/', async (req, res) => {
     };
 
     try {
-        let topic = 'toothtrek/office/get/';
+        let topic = 'toothtrek/office/get';
 
         mqttClient.subscribe(responseTopic);
         mqttClient.publish(topic, JSON.stringify(office));
@@ -205,7 +205,7 @@ router.post('/', async (req, res) => {
     };
 
     try {
-        let topic = 'toothtrek/office/create/';
+        let topic = 'toothtrek/office/create';
 
         mqttClient.subscribe(responseTopic);
         mqttClient.publish(topic, JSON.stringify(office));
@@ -257,7 +257,7 @@ router.delete('/:officeId', async (req, res) => {
     };
 
     try {
-        let topic = 'toothtrek/office/delete/';
+        let topic = 'toothtrek/office/delete';
 
         mqttClient.subscribe(responseTopic);
         mqttClient.publish(topic, JSON.stringify(office));

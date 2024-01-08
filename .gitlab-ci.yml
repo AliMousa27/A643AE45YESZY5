@@ -61,7 +61,7 @@ test-frontend:
 build-backend:
   stage: build
 
-  image: node:18
+  image: node:18-alpine
   tags:
     - docker
 
@@ -73,23 +73,25 @@ test-backend:
   stage: test
   needs: ["build-backend"]
 
-  image: node:18
+  image: node:18-alpine
   tags:
     - docker
 
   script:
+    - apk add mosquitto
     - cd Website/Backend
-    - npm test 
+    - export TEST=true
+    - mosquitto -d
+    - npm install
+    - npm run ci-test 
 
-  # Allow failure til we have tests
-  allow_failure: true
 
 # Dentist UI
 
 build-dentistUI:
   stage: build
 
-  image: node:18
+  image: node:18-alpine
   tags:
     - docker
 
@@ -101,16 +103,18 @@ test-dentistUI:
   stage: test
   needs: ["build-dentistUI"]
 
-  image: node:18
+  image: node:18-alpine
   tags:
     - docker
 
   script:
+    - apk add mosquitto
     - cd DentistUI
-    - npm test 
+    - export TEST=true
+    - mosquitto -d
+    - npm install
+    - npm run ci-test
 
-  # Allow failure til we have tests
-  allow_failure: true
 
 # --- Java Middleware ---
 

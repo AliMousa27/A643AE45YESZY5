@@ -4,7 +4,6 @@ var mqttClient = require('./mqttHelper.js');
 
 router.get('/:id', async function (req, res, next) {
     try {
-        console.log('Requesting timeslots for office:', req.params.id);
         // set request and response topics
         const requestTopic = 'toothtrek/timeslots/get';
         const responseTopic = `toothtrek/timeslots/get/${req.params.id}`;

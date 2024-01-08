@@ -1,8 +1,7 @@
 require('dotenv').config();
 
-if (process.env.TEST === 'true') {
-    console.log('Environment variable TEST is set to true. Entering MQTT mock Service...');
-    module.exports = require('./tests/mqttMock.js');
+if (process.env.TEST !== 'true') {
+    console.log('Environment variable TEST is not set to true. Exiting MQTT mock Service...');
     return;
 }
 
@@ -21,8 +20,31 @@ const mqttClient = mqtt.connect(connectUrl, {
 })
 
 mqttClient.on('connect', () => {
-    console.log(`Connected to mqtt server with url ${connectUrl}`)
+    console.log(`Connected to mqtt server with url ${connectUrl}`);
+    
+    const topicToSubscribe = 'toothtrek/#';
+    mqttClient.subscribe(topicToSubscribe, (err) => {
+        if (err) {
+            console.error('Error subscribing to topic:', err);
+        }
+    });
 })
+
+mqttClient.on('message', (topic, message) => {
+    const topics = topic.split('/');
+    console.log(topics);
+    console.log(topics.length);
+    if (topics.length == 3) {
+        const parsedMessage = JSON.parse(message);
+        const responseTopic = parsedMessage.responseTopic;
+        const responseMessage = JSON.stringify({ "status": "success" });
+        mqttClient.publish(responseTopic, responseMessage, (err) => {
+            if (err) {
+                console.error('Error publishing message:', err);
+            }
+        });
+    }
+});
 
 mqttClient.on('error', (err) => {
     console.log(err)
@@ -37,7 +59,7 @@ mqttClient.on('message', (topic, message) => {
     }
 });
 
-mqttClient.handleRequest = async function(req, res, requestTopic, uid, body) {
+mqttClient.handleRequest = async function(req, res, requestTopic, uid,body) {
     try {
         const responseTopic = `${requestTopic}/${uid}`;
         this.subscribe(responseTopic);
@@ -78,10 +100,5 @@ mqttClient.handleRequest = async function(req, res, requestTopic, uid, body) {
         return res.status(500).send('Internal Server Error');
     }
 };
-
-process.on('SIGINT', () => {
-    mqttClient.end();
-    console.log('Closed MQTT connection');
-});
 
 module.exports = mqttClient;

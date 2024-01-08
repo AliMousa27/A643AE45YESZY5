@@ -92,11 +92,11 @@ public class BookingsApplication implements CommandLineRunner {
 		// Initialize MQTT
 		mqttHandler.initialize(mqttCallbackHandler);
 		mqttHandler.connect(true, true);
-		mqttHandler.subscribe("toothtrek/booking/+/");
-		mqttHandler.subscribe("toothtrek/office/+/");
-		mqttHandler.subscribe("toothtrek/dentist/+/");
-		mqttHandler.subscribe("toothtrek/patient/+/");
-		mqttHandler.subscribe("toothtrek/timeslot/+/");
+		mqttHandler.subscribe("toothtrek/booking/+");
+		mqttHandler.subscribe("toothtrek/office/+");
+		mqttHandler.subscribe("toothtrek/dentist/+");
+		mqttHandler.subscribe("toothtrek/patient/+");
+		mqttHandler.subscribe("toothtrek/timeslot/+");
 
 	}
 

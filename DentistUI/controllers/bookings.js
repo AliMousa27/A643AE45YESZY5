@@ -37,8 +37,8 @@ router.patch('/:bookingId', async (req, res) => {
         return res.status(400).send('invalid parameters: state should be one of: ' + STATES.join(', ') + ')');
     }
 
-    const topic = 'toothtrek/booking/state/';
-    const responseTopic = topic + uuidv4();
+    const topic = 'toothtrek/booking/state';
+    const responseTopic = topic + '/' + uuidv4();
 
     var booking = {
         bookingId: req.params.bookingId,
