@@ -79,7 +79,7 @@ router.post('/', async (req, res) => {
         }
 
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error: in catch', error);
         return next(error);
     }
 });
