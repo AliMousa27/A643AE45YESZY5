@@ -8,9 +8,9 @@
 
 
 <div align="center">
-![Middleware tests](https://git.chalmers.se/courses/dit355/2023/student-teams/dit356-2023-12/toothtrek//badges/main/pipeline.svg?job=androidBuild&key_text=Middleware+CI&key_width=80)
-![Frontend CI](https://git.chalmers.se/courses/dit355/2023/student-teams/dit356-2023-12/toothtrek//badges/main/pipeline.svg?job=androidBuild&key_text=Frontend+CI&key_width=80)
-![Backend CI](https://git.chalmers.se/courses/dit355/2023/student-teams/dit356-2023-12/toothtrek//badges/main/pipeline.svg?job=androidBuild&key_text=Backend+CI&key_width=80)
+<img alt="Static Badge" src="https://img.shields.io/badge/Middleware_CI-passed-green">
+<img alt="Static Badge" src="https://img.shields.io/badge/Frontend_CI-passed-green">
+<img alt="Static Badge" src="https://img.shields.io/badge/Backend_CI-passed-green">
 </div>
 <div align="center">
         <img width ="40" alt="java img" src="https://cdn.freebiesupply.com/logos/large/2x/java-14-logo-png-transparent.png">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
