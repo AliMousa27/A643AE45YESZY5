@@ -26,8 +26,12 @@
 
 **Table of Contents:**
 
-
-[[_TOC_]]
+- [ToothTrek](#toothtrek)
+  * [Purpose](#purpose)
+  * [Benefits](#benefits)
+  * [Setup](#setup)
+  * [Dentists API integration](#dentists-api-integration)
+  * [Architecture](#architecture)
 
 
 ## Purpose
@@ -70,32 +74,31 @@ The system consists of 4 main components, the website/app frontend, the express 
 **Refer to the various parts of the system to set them up**
 
 
-* [Flutter frontend setup](https://git.chalmers.se/courses/dit355/2023/student-teams/dit356-2023-12/toothtrek/-/blob/main/Website/Frontend/README.md?ref_type=heads)
-* [Express backend setup](https://git.chalmers.se/courses/dit355/2023/student-teams/dit356-2023-12/toothtrek/-/blob/main/Website/Backend/README.md?ref_type=heads)
+* [Flutter frontend setup](https://github.com/AliMousa27/Toothtrek/tree/main/Website/Frontend/README.md)
+* [Express backend setup](https://github.com/AliMousa27/Toothtrek/tree/main/Website/Backend/README.md)
 
 
 * *MQTT and middleware services setup*
-  * [Logs Service](https://git.chalmers.se/courses/dit355/2023/student-teams/dit356-2023-12/toothtrek/-/blob/main/Middleware/Logs/README.md?ref_type=heads)
-
-
-  * [Bookings Service](https://git.chalmers.se/courses/dit355/2023/student-teams/dit356-2023-12/toothtrek/-/blob/main/Middleware/bookings/README.md?ref_type=heads)
-  * [Dental Records Service](https://git.chalmers.se/courses/dit355/2023/student-teams/dit356-2023-12/toothtrek/-/blob/main/Middleware/dentalRecord/README.md?ref_type=heads)
-  * [Notifications Service](https://git.chalmers.se/courses/dit355/2023/student-teams/dit356-2023-12/toothtrek/-/blob/main/Middleware/notifications/README.md?ref_type=heads)
+  * [Logs Service](https://github.com/AliMousa27/Toothtrek/tree/main/Middleware/Logs/README.md)
+  * [Bookings Service](https://github.com/AliMousa27/Toothtrek/tree/main/Middleware/bookings/README.md)
+  * [Dental Records Service](https://github.com/AliMousa27/Toothtrek/tree/main/Middleware/dentalRecord/README.md)
+  * [Notifications Service](https://github.com/AliMousa27/Toothtrek/tree/main/Middleware/notifications/README.md)
 
 
 **Note: You need all the middleware services running for the system to function properly**
 
 
 ## Dentists API integration
-Our system sports a comprehensive API that any external dentist can utilize to manage their patients bookings. In order to use our API, you will have to create a client and create requests to the appropriate endpoints in order to integrate and register in our system. However if your hosting our system, refer to the [Dentist API setup instructions](https://git.chalmers.se/courses/dit355/2023/student-teams/dit356-2023-12/toothtrek/-/blob/main/DentistUI/README.md?ref_type=heads)
+Our system sports a comprehensive API that any external dentist can utilize to manage their patients bookings. In order to use our API, you will have to create a client and create requests to the appropriate endpoints in order to integrate and register in our system. However if your hosting our system, refer to the [Dentist API setup instructions](https://github.com/AliMousa27/Toothtrek/blob/main/DentistUI/README.md)
 
 
 ## Architecture
 Our architecture is a service oriented architecture.
 <div align="center">
-![Architecture diagram](https://git.chalmers.se/courses/dit355/2023/student-teams/dit356-2023-12/toothtrek/-/wikis/uploads/ca6c5e7b9c24f6ab56e04f0411428b00/image.png)
+<img src = "https://github.com/AliMousa27/Toothtrek/wiki/uploads/ca6c5e7b9c24f6ab56e04f0411428b00/image.png"></img>
 </div>
-For more detailed information, refer to the [architecture wiki page](https://git.chalmers.se/courses/dit355/2023/student-teams/dit356-2023-12/toothtrek/-/wikis/architecture)
 
-For a thorough analysis of how the architecture performs, refer to our [system analysis wiki page](https://git.chalmers.se/courses/dit355/2023/student-teams/dit356-2023-12/toothtrek/-/wikis/system-analysis)  
+For more detailed information, refer to the [architecture wiki page](https://github.com/AliMousa27/Toothtrek/wiki/architecture)
+
+For a thorough analysis of how the architecture performs, refer to our [system analysis wiki page](https://github.com/AliMousa27/Toothtrek/wiki/system-analysis)  
 
