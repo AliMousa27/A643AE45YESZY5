@@ -102,3 +102,5 @@ For more detailed information, refer to the [architecture wiki page](https://git
 
 For a thorough analysis of how the architecture performs, refer to our [system analysis wiki page](https://github.com/AliMousa27/Toothtrek/wiki/system-analysis)  
 
+**This project was ported from [_gitlab_](https://git.chalmers.se/courses/dit355/2023/student-teams/dit356-2023-12/toothtrek)**
+
